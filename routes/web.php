@@ -27,4 +27,4 @@ Route::group(['middleware' => 'auth', 'prefix' => 'user'], function () {
 });
 
 
-Route::get('/register/{invite_code}', 'Auth\RegisterController@inviteRegist')->name('regist:invite');
+Route::get('/register/{invite_code}', 'Auth\RegisterController@showRegist')->name('regist');

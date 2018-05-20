@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
+use App\Models\UserInvit;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -72,21 +73,29 @@ class RegisterController extends Controller
         }
 
         $user = User::create([
-                    'name' => $data['name'],
-                    'email' => $data['email'],
-                    'password' => Hash::make($data['password']),
-                    'invite_code' => strtoupper(uniqid()),
-                    'invite_uid' => $invite_uid,
-                    'avatar' => rand(1, 8),
-                ]);
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => Hash::make($data['password']),
+            'invite_code' => strtoupper(uniqid()),
+            'invite_uid' => $invite_uid,
+            'avatar' => rand(1, 8),
+        ]);
 
         if($user && !empty($invite_user)) {
+            $this->userInvite($user->id, $invite_user->id);
             $invite_user->increment('invite_number');
         }
         return $user;
     }
-    public function inviteRegist($invite_code)
+    public function showRegist($invite_code)
     {
         return view('auth.register', ['invite_code' => $invite_code]);
+    }
+    public function userInvite($uid, $inviteUid){
+        $user = UserInvit::where('uid', '=', $inviteUid)->first();
+        $addData['uid'] = $uid;
+        $addData['first_uid'] = $inviteUid;
+        $addData['second_uid'] = empty($user) ? 0 : intval($user->first_uid);
+        return UserInvit::create($addData);
     }
 }
