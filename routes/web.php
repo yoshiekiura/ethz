@@ -18,3 +18,13 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+
+Route::group(['middleware' => 'auth', 'prefix' => 'user'], function () {
+    // Route::get('/', 'UserController@index')->name('user');
+    // Route::get('/invite/qrcode', 'UserController@qrcode')->name('user:qrcode');
+    // Route::get("/notice", 'ChatController@notice')->name('room:notice');
+});
+
+
+Route::get('/register/{invite_code}', 'Auth\RegisterController@inviteRegist')->name('regist:invite');

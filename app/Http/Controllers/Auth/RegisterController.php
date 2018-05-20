@@ -63,10 +63,30 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-        ]);
+        $invite_uid = 0;
+        if(!empty($data['invite_code'])) {
+            $invite_user = User::where('invite_code', $data['invite_code'])->first();
+            if(isset($invite_user->id)) {
+                $invite_uid = $invite_user->id;
+            }
+        }
+
+        $user = User::create([
+                    'name' => $data['name'],
+                    'email' => $data['email'],
+                    'password' => Hash::make($data['password']),
+                    'invite_code' => strtoupper(uniqid()),
+                    'invite_uid' => $invite_uid,
+                    'avatar' => rand(1, 8),
+                ]);
+
+        if($user && !empty($invite_user)) {
+            $invite_user->increment('invite_number');
+        }
+        return $user;
+    }
+    public function inviteRegist($invite_code)
+    {
+        return view('auth.register', ['invite_code' => $invite_code]);
     }
 }
