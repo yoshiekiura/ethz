@@ -22,9 +22,10 @@ Encore\Admin\Form::forget(['map', 'editor']);
 app('view')->prependNamespace('admin', resource_path('views/admin'));
 
 use App\Admin\Extensions\Column\ExpandRow;
-use App\Admin\Extensions\Form\CKEditor;
+use App\Admin\Extensions\Form\WangEditor;
 use Encore\Admin\Form;
 use Encore\Admin\Grid\Column;
+use App\Admin\Extensions\Form\CKEditor;
 
 Column::extend('expand', ExpandRow::class);
 Form::extend('ckeditor', CKEditor::class);

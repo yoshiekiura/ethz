@@ -31,4 +31,5 @@ Route::group([
     $router->resource('deposits', DepositsController::class);
 
     $router->resource('guess', GuessController::class);
+    $router->resource('news', NewsController::class);
 });

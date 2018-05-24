@@ -2,15 +2,17 @@
 
 namespace App\Models;
 
-use App\Models\BaseModel as Model;
+use Encore\Admin\Traits\AdminBuilder;
 use App\User;
-use App\Models\CurrencyModel;
+use Encore\Admin\Traits\ModelTree;
+use Illuminate\Database\Eloquent\Model;
 
 class UserInvit extends Model
 {
-	protected $table = 'users_invit';
+    use ModelTree, AdminBuilder;
+    protected $table = 'users_invit';
 
-    protected $primaryKey = "id";        //指定主键
+    protected $primaryKey = 'uid';
 
     /**
      * The attributes that are mass assignable.
