@@ -18,21 +18,25 @@
 				<div class="labtb">
 					<div class="tr-item">
 						<div class="tb-item">
-							<div class="lab-item fs12 text-left color-tip">
-								<i class="fa fa-users pull-left fs16"></i>
-								<div class="info">
-									<p class="fs14">1100</p>
-									<p class="color-link">好友</p>
+							<router-link to="/list_friends">
+								<div class="lab-item fs12 text-left color-tip">
+									<i class="fa fa-users pull-left fs16"></i>
+									<div class="info">
+										<p class="fs14">1100</p>
+										<p class="color-link">好友</p>
+									</div>
 								</div>
-							</div>
+							</router-link>
 						</div>
 						<div class="tb-item">
-							<div class="lab-item fs12 text-left color-tip">
-								<i class="fa fa-user-plus pull-left fs16"></i>
-								<div class="info">
-									邀请好友
+							<router-link to="/invite">
+								<div class="lab-item fs12 text-left color-tip">
+									<i class="fa fa-user-plus pull-left fs16"></i>
+									<div class="info">
+										邀请好友
+									</div>
 								</div>
-							</div>
+							</router-link>
 						</div>
 					</div>
 				</div>

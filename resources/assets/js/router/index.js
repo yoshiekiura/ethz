@@ -14,7 +14,11 @@ import code from '../view/code'
 import article from '../view/article'
 import listProject from '../view/list-project'
 import listMember from '../view/list-member'
+import listItem from '../view/list-item'
+import listFriends from '../view/list-friends'
 import address from '../view/address'
+import withdraw from '../view/withdraw'
+import invite from '../view/invite'
 Vue.use(Router)
 
 const routes = [
@@ -67,8 +71,24 @@ const routes = [
    		component: listMember
    	},
    	{
+   		path: '/list_item',
+   		component: listItem
+   	},
+   	{
+   		path: '/list_friends',
+   		component: listFriends
+   	},
+   	{
    		path: '/address',
    		component: address
+   	},
+   	{
+   		path: '/withdraw',
+   		component: withdraw
+   	},
+   	{
+   		path: '/invite',
+   		component: invite
    	}
 ];
 

@@ -176,7 +176,7 @@ text-align:center; cursor:pointer; -moz-user-select:none; -webkit-user-select:no
 .el-collapse-item__content .item:first-child{border-bottom:0 none;}
 .el-collapse-item__arrow{line-height:100%;}
 
-.el-form-item{margin-bottom: 0; border-bottom: 1px solid #10253a; background: #0b1b28; border-radius: 5px;}
+.el-form-item{margin-bottom: 0; border-bottom: 1px solid #10253a; background: rgba(11,27,40,0.5); border-radius: 5px;}
 
 .el-form-item__content{width: 100%; display: flex; display: -webkit-flex; }
 .el-form-item__content .el-form-item__label{display: inline-block;}
@@ -207,8 +207,9 @@ text-align:center; cursor:pointer; -moz-user-select:none; -webkit-user-select:no
 /*项目列表*/
 .project-list .project-list-item {background:url(../img/eth_logo_2.png) no-repeat right bottom #0b1b28; background-size: 26%;}
 .project-list .project-list-item .panel-hd, 
-.project-list .project-list-item .panel-bd{background-color: transparent;}
-
+.project-list .project-list-item .panel-bd{background-color: transparent; position: relative; top: 0; left: 0;}
+.project-list .project-list-item .panel-hd .tag {position: absolute; right: .15rem; top: 50%; padding: .1rem .2rem; line-height: 100%; 
+margin-top: -0.2rem; background: #f3c44e; border-radius: .2rem; color: #333333; font-style: normal;}
 
 /*star*/
 .star_logo_wrap {margin-top: 1rem; margin-bottom: .2rem;}
@@ -226,13 +227,14 @@ text-align:center; cursor:pointer; -moz-user-select:none; -webkit-user-select:no
 .qrcode img {width: 100%; height: 100%; display: block;}
 
 
-
-
-
-
-
-
-
+/*邀请*/
+.invite-page {background: #0a1622;}
+.invite-page .ctninner { padding: 5.6rem 1rem 0; background: url('../img/bg_invite.jpg') no-repeat top center ; background-size: 100% auto;}
+.invite-page .logs {width: 100%; height: 1rem; line-height: 1rem; position: absolute; top: 2rem; left: 0; 
+text-align: center; text-shadow: 0 .03rem #0a1622; color: #FFFFFF;}
+.invite-page .logs .s {font-size: 0.4rem; font-weight: 800; margin-right: .5rem;}
+.invite-page .logs .l {font-size: 0.8rem; font-weight: 800; vertical-align: top; color: #f3c44e;}
+.invite-page  .tips {margin-top: -0.6rem; margin-bottom: .6rem;}
 
 
 
