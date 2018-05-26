@@ -88,8 +88,9 @@ class GuessController extends Controller
 
                 $profile['竞猜价'] = my_number_format($this->expect_price);
                 $profile['平台运营费'] = my_number_format($this->charges) . '%';
-                $profile['最大投注'] = my_number_format($this->max_amount);
-                $profile['最小投注'] = my_number_format($this->min_amount);
+                // $profile['最大投注'] = my_number_format($this->max_amount);
+                // $profile['最小投注'] = my_number_format($this->min_amount);
+                $profile['最低投注'] = my_number_format($this->price);
 
                 $profile['开奖时间'] = $this->open_time;
                 $profile['开始时间'] = $this->start_time;
@@ -144,10 +145,10 @@ class GuessController extends Controller
 
             })->tab('竞猜设置', function (Form $form) {
 
-              $form->number('expect_price', '竞猜价')->rules('required');
+              $form->number('expect_price', '竞猜低价')->rules('required');
               $form->number('charges', '运营费用')->rules('required');
-              $form->number('max_amount', '最大投注数')->rules('required');
-              $form->number('min_amount', '最小投注数')->rules('required');
+              // $form->number('max_amount', '最大投注数')->rules('required');
+              // $form->number('min_amount', '最小投注数')->rules('required');
 
               $form->datetime('open_time', '开奖时间')->rules('required');
               $form->datetime('start_time', '开始时间')->rules('required');

@@ -8,6 +8,7 @@ use App\Http\Controllers\ApiController as Controller;
 use App\Http\Resources\GuessResource;
 use App\Models\Guess;
 use App\Models\GuessOrders;
+use App\Services\Guess as GuessSer;
 
 
 class GuessController extends Controller
@@ -60,18 +61,33 @@ class GuessController extends Controller
 
     public function guess(Request $request, Guess $guess)
     {
-        $amount = $request->input('amount');
+        if(empty($this->uid)) {
+            $this->setStatusCode(404)->responseError('请先登录');
+        }
+
+        $number = $request->input('number');
         $price = $request->input('price');
+        $user = $this->getUser();
 
-        $id = GuessOrders::create([
-            'uid' => $this->uid??0,
-            'guess_id' => $guess->id,
-            'currency' => 1,
-            'expect_price' => $price,
-            'amount' => $amount,
-        ]);
+        if(empty($number)) {
+            $this->setStatusCode(404)->responseError('请输入投注数');
+        }
 
-        return $this->responseSuccess($id, 'success');
+        if(empty($price)) {
+            $this->setStatusCode(404)->responseError('请输入竞猜价格');
+        }
+
+        $amount = bcmul($guess->expect_price, $number);
+        $order = json_encode(['price' => $price, 'amount' => $amount]);
+        $order = json_decode($order);
+
+        $orderId = with(new GuessSer())->order($user, $guess, $order);
+
+        if($orderId > 0) {
+            return $this->responseSuccess(['id' => $orderId], 'success');
+        } else {
+            $this->setStatusCode(404)->responseError('竞猜失败');
+        }
     }
 }
 

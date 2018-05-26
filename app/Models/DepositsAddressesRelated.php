@@ -9,15 +9,11 @@ use App\Models\BaseModel as Model;
 use App\Models\CurrencyModel;
 use App\User;
 
-class DepositsAddressesModel extends Model
+class DepositsAddressesRelated extends Model
 {
-	protected $table = 'deposits_addresses';
-
-    protected $expire_at;
+	protected $table = 'deposits_addresses_related';
 
     protected $primaryKey = "id";        //指定主键
-
-    protected $currency;
 
     /**
      * The attributes that are mass assignable.
@@ -25,7 +21,7 @@ class DepositsAddressesModel extends Model
      * @var array
      */
     protected $fillable = [
-        'uid', 'currency', 'address', 'password', 'status',
+        'uid', 'address_id', 'currency'
     ];
 
     /**
@@ -37,14 +33,20 @@ class DepositsAddressesModel extends Model
 
     ];
 
-    /**
-     * Log belongs to users.
-     *
-     * @return BelongsTo
-     */
-    public function user() : BelongsTo
+    public function user()
     {
-        return $this->belongsTo(User::class, 'uid');
+        $data= $this->hasOne('App\User','id','uid');
+        return $data;
+    }
+
+    public function getByUid($uid)
+    {
+        $row = $this->where(['uid'=>$uid,'status'=>1])->first();
+        if ($row) {
+            return $row->toArray();
+        }
+
+        return false;
     }
 
     /**
@@ -52,16 +54,23 @@ class DepositsAddressesModel extends Model
      *
      * @return BelongsTo
      */
-    public function currencyTo() : BelongsTo
+    public function currencyTo()
     {
-        return $this->belongsTo(CurrencyModel::class, 'currency');
+        return $this->hasOne(CurrenciesModel::class, 'currency');
     }
 
-    public function createAddress(array $data = [])
+    public function createAddress($data) 
     {
-        return $this->getConnection()->transaction(function () use ($data) {
-            return $this->save($data);
-        });
+        if(empty($data)) {
+            return null;
+        }
+
+        return $this->insertGetId([
+            'uid'        => (int) $data['uid'], 
+            'currency'   => (int) $data['currency'], 
+            'address_id' => (int) $data['address_id'], 
+            'status'     => 1,
+        ]);
     }
 
     /**
@@ -81,21 +90,6 @@ class DepositsAddressesModel extends Model
     public function getCurrency()
     {
         return $this->currency;
-    }
-
-
-
-    public function getInfoByUid($uid)
-    {
-        if(empty($uid)) {
-            return null;
-        }
-
-        return $this->where([
-            'uid'      => (int) $uid,
-            'currency' => (int) $this->getCurrency(),
-            'status'   => 1,
-        ])->first();
     }
 
     public function getInfo($id) 
@@ -119,51 +113,20 @@ class DepositsAddressesModel extends Model
         }
 
         $cond['uid'] = $uid;
-        if($this->getCurrency()) {
-            $cond['currency'] = $this->getCurrency();
-        }
-
         return $this->where($cond)->orderByDesc('id')->simplePaginate($pageSize, ['*'], 'page', $page);
     }
 
-    public function getUidByAddress($address) 
-    {
-        if(empty($address)) {
-            return null;
-        }
-
-        if($this->getCurrency()) {
-            $cond['currency'] = $this->getCurrency();
-        }
-        
-        $cond['address'] = (string) $address;
-        $cond['status'] = 1;
-        $data = $this->where($cond)->first();
-
-        if(!empty($data)) {
-            return $data->uid;
-        } else {
-            return null;
-        }
-    }
-
-    public function getAddressByUid($uid)
+    public function getInfoByUid($uid)
     {
         if(empty($uid)) {
             return null;
         }
 
-        $data = $this->where([
+        return $this->where([
             'uid'      => (int) $uid,
             'currency' => (int) $this->getCurrency(),
             'status'   => 1,
         ])->first();
-
-        if(!empty($data)) {
-            return $data;
-        } else {
-            return null;
-        }
     }
 
 }

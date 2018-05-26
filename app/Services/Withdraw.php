@@ -8,72 +8,12 @@ use App\Models\WithdrawsOrdersModel;
 use App\Models\CurrencyModel;
 use App\Models\AccountsModel;
 use App\Models\AccountsDetailsModel;
-use App\Models\UserModel;
 use App\Models\CurrencyFeeModel;
-
-use App\Events\OrderShipped;
-
+use App\Models\UserModel;
 use DB;
 
 class Withdraw extends BaseService
 {
-
-    public function getUserAddressList($uid, $currencyCode)
-    {
-        if(empty($uid)) {
-            $this->error(__('api.account.lack_user'));
-        }
-        if(empty($currencyCode)) {
-            $this->error(__('api.account.lack_currency'));
-        }
-
-        $currency = $this->getCurrencyModel()->getByCode($currencyCode);
-        if(empty($currency)) {
-            $this->error(__('api.account.account_empty'));
-        }
-
-        $addressModel = $this->getAddressesModel()->setCurrency($currency->id);
-        $data = $addressModel->getListByUid($uid, 1, 99);
-        
-        if(!empty($data)) {
-            $data = $data->toArray();
-            return $this->success($data);
-        } else {
-            return $this->error(__('api.public.empty_data'));
-        }
-    }
-
-    /**
-     * 添加提现申请码
-     * @param  [type] $uid      [description]
-     * @param  [type] $currency [description]
-     * @return [type]           [description]
-     */
-    public function createAddress($data) 
-    {
-        $uid      = (int) $data['uid'];
-        $coinType = (string) $data['coinType'];
-        $currency = $this->getCurrencyModel()
-                         ->getIdByCode($coinType);
-        if(is_null($currency)) {
-            return null;
-        }
-
-        $addressModel = $this->getAddressesModel()->setCurrency($currency);
-        $address = $addressModel->getInfoByUid($uid);
-        if(!empty($address)) {
-            return $address;
-        }
-
-        $id = $addressModel->createAddress([
-                    'uid'        => $uid,
-                    'currency'   => $currency,
-                    'name'       => $data['name'],
-                    'address'    => $data['address'],
-                    'is_default' => 0,
-                ]);
-        return $addressModel->getInfo($id);
-    }
 
     /**
      * 数字资产转出
@@ -167,11 +107,6 @@ class Withdraw extends BaseService
         }
     }
 
-    public function mailTo($orderId)
-    {
-        return event(new OrderShipped(WithdrawsOrdersModel::findOrFail($orderId)));
-    }
-
     public function addAddress($data) 
     {
         $uid      = (int) $data['uid'];
@@ -211,70 +146,6 @@ class Withdraw extends BaseService
         }
     }
 
-    public function editAddress($id, $saveData) 
-    {
-        $uid      = (int) $data['uid'];
-        $name     = (string) $data['name'];
-        $address  = (string) $data['address'];
-        $coinType = (string) $data['coinType'];
-
-        $currency = $this->getCurrencyModel()
-                         ->getIdByCode($coinType);
-
-        if(is_null($currency)) {
-            return $this->error(__('api.account.currency_non_existent'));
-        }
-
-        $addressInfo = $this->getAddressesModel()->getInfo($id);
-        if(empty($addressInfo)) {
-            return $this->error(__('api.account.wallet_non_existent'));
-        }
-
-        $this->getAddressesModel()->editAddressById($id, [
-            'name'    => $name,
-            'address' => $address,
-        ]);
-        $wallet = $this->getAddressesModel()->getInfo($id);
-
-        if(isset($wallet)) {
-            if(is_object($wallet)) {
-                $wallet = $wallet->toArray();
-            }
-            return $this->success($wallet);
-        } else {
-            return $this->error(__('api.account.created_address_fail'));
-        }
-    }
-
-    public function deleteAddress($id) 
-    {
-        $addressInfo = $this->getAddressesModel()->getInfo($id);
-        if(empty($addressInfo)) {
-            return $this->error(__('api.account.wallet_non_existent'));
-        }
-
-        $res = $this->getAddressesModel()->editAddressById($id, ['status' => 0]);
-        if($res) {
-            return $this->success([]);
-        } else {
-            return $this->error(__('api.account.created_address_fail'));
-        }
-    }
-
-    public function getWithdrawAddress($id) 
-    {
-        $address = $this->getAddressesModel()->getInfo($id);
-        if(empty($address)) {
-            return $this->error(__('api.account.wallet_non_existent'));
-        }
-
-        if(is_object($address)) {
-            $address = $address->toArray();
-        }
-
-        return $this->success($address);
-    }
-
     private function getAccountsModel()
     {
         return new AccountsModel();
@@ -303,10 +174,5 @@ class Withdraw extends BaseService
     private function getUserModel()
     {
         return new UserModel();
-    }
-
-    private function getCurrencyFeeModel()
-    {
-        return new CurrencyFeeModel();
     }
 }

@@ -30,6 +30,10 @@ Route::group([
 		Route::group(['prefix' => 'user'], function () {
 		    Route::get('/','Api\UserController@index');
 		});
+
+		Route::group(['prefix' => 'deposits'], function () {
+		    Route::get('/address','Api\DepositsController@address');
+		});
 });
 
 Route::group(['prefix' => 'v1'], function () {
@@ -43,6 +47,7 @@ Route::group(['prefix' => 'v1'], function () {
 	Route::group(['prefix' => 'news'], function () {
 	    Route::get('/','Api\ArticlesController@index');
 	});
+
 	Route::get('/contact','Api\ContactController@index');
 	Route::post('/feedback','Api\FeedbackController@index');
 });

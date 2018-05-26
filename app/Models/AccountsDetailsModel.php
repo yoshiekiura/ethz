@@ -51,6 +51,7 @@ class AccountsDetailsModel extends Model
             'type'           => (int) $data['type'], 
             'change_balance' => (float) $data['change_balance'], 
             'balance'        => (float) $data['balance'], 
+            'target_id'      => (int) $data['target_id'] ?? 0, 
             'remark'         => (string) $data['remark'], 
         ]);
     }

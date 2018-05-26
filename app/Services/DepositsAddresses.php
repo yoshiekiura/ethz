@@ -4,12 +4,13 @@ namespace App\Services;
 
 use App\Services\BaseService;
 
+use App\Models\Erc20TokensModel as MtsErc20Tokens;
+use App\Models\DepositsAddressesRelated;
 use App\Models\DepositsAddressesModel;
+use App\Models\AccountsModel;
 use App\Models\CurrencyModel;
-use App\Models\Erc20TokensModel;
 use App\Models\UserModel;
-use App\Coin;
-use Illuminate\Support\Facades\Storage;
+// use App\Coin;
 use DB;
 
 class DepositsAddresses extends BaseService
@@ -20,76 +21,64 @@ class DepositsAddresses extends BaseService
      * @param  [type] $currency [description]
      * @return [type]           [description]
      */
-    public function getUserAddress($uid, $coinType)
+    public function getUserAddress($uid, $code)
     {
-        if(empty($uid)) {
-            return $this->error(__('api.account.lack_user'));
-        }
-        if(empty($coinType)) {
-            return $this->error(__('api.account.lack_currency'));
-        }
-
-        $currency = $this->getCurrencyModel()->getByCode($coinType);
-
-        if(empty($currency) || is_null($currency)) {
-            return $this->error(__('api.account.lack_currency'));
-        }
-        $currency = $currency->toArray();
-
-        $addressModel = $this->getDepositsAddressesModel()
-                             ->setCurrency($currency['id']);
+        $currency = $this->getCurrencyModel()->getByCode($code);
+        $addressModel = $this->getDepositsAddressesModel()->setCurrency($currency->id);
 
         $address = $addressModel->getInfoByUid($uid);
 
-        if(is_null($address))
-            $address = $this->createAddress($uid, $currency['id']);
-        if(!empty($address)) {
-            $address = $address->toArray();
+        if(is_null($address)) {
+            $isErc20 = $this->isErc20($currency->id);
+            if($isErc20) {
+                $coinId = $this->getCurrencis()->getIdByCode('ETH');
+                $address = $addressModel->setCurrency($coinId)->getAddressByUid($uid);
+                if(empty($address)) {
+                    $address = $this->createAddress($uid, $coinId);
+                }
+            } else {
+                $address = $this->createAddress($uid, $currency->id);
+            }
+            if(!empty($address)){
+                $address->currency = $currency->id;
+                $this->saveDepositeRelated($address);
+            }
         }
-        $address['coin']    = $coinType;
-        $address['logo']    = $currency['logo'] ? Storage::disk('public')->url($currency['logo']) : '';
-        $address['explain'] = __('api.account.tip_explain', ['coin' => $coinType, 'number' => $currency['confirmations']]);
-        $address['tip']     = __('public.account.tip_title');
-        return $this->success($address);
+
+        $this->getAccounts()->setCurrency($address->currency)->getAccount($uid);
+        return $address;
     }
 
     public function createAddress($uid, $currency) 
     {
         $addressModel = $this->getDepositsAddressesModel();
-        
+
         $type = $this->getCurrencyType($currency);
         if(is_null($type)) {
             return null;
         }
-        
-        
-        $erc20TokensModel = new Erc20TokensModel();
-        $isHas = $erc20TokensModel->checkCurrency($currency);
-        if($isHas) {
-            $ethId   = $this->getCurrencyModel()->getIdByCode('ETH');
-            $address = $addressModel->setCurrency($ethId)->getAddressByUid($uid);
-            if(!empty($address)) {
-                return $address;
-            }else {
-                $type = 'ETH';
-                $currency = $this->getCurrencyModel()->getIdByCode($type);
-            }
-        } 
 
+        // $address = $this->getCoin()->getnewaddress($type);
+        $address = md5(uniqid());
 
-        $address = $this->getCoin()->getnewaddress($type);
-        
         if(is_null($address)) {
             return null;
         }
 
-        $id = $addressModel->createAddress([
-                    'uid'      => $uid,
-                    'currency' => $currency,
-                    'address'  => $address,
-                    'password' => ''
-                ]);
-        return $addressModel->getInfo($id);
+        try {
+            $addressModel->uid      = $uid;
+            $addressModel->address  = $address;
+            $addressModel->currency = $currency;
+            $addressModel->createAddress();
+            $addressModel->getConnection()->transaction(function () use ($addressModel) {
+                $this->saveDepositeRelated($addressModel);
+            });
+        } catch (\Exception $e) {
+            $addressModel->delete();
+            throw $e;
+        }
+
+        return $addressModel->getInfo($addressModel->id);
     }
 
     public function getCurrencyType($currency)
@@ -101,6 +90,37 @@ class DepositsAddresses extends BaseService
         } else {
             return null;
         }
+    }
+
+    public function isErc20($currency)
+    {
+        $erc20TokensModel = new MtsErc20Tokens();
+        $erc20 = $erc20TokensModel->checkCurrency($currency);
+        return isset($erc20->currency) ? true : false;
+    }
+
+    public function saveDepositeRelated($address)
+    {
+        $result = $this->getOwnAddress($address->uid, $address->currency);
+        if(!empty($result)) {
+            return $result;
+        }
+        return $this->getAddressesRelated()->createAddress([
+                'uid'        => (int) $address->uid, 
+                'currency'   => (int) $address->currency, 
+                'address_id' => (int) $address->id, 
+            ]);
+    }
+
+    public function getOwnAddress($uid, $currency)
+    {
+        return $this->getAddressesRelated()->setCurrency($currency)->getInfoByUid($uid);
+
+    }
+
+    private function getAddressesRelated()
+    {
+        return new DepositsAddressesRelated();
     }
 
     private function getDepositsAddressesModel()
@@ -118,9 +138,13 @@ class DepositsAddresses extends BaseService
         return new UserModel();
     }
 
+    private function getAccounts()
+    {
+        return new AccountsModel();
+    }
+
     private function getCoin()
     {
-        $server = env('WALLET_HOST') . ':' . env('WALLET_PORT');
-        return new Coin($server);
+        return new Coin();
     }
 }
