@@ -23,37 +23,68 @@
 				<a class="handler color-link">忘记密码</a>
 			</el-form-item>
 		</el-form>
-		<el-button @click="submit" class="full submit" round >登录</el-button>
+		<div class="submit-wrap mt200 mb10 plr20" v-loading="!isloaded" ><el-button @click="loginSubmit" class="full submit fs14" type="primary">登录</el-button></div>
 	</div>
 </div>
 </template>
 
 <script>
 import mhead from '../components/head.vue'
+import jwtToken from '../helpers/jwt'
 export default{
 	components:{
-		mhead
+		mhead,
+		jwtToken
 	},
 	data(){
 		return {
 			form: {
 				mail:'',
 				pwd: ''
-			}
+			},
+			isloaded:true
 		}
 	},
 	methods:{
 		submit(){
 			var	vm = this;
-		
+
 	    	vm.$store.dispatch('setUserState', {
 	    		username:'hahahah',
 				statius:1,
 				cc:'hhh'
 	    	});
-	    	
+
 	    	vm.$router.push('/user');
 		},
+		loginSubmit(){
+    		var vm = this;
+    		if(vm.form.mail == ''){
+    			this.$alert('请填写用登录邮箱', { confirmButtonText: '确定' });
+    			return;
+    		}
+
+    		if(vm.form.pwd == ''){
+    			this.$alert('请填写用登录密码', { confirmButtonText: '确定' });
+    			return;
+    		}
+    		vm.isloaded = false;
+    		this.$http.post(vm.commonApi.login ,{
+    			account:vm.form.mail,
+    			password:vm.form.pwd
+    		}).then(function(response){
+    			var res = response.body;
+    			vm.isloaded = true;
+    			if(res.data.token){
+    				jwtToken.setToken(res.data.token);
+                    vm.$router.push('/user');
+    			}else{
+    				this.$alert(res.message, { confirmButtonText: '确定' });
+    			}
+    		}).catch(function(){
+    			vm.isloaded = true;
+    		})
+    	},
 		goback(){
 			this.$router.go(-1)
 		}

@@ -30,7 +30,7 @@
 				<el-input v-model="form.invite" placeholder="邀请码"></el-input>
 			</el-form-item>
 		</el-form>
-		<router-link to="/user"><el-button class="full submit" round >登录</el-button></router-link>
+		<el-button class="full submit" round type="tip" v-loading="!isloaded" @click="regist" >确认注册</el-button>
 	</div>
 </div>
 </template>
@@ -51,14 +51,62 @@ export default{
 				pwd: '',
 				repwd: '',
 				invite: ''
-			}
+			},
+			isloaded:true
 		}
 	},
 	methods:{
-		submit(){
-			var	that = this;
-//			that.$emit('lgn-smt',true);
-		},
+		regist(){
+    		var vm = this;
+    		if(vm.form.mail == '') {
+				vm.$alert('请输入注册账号', { confirmButtonText: '确定' });
+    			return false;
+    		}
+    		if(vm.form.pwd == '') {
+			vm.$alert('请输入密码', { confirmButtonText: '确定' });
+    			return false;
+    		}
+    		if(vm.form.repwd == '') {
+			vm.$alert('请输入确认密码', { confirmButtonText: '确定' });
+    			return false;
+    		}
+    		if(vm.form.repwd != vm.form.pwd) {
+			vm.$alert('两次密码输入不正确', { confirmButtonText: '确定' });
+    			return false;
+    		}
+    		if(vm.is_post == true) {
+    			return false;
+    		}
+    		vm.is_post = true;
+    		vm.isloaded = false;
+    		vm.$http.post(vm.commonApi.register, {
+    					'email':vm.form.mail,
+    					'password':vm.form.pwd,
+    					'password_confirmation':vm.form.repwd,
+    					'invite':vm.invite,
+    				})
+    			 	.then(function(response){
+    			 		vm.is_post = false;
+    					vm.isloaded = true;
+    			 		var _data = response.data;
+						if(_data.code == 200){
+							vm.$alert('注册成功', { confirmButtonText: '确定' });
+							vm.$router.push('/user');
+	        			} else {
+	        				this.$alert(_data.message, { confirmButtonText: '确定' });
+	        			}
+	            	})
+    	},
+	    message(_content, _type) { // success, warning, 
+    		var vm = this;
+			vm.isloaded = true;
+	        this.$alert(_content, '', { confirmButtonText: '关闭' });
+	    },
+	    alert(_content) {
+    		var vm = this;
+			vm.isloaded = true;
+	        this.$alert(_content, '', { confirmButtonText: '关闭' });
+	    },
 		goback(){
 			this.$router.go(-1)
 		}

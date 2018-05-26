@@ -49,7 +49,7 @@ class LoginController extends Controller
         $token = $this->proxy->login(request('account'), request('password'));
         if($token->original['code'] == 200) {
             unset($token->original['code']);
-            return $this->responseSuccess($token->original);
+            return $this->responseSuccess($token->original, '登录成功');
         } else {
             unset($token->original['code']);
             return $this->setStatusCode($token->original['code'])->responseError($token->original);
