@@ -46,7 +46,14 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
-        return $this->proxy->login(request('account'), request('password'));
+        $token = $this->proxy->login(request('account'), request('password'));
+        if($token->original['code'] == 200) {
+            unset($token->original['code']);
+            return $this->responseSuccess($token->original);
+        } else {
+            unset($token->original['code']);
+            return $this->setStatusCode($token->original['code'])->responseError($token->original);
+        }
     }
 
     public function logout()

@@ -85,7 +85,7 @@ class RegisterController extends Controller
 
         if($user && !empty($invite_user)) {
             $this->userInvite($user->id, $invite_user->id);
-            $invite_user->increment('invite_number');
+            $invite_user->increment('invite_count');
         }
         return $user;
     }

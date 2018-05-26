@@ -60,7 +60,6 @@ class RegisterController extends  ApiController
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6|confirmed',
         ]);
@@ -79,49 +78,56 @@ class RegisterController extends  ApiController
         $postData = $request->all();
         $validator = $this->validator($postData);
         if($validator->fails()){
-            foreach ($validator->messages()->toArray() as  $value) {
-                return $this->setStatusCode(403)
-                         ->responseNotFound(__($value[0]));
-            }
-            exit();
-            
+            return $this->setStatusCode(403)->responseError('验证出错', $validator->messages()->toArray());
         }
 
         if($this->isUser($postData['email'])){
-            return $this->setStatusCode(403)
-                        ->responseNotFound(__('auth.register.repeat_email'));
+            return $this->setStatusCode(403)->responseError('验证出错', ['email' => '邮箱已注册']);
         }
 
-        $userData = $request->all();
+        if($postData['password'] != $postData['password_confirmation']) {
+            return $this->setStatusCode(403)->responseError('验证出错', ['password' => '两次输入密码不正确']);
+        }
 
-        // 查看邀请用户
-        //$inviteUid = (int) Cookie::get('inviteUid');
-        $inviteUid = (int) $userData['invite'];
-        //event(new Registered($user = $this->create($request->all())));
+        $email = $request->input('email');
+        $password = $request->input('password');
+        $inviteCode = $request->input('invite');
+        $inviteUid = 0;
+        $name = explode('@', $email)[0];
+
+        $inviteUser = array();
+        if(!empty($inviteCode)) {
+            $inviteUser = User::where('invite_code', $inviteCode)->first();
+        }
+
         $user = $this->create([
-                    'name' => $postData['name'],
-                    'email' => $postData['email'],
-                    'password' => $postData['password'],
-                    'registere_ip' => $request->getClientIp(),
-                ]);
-        //Auth::login($user);           //去除了注册自动登录设置
+            'name' => $name,
+            'email' => $email,
+            'password' => $password,
+            'invite_uid' => isset($inviteUser->id) ? $inviteUser->id : 0,
+            'invite_code' => strtoupper(uniqid()),
+            'ip' => $request->getClientIp(),
+        ]);
+
         if(isset($user) && $user->id > 0) {
-            if($inviteUid > 0){
-                $this->userInvite($user->id,$inviteUid);
+
+            // 邀请人
+            if(isset($inviteUser->id)) {
+                $this->userInvite($user->id, $inviteUser->id);
+                $inviteUser->increment('invite_count');
             }
+
             $token = $this->proxy->login($postData['email'], $postData['password']);
-            //Cookie::make('refreshToken', $token['refresh_token'], 14400);
-            $retData = [
-                        'uid'          => $user->id,
-                        'token'        => $token->original['token'],
-                        'auth_id'      => $token->original['auth_id'],
-                        'expires_in'   => $token->original['expires_in'],
-                        'my_persimmon' => Session::getId()
-                    ];
-            return $this->responseSuccess($retData, __('api.public.success'));
+
+            return $this->responseSuccess([
+                'uid'          => $user->id,
+                'token'        => $token->original['token'],
+                'auth_id'      => $token->original['auth_id'],
+                'expires_in'   => $token->original['expires_in'],
+                'my_persimmon' => Session::getId()
+            ], '注册成功');
         } else {
-            return $this->setStatusCode(403)
-                        ->responseNotFound(__('auth.register.register_error'));
+            return $this->setStatusCode(403)->responseNotFound('注册失败');
         }
     }
 
@@ -139,18 +145,6 @@ class RegisterController extends  ApiController
         return empty($user) ? 0: 1;
     }
 
-
-    // public function register(Request $request)
-    // {
-
-    //     $this->validator($request->all())->validate();
-    //     echo 221;exit();
-    //     event(new Registered($user = $this->create($request->all())));
-
-    //     return response()->json(['status' => true,'message' => 'User Created!']);
-    // }
-
-
     /**
      * Create a new user instance after a valid registration.
      *
@@ -163,83 +157,15 @@ class RegisterController extends  ApiController
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'group' => 1,
-            'amount' => 0,
-            'registere_ip' => $data['registere_ip']
+            'invite_uid' => $data['invite_uid'],
+            'invite_code' => $data['invite_code'],
+            'avatar' => rand(1, 8),
+            'ip' => $data['ip']
         ]);
-    }
-
-    public function inviteRegister(Request $request) 
-    {
-        $inviteUid = $request->route('inviteUid');
-        Cookie::make('inviteUid', $inviteUid, 3600);
-        return $this->showRegistrationForm();
     }
 
     public function isUserByPhone($phone){
         $user = User::where('phone', '=', $phone)->first();
         return empty($user) ? 0: 1;
-    }
-
-    /**
-     * 快速生成用户
-     * @param  Request $request [description]
-     * @return [type]           [description]
-     */
-    public function simple(Request $request) 
-    {
-        $postData = $request->all();
-
-        if(empty($postData['email']) && empty($postData['phone'])) {
-            return $this->setStatusCode(403)
-                        ->responseNotFound(__('auth.emptyAccount'));
-        }
-
-        if(!empty($postData['email']) && $this->isUser($postData['email'])){
-            return $this->setStatusCode(403)
-                        ->responseNotFound(__('auth.emailReg'));
-        }
-
-        if(!empty($postData['phone']) && $this->isUserByPhone($postData['phone'])){
-            return $this->setStatusCode(403)
-                        ->responseNotFound(__('auth.phone_repeated'));
-        }
-
-        if(empty($postData['password'])) {
-            return $this->setStatusCode(403)
-                        ->responseNotFound(__('auth.emptyPassword'));
-        }
-
-        if(empty($postData['name'])) {
-            return $this->setStatusCode(403)
-                        ->responseNotFound(__('auth.emptyFirstName'));
-        }
-
-        if(empty($postData['user_id'])) {
-            return $this->setStatusCode(403)
-                        ->responseNotFound('用户ID不能为空');
-        }
-
-        $user = new User();
-        $user->fillable(['id', 'name', 'email', 'password', 'registere_ip', 'group', 'amount']);
-        $user->id = $postData['user_id'];
-        $user->name = $postData['name'];
-        $user->email = $postData['email'];
-        $user->password = Hash::make($postData['password']);
-        $user->registere_ip = $request->getClientIp();
-        $user->group = 1;
-        $user->amount = 0;
-        $res = $user->save();
-
-        if($res) {
-            $userAuthorize = new UserAuthorize();
-            $userAuthorize->createData([
-                'uid' => $user->id,
-                'open_uid' => $user->id,
-                'type' => 'mts_sns',
-            ]);
-
-            return $this->responseSuccess($user->toArray(), 'Success');
-        }
     }
 }

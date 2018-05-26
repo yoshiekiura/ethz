@@ -61,11 +61,11 @@ class ApiController extends Controller
     	return $this->responseError($message);
     }
 
-    public function responseError($message) {
+    public function responseError($message, $data = []) {
     	return $this->response([
     		'code' => $this->getStatusCode(),
     		'message' => $message,
-            'data' => []
+            'data' => $data
     	]);
     }
 
@@ -98,7 +98,7 @@ class ApiController extends Controller
 
     public function response($data) {
         $this->_convert_data($data);
-        $data = $this->convertHump($data);
+        // $data = $this->convertHump($data);
     	return response()->json($data);
     }
 
