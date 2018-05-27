@@ -23,7 +23,10 @@
 				<el-input v-model="form.count" placeholder="请填写邮箱"></el-input>
 			</el-form-item>
 		</el-form>
-		<el-button @click="submit" class="full submit" round type="tip">确认</el-button>
+		
+		<div class="submit-wrap">
+			<el-button @click="submit" class="full submit" round type="tip">确认</el-button>
+		</div>
 	</div>
 </div>
 </template>

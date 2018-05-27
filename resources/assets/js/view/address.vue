@@ -8,12 +8,13 @@
 	</mhead>
 	<div class="ctninner">
 		<p class="text-center">{{address.address}}</p>
-		<div class="qrcode">
+		<div class="qrcode" v-loading = 'address.qrcodeUrl'>
 			<img :src="address.qrcodeUrl">
 		</div>
 		
-		<div class="submit-wrap">
-			<router-link to="/user"><el-button class="full submit" round >确定</el-button></router-link>
+		<div class="submit-wrap w500 m-auto">
+			<el-button class="full submit" round >复制地址</el-button>
+			<router-link :to='{path:"/withdraw", query:{code:code}}'><el-button class="full submit" round type="tip">提现</el-button></router-link>
 		</div>
 	</div>
 </div>
