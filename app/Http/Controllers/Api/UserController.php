@@ -41,5 +41,22 @@ class UserController extends Controller
     	$data['lastId'] = 1;
     	return $this->responseSuccess($data, '查询成功');
     }
+
+
+
+    public function friends(Request $request)
+    {
+        $sinceId = $request->input('sinceId', 0);
+        $limit = $request->input('limit', 20);
+
+        $data['list'] = array(
+            ['uid' => 1, 'name' => 'Jack', 'createdAt' => date('Y-m-d'),  'avatar' => env('APP_URL') . "/avatars/avatar_".rand(1, 8).".png"],
+            ['uid' => 2, 'name' => 'Red', 'createdAt' => date('Y-m-d'),  'avatar' => env('APP_URL') . ("/avatars/avatar_".rand(1, 8).".png")],
+            ['uid' => 3, 'name' => 'Ken', 'createdAt' => date('Y-m-d'),  'avatar' => env('APP_URL') . ("/avatars/avatar_".rand(1, 8).".png")],
+            ['uid' => 4, 'name' => 'Make', 'createdAt' => date('Y-m-d'),  'avatar' => env('APP_URL') . ("/avatars/avatar_".rand(1, 8).".png")],
+        );
+        $data['lastId'] = 4;
+        return $this->responseSuccess($data, 'success');
+    }
 }
 

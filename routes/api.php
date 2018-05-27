@@ -30,6 +30,7 @@ Route::group([
 		Route::group(['prefix' => 'user'], function () {
 		    Route::get('/','Api\UserController@index');
 		    Route::get('/items','Api\UserController@items');
+		    Route::get('/friends','Api\UserController@friends');
 		});
 
 		Route::group(['prefix' => 'password'], function () {
