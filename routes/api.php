@@ -58,6 +58,7 @@ Route::group(['prefix' => 'v1'], function () {
 
 	Route::group(['prefix' => 'news'], function () {
 	    Route::get('/','Api\ArticlesController@index');
+	    Route::get('/{id}','Api\ArticlesController@show');
 	});
 
 	Route::group(['prefix' => 'deposits'], function () {

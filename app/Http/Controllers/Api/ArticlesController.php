@@ -25,6 +25,12 @@ class ArticlesController extends Controller
 
     public function show(Request $request, News $news)
     {
+        $id = $request->id;
+        if(empty($id)) {
+            $this->setStatusCode(404)->responseError('缺少参数');
+        }
+
+        $news = News::find($id);
         return $this->responseSuccess($news, 'success');
     }
 
