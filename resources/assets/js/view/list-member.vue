@@ -90,6 +90,16 @@ export default{
 		}
 	},
 	methods:{
+		getMemberList(){
+    		var vm = this
+    		console.log(vm.commonApi.listProject)
+    		vm.$http.get(vm.commonApi.listProject).then(function(response){
+		 		if(response.body.code == 200) {
+		 			vm.list = response.body.data.list
+		 		}
+				console.log(vm.list)
+        	})
+    	},
 		goback(){
 			this.$router.go(-1)
 		}

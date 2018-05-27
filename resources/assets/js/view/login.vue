@@ -77,6 +77,7 @@ export default{
     			vm.isloaded = true;
     			if(res.data.token){
     				jwtToken.setToken(res.data.token);
+    				vm.user_state = es.data.token
                     vm.$router.push('/user');
     			}else{
     				this.$alert(res.message, { confirmButtonText: '确定' });

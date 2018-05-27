@@ -25,7 +25,7 @@ class GuessController extends Controller
         $list = array();
         foreach ($guess as $key => $item) {
             $data = new GuessResource($item);
-            $list[$key] = $data->toArray($data->resource);
+            $list[] = $data->toArray($data->resource);
         }
 
         return $this->responseSuccess(['list' => $list], 'success');

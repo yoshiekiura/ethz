@@ -4,45 +4,20 @@
 		项目列表
 	</mhead>
 	<div class="ctninner">
-		<div class="project-list">
-			<router-link to="/list_member">
+		<div class="project-list" v-if="list.length > 0">
+			<router-link :to="{ path: '/list_member', query:{id: item.id} }" v-for="item in list" :key="item.id">
 				<div class="project-list-item panel mb20">
-					<div class="panel-hd fs9">项目时间: 2018-05-30 ~ 2018-06-01</div>
+					<div class="panel-hd fs9">项目时间: {{item.startTime}} ~ {{item.endTime}}</div>
 					<div class="panel-bd">
 						<div class="fs16 mb10">
-							<span class="fs12">以太总额:</span>
-							<span class="color-tip">100000</span>
+							<span class="fs12">{{item.name}}</span>
 						</div>
-						<div class="fs12">
-							<span class="color-light">参与人数: 9999/10000</span>
-						</div>
-					</div>
-				</div>
-			</router-link>
-			<router-link to="/list_member">
-				<div class="project-list-item panel mb20">
-					<div class="panel-hd fs9">项目时间: 2018-05-30 ~ 2018-06-01</div>
-					<div class="panel-bd">
 						<div class="fs16 mb10">
 							<span class="fs12">以太总额:</span>
-							<span class="color-tip">100000</span>
+							<span class="color-tip">{{item.sumAmount}}</span>
 						</div>
 						<div class="fs12">
-							<span class="color-light">参与人数: 9999/10000</span>
-						</div>
-					</div>
-				</div>
-			</router-link>
-			<router-link to="/list_member">
-				<div class="project-list-item panel mb20">
-					<div class="panel-hd fs9">项目时间: 2018-05-30 ~ 2018-06-01</div>
-					<div class="panel-bd">
-						<div class="fs16 mb10">
-							<span class="fs12">以太总额:</span>
-							<span class="color-tip">100000</span>
-						</div>
-						<div class="fs12">
-							<span class="color-light">参与人数: 9999/10000</span>
+							<span class="color-light">参与人数: {{item.number}}</span>
 						</div>
 					</div>
 				</div>
@@ -66,12 +41,25 @@ export default{
 	},
 	data(){
 		return {
-			
-		}
+	      	list:''
+	      }
 	},
-	methods:{
-	
-	}
+    activated(){
+    	var vm = this
+    	vm.getItemList()
+    },
+	methods: {
+    	getItemList(){
+    		var vm = this
+    		console.log(vm.commonApi.listProject)
+    		vm.$http.get(vm.commonApi.listProject).then(function(response){
+		 		if(response.body.code == 200) {
+		 			vm.list = response.body.data.list
+		 		}
+				console.log(vm.list)
+        	})
+    	}
+    }
 }
 </script>
 

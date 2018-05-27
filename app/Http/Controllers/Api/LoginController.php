@@ -51,8 +51,7 @@ class LoginController extends Controller
             unset($token->original['code']);
             return $this->responseSuccess($token->original, '登录成功');
         } else {
-            unset($token->original['code']);
-            return $this->setStatusCode($token->original['code'])->responseError($token->original);
+            return $this->setStatusCode(404)->responseError($token->original['message']);
         }
     }
 

@@ -91,6 +91,7 @@ export default{
     			 		var _data = response.data;
 						if(_data.code == 200){
 							vm.$alert('注册成功', { confirmButtonText: '确定' });
+							vm.user_state = es.data.token
 							vm.$router.push('/user');
 	        			} else {
 	        				this.$alert(_data.message, { confirmButtonText: '确定' });

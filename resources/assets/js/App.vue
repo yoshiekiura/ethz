@@ -12,34 +12,34 @@
 import {mapGetters} from 'vuex'	
 	
 export default {
-	computed:{
-		...mapGetters(['user_state'])
-	},
+	// computed:{
+	// 	...mapGetters(['user_state'])
+	// },
 	created(){
-		var vm = this;
-		var enter_path = vm.$route.path;
-		if(!vm.user_state.statius){
-			if(enter_path !=  '/' || enter_path != '/list_project' || enter_path != '/star' || enter_path != '/login' || enter_path != '/regist' || enter_path != '/reback') {
-				vm.$router.replace('/star');
-			}
-		}
+		// var vm = this;
+		// var enter_path = vm.$route.path;
+		// if(!vm.user_state.statius){
+		// 	if(enter_path !=  '/' || enter_path != '/list_project' || enter_path != '/star' || enter_path != '/login' || enter_path != '/regist' || enter_path != '/reback') {
+		// 		vm.$router.replace('/star');
+		// 	}
+		// }
 		
-		vm.$router.beforeEach((to, from, next) => {
-			let _path_ = to.path;
-			if(!vm.user_state.statius){
-				if(_path_ ==  '/' || _path_ == '/list_project' || _path_ == '/star' || _path_ == '/login' || _path_ == '/regist' || _path_ == '/reback'){
-					return next()
-				}else {
-					return next('/star')
-				}
-			}else{
-				if(_path_ ==  '/star'){
-					return next('/user')
-				}else{
-					return next();
-				}
-			}
-		})
+		// vm.$router.beforeEach((to, from, next) => {
+		// 	let _path_ = to.path;
+		// 	if(!vm.user_state.statius){
+		// 		if(_path_ ==  '/' || _path_ == '/list_project' || _path_ == '/star' || _path_ == '/login' || _path_ == '/regist' || _path_ == '/reback'){
+		// 			return next()
+		// 		}else {
+		// 			return next('/star')
+		// 		}
+		// 	}else{
+		// 		if(_path_ ==  '/star'){
+		// 			return next('/user')
+		// 		}else{
+		// 			return next();
+		// 		}
+		// 	}
+		// })
 	},
 	mounted(){		//替代ready方法
 		const vm = this

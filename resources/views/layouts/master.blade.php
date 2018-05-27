@@ -30,6 +30,6 @@
     <app></app>
 </div>
 
-<script src="{{ asset('js/app.js') }}?v={{ env('APP_VERSION') }}"></script>
+<script src="{{ asset('js/app.js') }}?v={{ time() }}"></script>
 </body>
 </html>
