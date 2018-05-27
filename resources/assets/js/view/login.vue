@@ -19,11 +19,13 @@
 			</el-form-item>
 			<el-form-item class="p20 enctrl">
 				<label class="el-form-item__label"><i class="fa fa-lock"></i></label>
-				<el-input v-model="form.pwd" placeholder="输入密码"></el-input>
+				<el-input v-model="form.pwd" type="password" placeholder="输入密码"></el-input>
 				<a class="handler color-link">忘记密码</a>
 			</el-form-item>
 		</el-form>
-		<div class="submit-wrap mt200 mb10 plr20" v-loading="!isloaded" ><el-button @click="loginSubmit" class="full submit fs14" type="primary">登录</el-button></div>
+		<div  v-loading="!isloaded" class="submit-wrap mb10">
+			<el-button @click="submit" class="full submit fs14" type="primary">登录</el-button>
+		</div>
 	</div>
 </div>
 </template>
@@ -49,17 +51,13 @@ export default{
 		submit(){
 			var	vm = this;
 
-	    	vm.$store.dispatch('setUserState', {
-	    		username:'hahahah',
-				statius:1,
-				cc:'hhh'
-	    	});
-
-	    	vm.$router.push('/user');
-		},
-		loginSubmit(){
-    		var vm = this;
-    		if(vm.form.mail == ''){
+//	    	vm.$store.dispatch('setUserState', {
+//	    		username:'hahahah',
+//				statius:1,
+//				cc:'hhh'
+//	    	});
+	    	
+	    	if(vm.form.mail == ''){
     			this.$alert('请填写用登录邮箱', { confirmButtonText: '确定' });
     			return;
     		}
@@ -68,24 +66,36 @@ export default{
     			this.$alert('请填写用登录密码', { confirmButtonText: '确定' });
     			return;
     		}
+    		
     		vm.isloaded = false;
-    		this.$http.post(vm.commonApi.login ,{
+    		vm.$http.post(vm.commonApi.login ,{
     			account:vm.form.mail,
     			password:vm.form.pwd
     		}).then(function(response){
     			var res = response.body;
     			vm.isloaded = true;
-    			if(res.data.token){
-    				jwtToken.setToken(res.data.token);
-    				vm.user_state = es.data.token
+    			
+    			if(res.code == 200){
+    				let resitem = res.data
+					vm.$store.dispatch('setUserState', {
+			    		username: resitem.name,
+						token: resitem.token,
+						earnings: resitem.earnings_count,
+						avatar: resitem.avatar,
+						wallet: resitem.wallet,
+						friendsamount: resitem.invite_count,
+						wins: resitem.win_count
+			    	});
                     vm.$router.push('/user');
     			}else{
     				this.$alert(res.message, { confirmButtonText: '确定' });
     			}
+    			
     		}).catch(function(){
     			vm.isloaded = true;
     		})
-    	},
+    		
+		},
 		goback(){
 			this.$router.go(-1)
 		}

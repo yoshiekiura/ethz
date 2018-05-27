@@ -22,7 +22,7 @@
 import mhead from '../components/head.vue'
 import tipHc from '../components/tip_help_center.vue'
 import unav from '../components/unav.vue'
-//import {mapGetters} from 'vuex'
+import {mapGetters} from 'vuex'
 export default{
 	components:{
 		mhead,
@@ -35,13 +35,13 @@ export default{
       }
     },
     computed:{
-//  	...mapGetters(['user_state'])
+    	...mapGetters(['user_state'])
     },
     activated(){
-//  	var vm = this;
-//  	if(vm.user_state.username){
-//  		vm.$router.replace('/user')
-//  	}
+    	var vm = this;
+    	if(vm.user_state.token){
+    		vm.$router.replace('/user')
+    	}
     },
     methods: {
     

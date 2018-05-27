@@ -8,8 +8,8 @@
 			<router-link to="/list_project"><i class="fa fa-tasks"></i></router-link>
 		</div>
 		<div class="nav-cell text-center lh10"  :class="(current == '/star' || current == '/user') && 'active'">
-			<router-link v-if="!user_state.username" to="/star"><i class="fa fa-user-circle"></i></router-link>
-			<router-link v-if="user_state.username" to="/user"><i class="fa fa-user-circle"></i></router-link>
+			<router-link v-if="!user_state.token" to="/star"><i class="fa fa-user-circle"></i></router-link>
+			<router-link v-if="user_state.token" to="/user"><i class="fa fa-user-circle"></i></router-link>
 		</div>
 	</div>
 </template>

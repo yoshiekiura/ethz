@@ -1,28 +1,38 @@
+import jwtToken from '../../helpers/jwt'
 export default {
 	state:{
 		username:null,
-		statius:null
+		token:null,
+		earnings:null,
+		wins:null,
+		avatar:null,
+		wallet:null,
+		friendsamount:null
 	},
 	mutations:{
 		SET_USER_STATE(state, payload){
-			state.username = payload.username;
-			state.statius = true;
+			for (let key in payload) {
+				if(payload[key]){
+					state[key] = payload[key]
+				}
+			}
 		},
 		CLEAR_USER_STATE(state){
-			state.username = null;
-			state.statius = null;
+			for (let key in state ) {
+				state[key] = '';
+			}
 		}
 		
 	},
 	getters:{
-		user_state: (state, getters) => {
+		user_state: (state,  getters) => {
 			return state;
 		}
 	},
 	actions:{
-		setUserState({commit}, data) {
-//			console.log(data)
-			commit('SET_USER_STATE', data);
+		setUserState(state, data) {
+			state.commit('SET_USER_STATE', data);
+			jwtToken.setUserState(data);
 		}
 	}
 }

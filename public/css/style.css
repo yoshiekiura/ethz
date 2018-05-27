@@ -159,11 +159,13 @@ text-align:center; cursor:pointer; -moz-user-select:none; -webkit-user-select:no
 .row-radio .el-radio__inner{width:.3rem; height: .3rem; position:absolute; top:50%; right: .2rem; transform: translateY(-50%); -webkit-transform: translateY(-50%);}
 .row-radio .el-radio__inner:after{width:50%; height:50%;}
 .row-radio .el-radio__label{display:none;}
+.submit-wrap {margin-top: .7rem;}
 /*.nav-cell .fa {font-size: .24rem;}*/
 /*用户头像栏*/
 .unav{  position: relative; top: 0; left: 0;}
 .unav .inner{padding-left: 1.2rem;}
 .unav .avatar{position: absolute; top: 0; left: 0; height: 1rem; width: 1rem; border-radius:10px; overflow:hidden;}
+.unav .avatar img {width: 100%; height: 100%;}
 .unav .uname{height: 1rem; line-height: 1rem;}
 
 /*hack*/
@@ -192,7 +194,7 @@ text-align:center; cursor:pointer; -moz-user-select:none; -webkit-user-select:no
 
 .el-button--default {background-color: #678096; border-color: #678096; color: #FFFFFF;}
 .el-button:focus, .el-button:hover {background: #59738a; border-color: #59738a; color: #FFFFFF;}
-.el-button.submit {margin-top: 0.7rem; font-size: .25rem; padding: .25rem; border-radius:.5rem;}
+.el-button.submit {font-size: .25rem; padding: .25rem; border-radius:.5rem; overflow: hidden;}
 .el-button.full {width: 100%;}
 .el-button--tip {background: #f3c44e; color: #0b1b28; border-color: #f3c44e;}
 .el-button:focus, .el-button:hover {background: #f8b708; border-color: #f8b708; color: #0b1b28;}
@@ -223,14 +225,14 @@ margin-top: -0.2rem; background: #f3c44e; border-radius: .2rem; color: #333333; 
 
 
 /*充值*/
-.qrcode { background: #FFFFFF; padding: .2rem; margin: .2rem auto 0; width: 6rem; height: 6rem; max-width: 640px; border-radius: 10px;}
+.qrcode { background: #FFFFFF; padding: .2rem; margin: .2rem auto 0; width: 5rem; height: 5rem; max-width: 640px; border-radius: 10px;}
 .qrcode img {width: 100%; height: 100%; display: block;}
 
 
 /*邀请*/
 .invite-page {background: #0a1622;}
 .invite-page .ctninner { padding: 5.6rem 1rem 0; background: url('../img/bg_invite.jpg') no-repeat top center ; background-size: 100% auto;}
-.invite-page .logs {width: 100%; height: 1rem; line-height: 1rem; position: absolute; top: 2rem; left: 0; 
+.invite-page .logs {width: 100%; height: 1rem; line-height: 1rem; position: absolute; top: 2.25rem; left: 0; 
 text-align: center; text-shadow: 0 .03rem #0a1622; color: #FFFFFF;}
 .invite-page .logs .s {font-size: 0.4rem; font-weight: 800; margin-right: .5rem;}
 .invite-page .logs .l {font-size: 0.8rem; font-weight: 800; vertical-align: top; color: #f3c44e;}

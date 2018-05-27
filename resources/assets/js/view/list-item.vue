@@ -1,7 +1,7 @@
 <template>
 <div class="container">
 	<mhead>
-		项目列表
+		参与项目
 	</mhead>
 	<div class="ctninner">
 		<div class="project-list">

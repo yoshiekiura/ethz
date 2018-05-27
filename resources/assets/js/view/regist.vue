@@ -19,18 +19,21 @@
 			</el-form-item>
 			<el-form-item class="p20">
 				<label class="el-form-item__label"><i class="fa fa-lock"></i></label>
-				<el-input v-model="form.pwd" placeholder="输入密码"></el-input>
+				<el-input v-model="form.pwd" type="password" placeholder="输入密码"></el-input>
 			</el-form-item>
 			<el-form-item class="p20">
 				<label class="el-form-item__label"><i class="fa fa-lock"></i></label>
-				<el-input v-model="form.repwd" placeholder="再次输入密码"></el-input>
+				<el-input v-model="form.repwd" type="password" placeholder="再次输入密码"></el-input>
 			</el-form-item>
 			<el-form-item class="p20">
 				<label class="el-form-item__label"><i class="fa fa-mars"></i></label>
 				<el-input v-model="form.invite" placeholder="邀请码"></el-input>
 			</el-form-item>
 		</el-form>
-		<el-button class="full submit" round type="tip" v-loading="!isloaded" @click="regist" >确认注册</el-button>
+		
+		<div  v-loading="!isloaded" class="submit-wrap mb10">
+			<el-button class="full submit" round type="tip" @click="regist" >注册</el-button>
+		</div>
 	</div>
 </div>
 </template>
@@ -39,7 +42,7 @@
 import mhead from '../components/head.vue'
 export default{
 	mounted(){
-		console.log(this.$store.state.count)
+		
 	},
 	components:{
 		mhead
@@ -74,10 +77,7 @@ export default{
 			vm.$alert('两次密码输入不正确', { confirmButtonText: '确定' });
     			return false;
     		}
-    		if(vm.is_post == true) {
-    			return false;
-    		}
-    		vm.is_post = true;
+    		
     		vm.isloaded = false;
     		vm.$http.post(vm.commonApi.register, {
     					'email':vm.form.mail,
@@ -86,28 +86,27 @@ export default{
     					'invite':vm.invite,
     				})
     			 	.then(function(response){
-    			 		vm.is_post = false;
+    			 		var res = response.body;
     					vm.isloaded = true;
-    			 		var _data = response.data;
-						if(_data.code == 200){
-							vm.$alert('注册成功', { confirmButtonText: '确定' });
-							vm.user_state = es.data.token
-							vm.$router.push('/user');
+    					
+						if(res.code == 200){
+							let resitem = res.data
+							vm.$store.dispatch('setUserState', {
+					    		username: resitem.name,
+								token: resitem.token,
+								earnings: resitem.earnings_count,
+								avatar: resitem.avatar,
+								wallet: resitem.wallet,
+								friendsamount: resitem.invite_count,
+								wins: resitem.win_count
+					    	});
+					    	
+					    	vm.$router.push('/user');
 	        			} else {
-	        				this.$alert(_data.message, { confirmButtonText: '确定' });
+	        				this.$alert(res.message, { confirmButtonText: '确定' });
 	        			}
 	            	})
     	},
-	    message(_content, _type) { // success, warning, 
-    		var vm = this;
-			vm.isloaded = true;
-	        this.$alert(_content, '', { confirmButtonText: '关闭' });
-	    },
-	    alert(_content) {
-    		var vm = this;
-			vm.isloaded = true;
-	        this.$alert(_content, '', { confirmButtonText: '关闭' });
-	    },
 		goback(){
 			this.$router.go(-1)
 		}

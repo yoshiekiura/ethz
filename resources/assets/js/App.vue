@@ -9,40 +9,52 @@
 </template>
 
 <script>
+import jwtToken from './helpers/jwt'
 import {mapGetters} from 'vuex'	
-	
 export default {
-	// computed:{
-	// 	...mapGetters(['user_state'])
-	// },
+	 computed:{
+	 	...mapGetters(['user_state'])
+	 },
 	created(){
-		// var vm = this;
-		// var enter_path = vm.$route.path;
-		// if(!vm.user_state.statius){
-		// 	if(enter_path !=  '/' || enter_path != '/list_project' || enter_path != '/star' || enter_path != '/login' || enter_path != '/regist' || enter_path != '/reback') {
-		// 		vm.$router.replace('/star');
-		// 	}
-		// }
+		let vm = this;
+		let enter_path = vm.$route.path;
 		
-		// vm.$router.beforeEach((to, from, next) => {
-		// 	let _path_ = to.path;
-		// 	if(!vm.user_state.statius){
-		// 		if(_path_ ==  '/' || _path_ == '/list_project' || _path_ == '/star' || _path_ == '/login' || _path_ == '/regist' || _path_ == '/reback'){
-		// 			return next()
-		// 		}else {
-		// 			return next('/star')
-		// 		}
-		// 	}else{
-		// 		if(_path_ ==  '/star'){
-		// 			return next('/user')
-		// 		}else{
-		// 			return next();
-		// 		}
-		// 	}
-		// })
+//		jwtToken.removeToken();
+		let local_state = jwtToken.getUserState();
+		if(local_state) {
+			vm.$store.dispatch('setUserState', local_state);
+		}
+		
+		console.log(local_state, vm.user_state)
+		if(!vm.user_state.token){
+			if(enter_path !=  '/' || enter_path != '/list_project' || enter_path != '/star' || enter_path != '/login' || enter_path != '/regist' || enter_path != '/reback') {
+				vm.$router.replace('/star');
+			}
+		}else{
+			if(enter_path ==  '/star' || enter_path == '/login' || enter_path == '/regist' ){
+				vm.$router.replace('/user')
+			}
+		}
+		
+		vm.$router.beforeEach((to, from, next) => {
+			let _path_ = to.path;
+			if(!vm.user_state.token){
+				if(_path_ ==  '/' || _path_ == '/list_project' || _path_ == '/star' || _path_ == '/login' || _path_ == '/regist' || _path_ == '/reback'){
+					return next()
+				}else {
+					return next('/star')
+				}
+			}else{
+				if(_path_ ==  '/star' || _path_ == '/login' || _path_ == '/regist' ){
+					return next('/user')
+				}else{
+					return next();
+				}
+			}
+		})
 	},
 	mounted(){		//替代ready方法
-		const vm = this
+		let vm = this
 		documentResetFontSize()
 		window.onresize = () => {		//挂载一个window.resize的方法, 元素改变的时候改变
 			return (() => {

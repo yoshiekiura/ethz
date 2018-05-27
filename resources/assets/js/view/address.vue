@@ -12,7 +12,9 @@
 			<img :src="address.qrcodeUrl">
 		</div>
 		
-		<router-link to="/user"><el-button class="full submit" round >确定</el-button></router-link>
+		<div class="submit-wrap">
+			<router-link to="/user"><el-button class="full submit" round >确定</el-button></router-link>
+		</div>
 	</div>
 </div>
 </template>

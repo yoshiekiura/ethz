@@ -4,7 +4,7 @@
 		<div class="color-tip handler left">
 			<a @click="goback"><i class="fa fa-angle-left fs18"></i></a>
 		</div>
-		项目列表
+		项目成员
 	</mhead>
 	<div class="ctninner">
 		<div class="rank">

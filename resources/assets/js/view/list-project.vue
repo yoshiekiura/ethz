@@ -3,7 +3,7 @@
 	<mhead>
 		项目列表
 	</mhead>
-	<div class="ctninner">
+	<div class="ctninner" v-loading="!isloaded">
 		<div class="project-list" v-if="list.length > 0">
 			<router-link :to="{ path: '/list_member', query:{id: item.id} }" v-for="item in list" :key="item.id">
 				<div class="project-list-item panel mb20">
@@ -41,7 +41,8 @@ export default{
 	},
 	data(){
 		return {
-	      	list:''
+	      	list:'',
+	      	isloaded:true
 	      }
 	},
     activated(){
@@ -50,13 +51,13 @@ export default{
     },
 	methods: {
     	getItemList(){
-    		var vm = this
-    		console.log(vm.commonApi.listProject)
+    		var vm = this;
+    		vm.isloaded = false;
     		vm.$http.get(vm.commonApi.listProject).then(function(response){
+    			vm.isloaded = true;
 		 		if(response.body.code == 200) {
 		 			vm.list = response.body.data.list
 		 		}
-				console.log(vm.list)
         	})
     	}
     }

@@ -1,5 +1,3 @@
-import Cookie from 'js-cookie'
-
 export default {
     setToken(token) {
     	
@@ -12,9 +10,31 @@ export default {
     },
     removeToken() {
         window.localStorage.removeItem('jwt_token');
-        Cookie.remove('auth_id');
+        window.localStorage.removeItem('user_state');
     },
-    setAuthId(authId) {
-       Cookie.set('auth_id',authId)
+    setUserState (data) {
+    	let localstate = this.getUserState('user_state');
+//  	console.log(localstate, data)
+    	if(localstate) {
+    		for (let key in data) {
+    			localstate[key] = data[key]
+    		}
+    	} else {
+    		localstate = data;
+    	}
+    	
+    	localstate = JSON.stringify(localstate);
+    	
+    	try{
+    		window.localStorage.setItem('user_state',localstate)
+    	} 
+    	catch(err){
+    		this.removeToken();
+    		console.log(err);
+    	}
+    	
+    },
+    getUserState () {
+    	return JSON.parse(window.localStorage.getItem('user_state'));
     }
 }
