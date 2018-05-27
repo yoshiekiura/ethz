@@ -41,6 +41,18 @@ class GuessController extends Controller
         return $this->responseSuccess($data, 'success');
     }
 
+    public function showNew(Request $request)
+    {
+        $model = new Guess();
+        $guess = $model->orderBy('id', 'DESC')->first();
+        $data = new GuessResource($guess);
+        $data = $data->toArray($data->resource);
+        $data['currency'] = 1;
+        $data['last'] = rand(1000, 9999);
+        $data['unit'] = '0.01';
+        return $this->responseSuccess($data, 'success');
+    }
+
     public function attendance(Request $request)
     {
         $guessId = $request->input('guess_id');
