@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 use App\Http\Controllers\ApiController as Controller;
 use App\Http\Resources\GuessResource;
@@ -66,8 +67,14 @@ class UserController extends Controller
             return $this->setStatusCode(404)->responseError('请登录');
         }
 
+        $invite_data = $request->all();
+        $validator = $this->validator($invite_data);
+        if($validator->fails()){
+            return $this->setStatusCode(403)->responseError('验证出错', $validator->messages()->toArray());
+        }
+
         $user = $request->user();
-        $email = $user->email;
+        $email = $invite_data['email'];
         $url = env('APP_URL') . '/#/regist?code=' . $user->invite_code;
         $emailContent = __('auth.invite_email', ['url' => $url]);
 
@@ -81,6 +88,19 @@ class UserController extends Controller
         }
 
         return $this->responseSuccess('邮件发送成功');
+    }
+
+    /**
+     * Get a validator for an incoming registration request.
+     *
+     * @param  array  $data
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
+    protected function validator(array $data)
+    {
+        return Validator::make($data, [
+            'email' => 'required|string|email|max:255',
+        ]);
     }
 }
 

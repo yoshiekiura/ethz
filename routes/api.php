@@ -31,7 +31,7 @@ Route::group([
 		    Route::get('/','Api\UserController@index');
 		    Route::get('/items','Api\UserController@items');
 		    Route::get('/friends','Api\UserController@friends');
-		    Route::get('/invite/email','Api\UserController@sendInviteEmail');
+		    Route::post('/invite/email','Api\UserController@sendInviteEmail');
 		});
 
 		Route::group(['prefix' => 'password'], function () {
