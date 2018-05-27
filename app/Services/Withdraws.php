@@ -2,19 +2,131 @@
 
 namespace App\Services;
 
-
 use DB;
 use App\Services\BaseService;
-
 use App\Monolog\WithdrawsLogs;
-
 use App\Models\WithdrawsOrdersModel;
 use App\Models\AccountsModel;
 use App\Models\AccountsDetailsModel;
+use App\Models\WithdrawsAddressesModel;
+use App\Models\CurrencyModel;
+use App\Models\UserModel;
 use App\Coin;
 
 class Withdraws extends BaseService
 {
+    /**
+     * 数字资产转出
+     * @param  [type] $data [description]
+     * @return [type]       [description]
+     */
+    public function apply($user, $data) 
+    {
+        $uid = $user->id;
+        $code = $data['code'];
+        $sumAmount = $data['amount'];
+        $address = $data['name'] = $data['address'];
+
+        // 获取货币详细
+        $currency = $this->getCurrencyModel()->getByCode($code);
+
+        if($currency->enable_withdraw == 0) {
+            return ['status' => false, '暂不支持提现'];
+        }
+
+        // 是否最低提现标准
+        if(bccomp($currency->min_withdraw_amount, $sumAmount, 18) == 1) {
+            return ['status' => false, '提现金额少于最小提现金额'];
+        }
+
+        $data['name'] = $address;
+
+        DB::beginTransaction();
+
+        // 当前用户余额
+        $accountsModel = $this->getAccountsModel()->setCurrency($currency->id);
+        $account       = $accountsModel->getAccountLock($uid);
+
+        // 余额是否足够
+        if(bccomp($account->balance, $sumAmount, 18) == -1) {
+            DB::rollback();
+            return $this->error(__('api.account.not_sufficient_funds'));
+        }
+
+        // 计算手续费
+        $fee           = $currency->withdraw_service_charge;
+
+        // 实到金额
+        $amount        = bcsub($sumAmount, $fee, 18);
+
+        // 余额变动
+        $changeBalance = $accountsModel->decrementBalance($account->uid, $sumAmount);
+
+        $changeLocked  = $accountsModel->incrementLocked($account->uid, $sumAmount);
+
+        $insertOrderId = $this->getOrdersModel()->createOrder([
+                                'uid'          => $uid,
+                                'currency'     => $currency->id,
+                                'fee'          => $fee,
+                                'amount'       => $amount,
+                                'sum_amount'   => $sumAmount,
+                                'address_name' => $data['name'],
+                                'address'      => $address,
+                                'remark'       => '',
+                         ]);
+
+        $accountInfo   = $accountsModel->getInfoByUid($account->uid);
+
+        if($changeBalance && $changeLocked && $insertOrderId > 0) {
+            DB::commit();
+
+            // $this->mailTo($insertOrderId);
+            return ['status' => true, 'message' => '提现成功', 'order' => $insertOrderId];
+        } else {
+            DB::rollback();
+            return ['status' => false, 'message' => '提现失败'];
+        }
+    }
+
+    public function addAddress($data) 
+    {
+        $uid      = (int) $data['uid'];
+        $address  = (string) $data['address'];
+        $coinType = (string) $data['coinType'];
+        $currency = $this->getCurrencyModel()
+                         ->getIdByCode($coinType);
+
+        if(is_null($currency)) {
+            return null;
+        }
+
+        $addressModel = $this->getAddressesModel()->setCurrency($currency);
+        $addressInfo = $addressModel->getInfoByAddress($uid, $address);
+        if(!empty($addressInfo)) {
+            ;
+            $addressModel->editAddressById($addressInfo->id, ['name' => $data['name'], 'status' => 1]);
+            return $this->success($addressInfo);
+        }
+
+        $id = $addressModel->createAddress([
+                    'uid'        => $uid,
+                    'currency'   => $currency,
+                    'name'       => $data['name'],
+                    'address'    => $data['address'],
+                    'is_default' => 0,
+                ]);
+        $wallet = $addressModel->getInfo($id);
+
+        if(isset($wallet)) {
+            if(is_object($wallet)) {
+                $wallet = $wallet->toArray();
+            }
+            return $this->success($wallet);
+        } else {
+            return $this->error(__('api.account.created_address_fail'));
+        }
+    }
+
 	public function withdraw($id, $status, $remark = ''){
 
 		$accountsModel        = $this->getAccountsModel();
@@ -237,5 +349,25 @@ class Withdraws extends BaseService
     {
         $server = env('WALLET_HOST') . ':' . env('WALLET_PORT');
         return new Coin($server);
+    }
+
+    private function getAddressesModel()
+    {
+        return new WithdrawsAddressesModel();
+    }
+
+    private function getOrdersModel()
+    {
+        return new WithdrawsOrdersModel();
+    }
+
+    private function getCurrencyModel()
+    {
+        return new CurrencyModel();
+    }
+
+    private function getUserModel()
+    {
+        return new UserModel();
     }
 }

@@ -29,6 +29,7 @@ Route::group([
 	function () {
 		Route::group(['prefix' => 'user'], function () {
 		    Route::get('/','Api\UserController@index');
+		    Route::get('/items','Api\UserController@items');
 		});
 
 		Route::group(['prefix' => 'password'], function () {
@@ -37,6 +38,10 @@ Route::group([
 
 		Route::group(['prefix' => 'deposits'], function () {
 		    Route::get('/address','Api\DepositsController@address');
+		});
+
+		Route::group(['prefix' => 'withdraws'], function () {
+		    Route::post('/','Api\WithdrawsController@store');
 		});
 });
 
