@@ -49,7 +49,18 @@ class LoginController extends Controller
         $token = $this->proxy->login(request('account'), request('password'));
         if($token->original['code'] == 200) {
             unset($token->original['code']);
-            return $this->responseSuccess($token->original, '登录成功');
+
+            $client = new \GuzzleHttp\Client(['verify' => false]);
+            $response = $client->request('GET', env('APP_URL').'/api/v1/user', [
+                'headers' => [
+                    'Accept' => 'application/json',
+                    'Authorization' => 'Bearer '.$token->original['token'],
+                ],
+            ]);
+            $user = json_decode((string)$response->getBody(), true);
+            
+            $user['data']['token'] = $token->original['token'];
+            return $this->responseSuccess($user['data'], '登录成功');
         } else {
             return $this->setStatusCode(404)->responseError($token->original['message']);
         }
