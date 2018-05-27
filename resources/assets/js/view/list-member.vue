@@ -12,56 +12,17 @@
 		<div class="panel">
 			<div class="panel-bd">
 				<div class="memberList">
-					<ul>
-						<li>
-							<div class="avatar img-box"><img src="/img/album1.jpg" /></div>
+					<ul  v-if="list.length > 0">
+						<li v-for="item in list">
+							<div class="avatar img-box"><img :src="item.avatar" /></div>
 							<div class="info">
 								<div class="r">
-									<span class="fs14">Ession1</span>
-									<span class="color-light fs9 pull-right">买入价格:455**</span>
+									<span class="fs14">{{item.name}}</span>
+									<span class="color-light fs9 pull-right">买入价格:{{item.price}}</span>
 								</div>
 								<div class="r fs9">
-									<span class="color-light">1992-02-03</span>
-									<span class="color-light pull-right">买入数量:1</span>
-								</div>
-							</div>
-						</li>
-						<li>
-							<div class="avatar img-box"><img src="/img/album1.jpg" /></div>
-							<div class="info">
-								<div class="r">
-									<span class="fs14">Ession4</span>
-									<span class="color-light fs9 pull-right">买入价格:455**</span>
-								</div>
-								<div class="r fs9">
-									<span class="color-light">1992-02-03</span>
-									<span class="color-light pull-right">买入数量:1</span>
-								</div>
-							</div>
-						</li>
-						<li>
-							<div class="avatar img-box"><img src="/img/album1.jpg" /></div>
-							<div class="info">
-								<div class="r">
-									<span class="fs14">Ession2</span>
-									<span class="color-light fs9 pull-right">买入价格:455**</span>
-								</div>
-								<div class="r fs9">
-									<span class="color-light">1992-02-03</span>
-									<span class="color-light pull-right">买入数量:1</span>
-								</div>
-							</div>
-						</li>
-						<li>
-							<div class="avatar img-box"><img src="/img/album1.jpg" /></div>
-							<div class="info">
-								<div class="r">
-									<span class="fs14">Ession3</span>
-									<span class="color-light fs9 pull-right">买入价格:455**</span>
-								</div>
-								<div class="r fs9">
-									<span class="color-light">1992-02-03</span>
-									<span class="color-light pull-right">买入数量:1</span>
+									<span class="color-light">{{item.createdAt}}</span>
+									<span class="color-light pull-right">买入数量:{{item.amount}}{{item.code}}</span>
 								</div>
 							</div>
 						</li>
@@ -86,18 +47,25 @@ export default{
 	},
 	data(){
 		return {
-			
-		}
+			id:'',
+	      	list:[]
+	      }
 	},
+    activated(){
+    	var vm = this
+    	vm.getMemberList()
+    },
 	methods:{
 		getMemberList(){
     		var vm = this
-    		console.log(vm.commonApi.listProject)
-    		vm.$http.get(vm.commonApi.listProject).then(function(response){
+    		vm.id = vm.$route.query.id;
+    		vm.$http.get(
+    			vm.commonApi.listAttendance,
+    			{params:{guess_id:vm.id}}
+    			).then(function(response){
 		 		if(response.body.code == 200) {
 		 			vm.list = response.body.data.list
 		 		}
-				console.log(vm.list)
         	})
     	},
 		goback(){

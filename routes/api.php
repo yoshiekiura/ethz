@@ -31,6 +31,10 @@ Route::group([
 		    Route::get('/','Api\UserController@index');
 		});
 
+		Route::group(['prefix' => 'password'], function () {
+		    Route::post('/reset','Api\ResetPasswordController@reset');
+		});
+
 		Route::group(['prefix' => 'deposits'], function () {
 		    Route::get('/address','Api\DepositsController@address');
 		});
@@ -46,6 +50,10 @@ Route::group(['prefix' => 'v1'], function () {
 
 	Route::group(['prefix' => 'news'], function () {
 	    Route::get('/','Api\ArticlesController@index');
+	});
+
+	Route::group(['prefix' => 'deposits'], function () {
+	    Route::get('/qrcode','Api\DepositsController@qrcode');
 	});
 
 	Route::get('/contact','Api\ContactController@index');

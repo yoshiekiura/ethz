@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Services\DepositsAddresses;
 use App\Http\Controllers\ApiController as Controller;
+use QrCode;
 
 class DepositsController extends Controller
 {
@@ -25,9 +26,18 @@ class DepositsController extends Controller
 
         $address = $this->getDepositsAdress()->getUserAddress($this->uid, $code);
         if(isset($address->id)) {
+            $address->qrcodeUrl = env('APP_URL') . '/api/v1/deposits/qrcode?text=' . $address->address;
             return $this->setStatusCode(200)->responseSuccess($address, 'success');
         } else {
             return $this->setStatusCode(404)->responseNotFound('生成错误');
+        }
+    }
+
+    public function qrcode(Request $request)
+    {
+        $text = $request->text;
+        if(!empty($text)) {
+            return QrCode::format('png')->size(500)->generate($text);
         }
     }
 

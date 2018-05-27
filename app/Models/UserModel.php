@@ -7,6 +7,8 @@ use App\User;
 class UserModel extends User
 {
 
+    protected $table = 'users';
+
     protected $visible = ['id', 'role_id', 'name', 'email', 'mobile', 'id_card', 'avatar', 'remember_token', 'api_token', 'is_email', 'is_mobile', 'is_verified', 'is_freeze', 'is_lock','is_delete','is_deduction','activation_code','registere_ip','google_secret','trade_code','created_at','updated_at'];
 
     public function getInfo($id)

@@ -7,9 +7,9 @@
 		充值
 	</mhead>
 	<div class="ctninner">
-		<p class="text-center">0x2012301dsf23sdf12df9309123a</p>
+		<p class="text-center">{{address.address}}</p>
 		<div class="qrcode">
-			
+			<img :src="address.qrcodeUrl">
 		</div>
 		
 		<router-link to="/user"><el-button class="full submit" round >确定</el-button></router-link>
@@ -25,10 +25,25 @@ export default{
 	},
 	data(){
 		return {
-			
+			code:'',
+			address:[]
 		}
 	},
+    activated(){
+    	var vm = this
+    	vm.getAddress()
+    },
 	methods:{
+		getAddress(){
+    		var vm = this
+    		vm.code = vm.$route.query.code;
+    		vm.$http.get(vm.commonApi.depositsAddress,
+    			{params:{code:vm.code}}).then(function(response){
+		 		if(response.body.code == 200) {
+		 			vm.address = response.body.data
+		 		}
+        	})
+    	},
 		goback(){
 			this.$router.go(-1)
 		}

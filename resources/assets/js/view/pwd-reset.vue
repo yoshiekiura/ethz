@@ -18,7 +18,7 @@
 				<a class="handler color-link fs16" v-if="!pwdview" @click="pwdview = !pwdview"><i class="fa fa-eye-slash"></i></a>
 			</el-form-item>
 		</el-form>
-		<router-link to="/user"><el-button class="full submit" round >确定</el-button></router-link>
+		<el-button class="full submit" round type="tip" v-loading="!isloaded" @click="restpwd" >确定</el-button>
 	</div>
 </div>
 </template>
@@ -35,14 +35,55 @@ export default{
 				oldpwd:'',
 				newpwd: ''
 			},
-			pwdview:false
+			pwdview:false,
+			is_post:false,
+			isloaded:true
 		}
 	},
 	methods:{
-		submit(){
-			var	that = this;
-//			that.$emit('lgn-smt',true);
-		},
+		restpwd(){
+    		var vm = this;
+    		if(vm.form.oldpwd == '') {
+			vm.$alert('请输入密码', { confirmButtonText: '确定' });
+    			return false;
+    		}
+    		if(vm.form.newpwd == '') {
+			vm.$alert('请输入新密码', { confirmButtonText: '确定' });
+    			return false;
+    		}
+    		if(vm.is_post == true) {
+    			return false;
+    		}
+    		vm.is_post = true;
+    		vm.isloaded = false;
+    		vm.$http.post(vm.commonApi.passwordReset, {
+    					'password_old':vm.form.oldpwd,
+    					'password':vm.form.newpwd,
+    					'password_confirmation':vm.form.newpwd,
+    				})
+    			 	.then(function(response){
+    			 		vm.is_post = false;
+    					vm.isloaded = true;
+    			 		var _data = response.data;
+						if(_data.code == 200){
+							vm.$alert('密码修改成功', { confirmButtonText: '确定' }
+							);
+							vm.$router.push('/user');
+	        			} else {
+	        				this.$alert(response.message, { confirmButtonText: '确定' });
+	        			}
+	            	})
+    	},
+	    message(_content, _type) { // success, warning, 
+    		var vm = this;
+			vm.isloaded = true;
+	        this.$alert(_content, '', { confirmButtonText: '关闭' });
+	    },
+	    alert(_content) {
+    		var vm = this;
+			vm.isloaded = true;
+	        this.$alert(_content, '', { confirmButtonText: '关闭' });
+	    },
 		goback(){
 			this.$router.go(-1)
 		}

@@ -47,14 +47,14 @@ class GuessController extends Controller
         $limit = $request->input('limit', 20);
 
         if(empty($guessId)) {
-            $this->setStatusCode(404)->responseError('缺少ID');
+            return $this->setStatusCode(404)->responseError('缺少ID');
         }
 
         $data['list'] = array(
-            ['uid' => 1, 'name' => 'Jack', 'createdAt' => date('Y-m-d'), 'price' => rand(1000, 9999), 'amount' => rand(1, 100)],
-            ['uid' => 2, 'name' => 'Red', 'createdAt' => date('Y-m-d'), 'price' => rand(1000, 9999), 'amount' => rand(1, 100)],
-            ['uid' => 3, 'name' => 'Ken', 'createdAt' => date('Y-m-d'), 'price' => rand(1000, 9999), 'amount' => rand(1, 100)],
-            ['uid' => 4, 'name' => 'Make', 'createdAt' => date('Y-m-d'), 'price' => rand(1000, 9999), 'amount' => rand(1, 100)],
+            ['uid' => 1, 'name' => 'Jack', 'createdAt' => date('Y-m-d'), 'price' => rand(1000, 9999), 'amount' => rand(1, 100), 'avatar' => env('APP_URL') . "/avatars/avatar_".rand(1, 8).".png"],
+            ['uid' => 2, 'name' => 'Red', 'createdAt' => date('Y-m-d'), 'price' => rand(1000, 9999), 'amount' => rand(1, 100), 'avatar' => env('APP_URL') . ("/avatars/avatar_".rand(1, 8).".png")],
+            ['uid' => 3, 'name' => 'Ken', 'createdAt' => date('Y-m-d'), 'price' => rand(1000, 9999), 'amount' => rand(1, 100), 'avatar' => env('APP_URL') . ("/avatars/avatar_".rand(1, 8).".png")],
+            ['uid' => 4, 'name' => 'Make', 'createdAt' => date('Y-m-d'), 'price' => rand(1000, 9999), 'amount' => rand(1, 100), 'avatar' => env('APP_URL') . ("/avatars/avatar_".rand(1, 8).".png")],
         );
         return $this->responseSuccess($data, 'success');
     }
