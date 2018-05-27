@@ -37,6 +37,7 @@ class GuessController extends Controller
         $data = $data->toArray($data->resource);
         $data['currency'] = 1;
         $data['last'] = rand(1000, 9999);
+        $data['unit'] = '0.01';
         return $this->responseSuccess($data, 'success');
     }
 
