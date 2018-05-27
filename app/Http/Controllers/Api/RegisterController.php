@@ -119,13 +119,10 @@ class RegisterController extends  ApiController
 
             $token = $this->proxy->login($postData['email'], $postData['password']);
 
-            return $this->responseSuccess([
-                'uid'          => $user->id,
-                'token'        => $token->original['token'],
-                'auth_id'      => $token->original['auth_id'],
-                'expires_in'   => $token->original['expires_in'],
-                'my_persimmon' => Session::getId()
-            ], '注册成功');
+            $user = User::find($user->id);
+            $user->token = $token->original['token'];
+
+            return $this->responseSuccess($user, '注册成功');
         } else {
             return $this->setStatusCode(403)->responseNotFound('注册失败');
         }
