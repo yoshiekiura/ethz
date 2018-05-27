@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\ApiController as Controller;
 use App\Http\Resources\GuessResource;
 use App\Models\Guess;
+use \Exception;
+use Mail;
+
 
 
 class UserController extends Controller
@@ -42,8 +45,6 @@ class UserController extends Controller
     	return $this->responseSuccess($data, '查询成功');
     }
 
-
-
     public function friends(Request $request)
     {
         $sinceId = $request->input('sinceId', 0);
@@ -57,6 +58,29 @@ class UserController extends Controller
         );
         $data['lastId'] = 4;
         return $this->responseSuccess($data, 'success');
+    }
+
+    public function sendInviteEmail(Request $request)
+    {
+        if(empty($this->uid)) {
+            return $this->setStatusCode(404)->responseError('请登录');
+        }
+
+        $user = $request->user();
+        $email = $user->email;
+        $url = env('APP_URL') . '/#/regist?code=' . $user->invite_code;
+        $emailContent = __('auth.invite_email', ['url' => $url]);
+
+        try {
+            $flag = Mail::send('web.invite_email',['emailContent'=>$emailContent],function($message) use($email){
+                $message ->to($email)->subject('竞猜邀请');
+            });
+        } catch (Exception $e) {
+            return $this->setStatusCode(403)
+                    ->responseNotFound('邮件发送失败');
+        }
+
+        return $this->responseSuccess('邮件发送成功');
     }
 }
 

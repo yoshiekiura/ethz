@@ -38,5 +38,6 @@ return [
     'loginSuccess'            => '登录成功,正在跳转...',
     'phone_repeated'          => '手机号码已被使用',
     'is_freeze'               => '账号被冻结，请联系管理员',
-    'kyc_error'               => '请先进行身份认证'
+    'kyc_error'               => '请先进行身份认证',
+    'invite_email'            => '一夜致富，不是梦，参与以太竞猜赢大奖：:url',
 ];
