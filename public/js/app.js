@@ -16611,24 +16611,26 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.prototype.commonApi = __WEBPACK_IMPO
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_5_element_ui___default.a);
 
 //var token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjI5ZjdlMDNiNjY0NzZmN2MwNDlhZDUwYWNmOWE2ZjI3YmQwYzU2M2ViMWZiYjQzZDFmY2I2NGJkZjI3OWRlYTE5ZjA5NjNhMjQwYzQ5NmQyIn0.eyJhdWQiOiIyIiwianRpIjoiMjlmN2UwM2I2NjQ3NmY3YzA0OWFkNTBhY2Y5YTZmMjdiZDBjNTYzZWIxZmJiNDNkMWZjYjY0YmRmMjc5ZGVhMTlmMDk2M2EyNDBjNDk2ZDIiLCJpYXQiOjE1Mjc0MDU1ODMsIm5iZiI6MTUyNzQwNTU4MywiZXhwIjoxNTI4NzAxNTgzLCJzdWIiOiIxMCIsInNjb3BlcyI6W119.UkwnQRKB6o8TrRiZ715mx46zDnFmm6Faj0ElBvjGzbyXyBugnp2C1BRXR4VYxcb7niaUAU_6WAdZwSB8KieWHRvTF2b3zmgy2PyhO4o-0tXS4PscRclAXTjL-Hg4RUZhQkiqFM9ligBQGRazSs7ZQ919AiaXZ24CK6thCFZapIlQ-d_mtS9NdSc8Hh1VeMIfkswAp74CljR7zbRd1pDwbW2n111lCAbKhqitUXrMKLRhrv7qNF4Bfn97PHm8bKVgt5VpUCQEJpGtxftFoqvwAYbqS4nQX_GAjzSfM3Ll0y0zYvD7AbkKMtV3gG2hNUTEhpQeRizWG4E4gOSiRf_XcG_PnBI0ijOJosnIiFLfS9WhGv-qL3vwgAY6GoxNCmbTHncbAoHubDHPcM2oPw-qu1CspMQkfFx9LBz_uWGiyK9WWTrAiUFlsqKI62jR0OjELQNae1RUhWx-sx0Q18kGCuTn3LrXVqrAhmHbNWiXHj2VVWaUHB5UwVSPIRhvdIi8XKki9Tm0DNDsFdYd0ojgPYKYDmkzcR6d2t_ZjW4l61MTOMUcEpwyIBFsbIFWv7lnfoOTB4dHo21N5h_qjoNJtcKI6b75yNYzeibSPySNg-MNPPsNsO15BjIawSIzg5kqpGTmgOtuXJoHz9coFIdxvrz8YmCffkuoSljaWeSurfA';
-__WEBPACK_IMPORTED_MODULE_0_vue___default.a.http.headers.common['Authorization'] = 'Bearer ' + __WEBPACK_IMPORTED_MODULE_2__helpers_jwt__["a" /* default */].getUserState().token;
-__WEBPACK_IMPORTED_MODULE_0_vue___default.a.http.interceptors.push(function (request, next) {
-  request.headers.set('Authorization', 'Bearer ' + __WEBPACK_IMPORTED_MODULE_2__helpers_jwt__["a" /* default */].getUserState().token);
-  next(function (response) {
-    // if(response.status == '401' && response.statusText == 'Unauthorized'){
-    //   window.location.href = '/wechat/authorize';
-    // }
-    return response;
-  });
-});
+if (__WEBPACK_IMPORTED_MODULE_2__helpers_jwt__["a" /* default */].getUserState()) {
+	__WEBPACK_IMPORTED_MODULE_0_vue___default.a.http.headers.common['Authorization'] = 'Bearer ' + __WEBPACK_IMPORTED_MODULE_2__helpers_jwt__["a" /* default */].getUserState().token;
+	__WEBPACK_IMPORTED_MODULE_0_vue___default.a.http.interceptors.push(function (request, next) {
+		request.headers.set('Authorization', 'Bearer ' + __WEBPACK_IMPORTED_MODULE_2__helpers_jwt__["a" /* default */].getUserState().token);
+		next(function (response) {
+			// if(response.status == '401' && response.statusText == 'Unauthorized'){
+			//   window.location.href = '/wechat/authorize';
+			// }
+			return response;
+		});
+	});
+}
 
 /* eslint-disable no-new */
 new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
-  el: '#app',
-  router: __WEBPACK_IMPORTED_MODULE_1__router__["a" /* default */],
-  template: '<App/>',
-  components: { App: __WEBPACK_IMPORTED_MODULE_9__App_vue___default.a },
-  store: __WEBPACK_IMPORTED_MODULE_8__vuex__["a" /* default */]
+	el: '#app',
+	router: __WEBPACK_IMPORTED_MODULE_1__router__["a" /* default */],
+	template: '<App/>',
+	components: { App: __WEBPACK_IMPORTED_MODULE_9__App_vue___default.a },
+	store: __WEBPACK_IMPORTED_MODULE_8__vuex__["a" /* default */]
 });
 
 /***/ }),
@@ -22017,7 +22019,7 @@ exports = module.exports = __webpack_require__(2)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -22030,6 +22032,8 @@ exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_head_vue__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_head_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__components_head_vue__);
+//
+//
 //
 //
 //
@@ -22090,6 +22094,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 	},
 
 	methods: {
+		logout: function logout() {
+			this.$store.dispatch('clearState');
+			this.$router.replace('/star');
+		},
 		goback: function goback() {
 			this.$router.go(-1);
 		}
@@ -22117,54 +22125,60 @@ var render = function() {
         _vm._v("\r\n\t\t设置\r\n\t")
       ]),
       _vm._v(" "),
-      _c(
-        "div",
-        { staticClass: "ctninner" },
-        [
-          _c("div", { staticClass: "panel color-tip" }, [
-            _c(
-              "div",
-              { staticClass: "panel-bd" },
-              [
-                _c("router-link", { attrs: { to: "/pwd_reset" } }, [
-                  _c("i", { staticClass: "fa fa-unlock-alt mr20" }),
-                  _vm._v("\r\n\t\t\t\t\t修改密码\r\n\t\t\t\t\t"),
-                  _c("i", { staticClass: "fa fa-angle-right fs14 pull-right" })
-                ])
-              ],
-              1
-            ),
-            _vm._v(" "),
-            _vm._m(0)
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "panel color-tip" }, [
-            _c(
-              "div",
-              { staticClass: "panel-bd" },
-              [
-                _c("router-link", { attrs: { to: "/help" } }, [
-                  _c("i", { staticClass: "fa fa-question-circle-o mr20" }),
-                  _vm._v("\r\n\t\t\t\t\t帮助中心\r\n\t\t\t\t\t"),
-                  _c("i", { staticClass: "fa fa-angle-right fs14 pull-right" })
-                ])
-              ],
-              1
-            ),
-            _vm._v(" "),
-            _vm._m(1),
-            _vm._v(" "),
-            _vm._m(2)
-          ]),
-          _vm._v(" "),
+      _c("div", { staticClass: "ctninner" }, [
+        _c("div", { staticClass: "panel color-tip" }, [
           _c(
-            "el-button",
-            { staticClass: "full submit", attrs: { round: "", type: "tip" } },
-            [_vm._v("退出登录")]
-          )
-        ],
-        1
-      )
+            "div",
+            { staticClass: "panel-bd" },
+            [
+              _c("router-link", { attrs: { to: "/pwd_reset" } }, [
+                _c("i", { staticClass: "fa fa-unlock-alt mr20" }),
+                _vm._v("\r\n\t\t\t\t\t修改密码\r\n\t\t\t\t\t"),
+                _c("i", { staticClass: "fa fa-angle-right fs14 pull-right" })
+              ])
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _vm._m(0)
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "panel color-tip" }, [
+          _c(
+            "div",
+            { staticClass: "panel-bd" },
+            [
+              _c("router-link", { attrs: { to: "/help" } }, [
+                _c("i", { staticClass: "fa fa-question-circle-o mr20" }),
+                _vm._v("\r\n\t\t\t\t\t帮助中心\r\n\t\t\t\t\t"),
+                _c("i", { staticClass: "fa fa-angle-right fs14 pull-right" })
+              ])
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _vm._m(1),
+          _vm._v(" "),
+          _vm._m(2)
+        ]),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "submit-wrap" },
+          [
+            _c(
+              "el-button",
+              {
+                staticClass: "full submit",
+                attrs: { round: "", type: "tip" },
+                on: { click: _vm.logout }
+              },
+              [_vm._v("退出登录")]
+            )
+          ],
+          1
+        )
+      ])
     ],
     1
   )
@@ -22296,7 +22310,7 @@ exports = module.exports = __webpack_require__(2)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -22351,16 +22365,32 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-	mounted: function mounted() {},
-
 	components: {
 		mhead: __WEBPACK_IMPORTED_MODULE_0__components_head_vue___default.a
 	},
 	data: function data() {
-		return {};
+		return {
+			list: '',
+			isloaded: true
+		};
 	},
 
 	methods: {
@@ -22370,6 +22400,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		goback: function goback() {
 			this.$router.go(-1);
 		}
+	},
+	mounted: function mounted() {
+		var vm = this;
+		vm.$http.get(vm.commonApi.help).then(function (response) {
+			var res = response.body;
+			vm.isloaded = true;
+			if (res.code == 200) {
+				vm.list = res.data;
+			} else {
+				this.$alert(res.message, { confirmButtonText: '确定' });
+			}
+		}).catch(function () {
+			vm.isloaded = true;
+		});
 	}
 });
 
@@ -22394,97 +22438,73 @@ var render = function() {
         _vm._v("\r\n\t\t帮助中心\r\n\t")
       ]),
       _vm._v(" "),
-      _c(
-        "div",
-        { staticClass: "ctninner" },
-        [
-          _c("div", { staticClass: "panel color-tip" }, [
-            _c("div", { staticClass: "panel-hd fs14" }, [
-              _vm._v("\r\n\t\t\t\t产品说明\r\n\t\t\t")
-            ]),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "panel-bd" },
-              [
-                _c(
-                  "router-link",
-                  {
-                    attrs: {
-                      to: { path: "/article", query: { title: "一点投" } }
-                    }
-                  },
-                  [
-                    _vm._v("\r\n\t\t\t\t\t一点投\r\n\t\t\t\t\t"),
-                    _c("i", {
-                      staticClass: "fa fa-angle-right fs14 pull-right"
-                    })
-                  ]
-                )
-              ],
-              1
-            ),
-            _vm._v(" "),
-            _vm._m(0),
-            _vm._v(" "),
-            _vm._m(1)
+      _c("div", { staticClass: "ctninner" }, [
+        _c("div", { staticClass: "panel color-tip" }, [
+          _c("div", { staticClass: "panel-hd fs14" }, [
+            _vm._v("\r\n\t\t\t\t产品说明\r\n\t\t\t")
           ]),
           _vm._v(" "),
-          _vm._m(2),
-          _vm._v(" "),
-          _c(
-            "el-button",
-            { staticClass: "full submit", attrs: { round: "", type: "tip" } },
-            [
-              _c("i", {
-                staticClass: "fa fa-headphones mr10 fs16",
-                staticStyle: { "vertical-align": "-2px" }
-              }),
-              _vm._v("问客服")
-            ]
-          )
-        ],
-        1
-      )
+          _vm.list
+            ? _c(
+                "div",
+                _vm._l(_vm.list.list, function(item) {
+                  return _c(
+                    "div",
+                    { staticClass: "panel-bd fs12" },
+                    [
+                      _c(
+                        "router-link",
+                        {
+                          attrs: {
+                            to: {
+                              path: "/article",
+                              query: { title: item.title, aid: item.id }
+                            }
+                          }
+                        },
+                        [
+                          _vm._v(
+                            "\r\n\t\t\t\t\t\t" +
+                              _vm._s(item.title) +
+                              "\r\n\t\t\t\t\t\t"
+                          ),
+                          _c("i", {
+                            staticClass: "fa fa-angle-right fs14 pull-right"
+                          })
+                        ]
+                      )
+                    ],
+                    1
+                  )
+                })
+              )
+            : _vm._e()
+        ]),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "submit-wrap" },
+          [
+            _c(
+              "el-button",
+              { staticClass: "full submit", attrs: { round: "", type: "tip" } },
+              [
+                _c("i", {
+                  staticClass: "fa fa-headphones mr10 fs16",
+                  staticStyle: { "vertical-align": "-2px" }
+                }),
+                _vm._v("问客服")
+              ]
+            )
+          ],
+          1
+        )
+      ])
     ],
     1
   )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "panel-bd" }, [
-      _vm._v("\r\n\t\t\t\t美股易股\r\n\t\t\t\t"),
-      _c("i", { staticClass: "fa fa-angle-right fs14 pull-right" })
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "panel-bd" }, [
-      _vm._v("\r\n\t\t\t\t礼金钱包\r\n\t\t\t\t"),
-      _c("i", { staticClass: "fa fa-angle-right fs14 pull-right" })
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "panel color-tip" }, [
-      _c("div", { staticClass: "panel-hd fs14" }, [
-        _vm._v("\r\n\t\t\t\t常见问题\r\n\t\t\t")
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "panel-bd" }, [
-        _vm._v("\r\n\t\t\t\t叮咚易投\r\n\t\t\t\t"),
-        _c("i", { staticClass: "fa fa-angle-right fs14 pull-right" })
-      ])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
@@ -22580,7 +22600,7 @@ exports = module.exports = __webpack_require__(2)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -22593,6 +22613,8 @@ exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_head_vue__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_head_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__components_head_vue__);
+//
+//
 //
 //
 //
@@ -22631,7 +22653,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 				newpwd: ''
 			},
 			pwdview: false,
-			is_post: false,
 			isloaded: true
 		};
 	},
@@ -22650,14 +22671,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			if (vm.is_post == true) {
 				return false;
 			}
-			vm.is_post = true;
+
 			vm.isloaded = false;
 			vm.$http.post(vm.commonApi.passwordReset, {
 				'password_old': vm.form.oldpwd,
 				'password': vm.form.newpwd,
 				'password_confirmation': vm.form.newpwd
 			}).then(function (response) {
-				vm.is_post = false;
 				vm.isloaded = true;
 				var _data = response.data;
 				if (_data.code == 200) {
@@ -22667,17 +22687,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 					this.$alert(response.message, { confirmButtonText: '确定' });
 				}
 			});
-		},
-		message: function message(_content, _type) {
-			// success, warning, 
-			var vm = this;
-			vm.isloaded = true;
-			this.$alert(_content, '', { confirmButtonText: '关闭' });
-		},
-		alert: function alert(_content) {
-			var vm = this;
-			vm.isloaded = true;
-			this.$alert(_content, '', { confirmButtonText: '关闭' });
 		},
 		goback: function goback() {
 			this.$router.go(-1);
@@ -22803,7 +22812,7 @@ var render = function() {
           ),
           _vm._v(" "),
           _c(
-            "el-button",
+            "div",
             {
               directives: [
                 {
@@ -22813,11 +22822,20 @@ var render = function() {
                   expression: "!isloaded"
                 }
               ],
-              staticClass: "full submit",
-              attrs: { round: "", type: "tip" },
-              on: { click: _vm.restpwd }
+              staticClass: "submit-wrap"
             },
-            [_vm._v("确定")]
+            [
+              _c(
+                "el-button",
+                {
+                  staticClass: "full submit",
+                  attrs: { round: "", type: "tip" },
+                  on: { click: _vm.restpwd }
+                },
+                [_vm._v("确定")]
+              )
+            ],
+            1
           )
         ],
         1
@@ -23154,7 +23172,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
 
 
 
@@ -23165,7 +23182,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 	},
 	data: function data() {
 		return {
-			title: this.$route.query.title
+			title: '',
+			aid: '',
+			ctn: '',
+			isloaded: true
 		};
 	},
 
@@ -23173,6 +23193,24 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		goback: function goback() {
 			this.$router.go(-1);
 		}
+	},
+	activated: function activated() {
+		var vm = this;
+		vm.title = vm.$route.query.title;
+		vm.aid = vm.$route.query.aid;
+
+		vm.isloaded = false;
+		vm.$http.get(vm.commonApi.help + '/' + vm.aid).then(function (response) {
+			var res = response.body;
+			vm.isloaded = true;
+			if (res.code == 200) {
+				vm.ctn = res.data.content;
+			} else {
+				this.$alert(res.message, { confirmButtonText: '确定' });
+			}
+		}).catch(function () {
+			vm.isloaded = true;
+		});
 	}
 });
 
@@ -23198,23 +23236,35 @@ var render = function() {
         _c("span", { attrs: { if: "title" } }, [_vm._v(_vm._s(_vm.title))])
       ]),
       _vm._v(" "),
-      _vm._m(0)
+      _c(
+        "div",
+        {
+          directives: [
+            {
+              name: "loading",
+              rawName: "v-loading",
+              value: !_vm.isloaded,
+              expression: "!isloaded"
+            }
+          ],
+          staticClass: "ctninner pl30 pr30"
+        },
+        [
+          _vm.ctn
+            ? _c("div", {
+                staticClass: "article fs12",
+                domProps: { innerHTML: _vm._s(_vm.ctn) }
+              })
+            : _c("div", { staticClass: "text-center mt40 color-gray" }, [
+                _vm._v("暂无该文章")
+              ])
+        ]
+      )
     ],
     1
   )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "ctninner pl30 pr30" }, [
-      _c("div", { staticClass: "article fs12" }, [
-        _vm._v("\n\t\t\t文章测试\n\t\t")
-      ])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
@@ -24971,7 +25021,7 @@ exports = module.exports = __webpack_require__(2)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -25026,15 +25076,32 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 	data: function data() {
 		return {
 			form: {
-				mail: '',
-				pwd: ''
-			}
+				mail: ''
+			},
+			isloaded: true
 		};
 	},
 
 	methods: {
 		submit: function submit() {
+			var _this = this;
+
 			var vm = this;
+
+			if (vm.form.mail == '') {
+				this.$alert('请填写邮箱', { confirmButtonText: '确定' });
+				return;
+			}
+
+			vm.isloaded = false;
+			vm.$http.post(vm.commonApi.invite, { email: vm.form.mail }).then(function (response) {
+				var res = response.body;
+				vm.isloaded = true;
+				_this.$alert(res.message, { confirmButtonText: '确定' });
+			}).catch(function (err) {
+				console.log(err);
+				vm.isloaded = true;
+			});
 		},
 		goback: function goback() {
 			this.$router.go(-1);
@@ -25091,11 +25158,11 @@ var render = function() {
                   _c("el-input", {
                     attrs: { placeholder: "请填写邮箱" },
                     model: {
-                      value: _vm.form.count,
+                      value: _vm.form.mail,
                       callback: function($$v) {
-                        _vm.$set(_vm.form, "count", $$v)
+                        _vm.$set(_vm.form, "mail", $$v)
                       },
-                      expression: "form.count"
+                      expression: "form.mail"
                     }
                   })
                 ],
@@ -25107,7 +25174,17 @@ var render = function() {
           _vm._v(" "),
           _c(
             "div",
-            { staticClass: "submit-wrap" },
+            {
+              directives: [
+                {
+                  name: "loading",
+                  rawName: "v-loading",
+                  value: !_vm.isloaded,
+                  expression: "!isloaded"
+                }
+              ],
+              staticClass: "submit-wrap"
+            },
             [
               _c(
                 "el-button",
@@ -68565,7 +68642,9 @@ var host = hostUrl;
 	depositsAddress: host + '/api/v1/deposits/address',
 	depositsQrcode: host + '/api/v1/deposits/qrcode',
 	passwordReset: host + '/api/v1/password/reset',
-	withdraw: host + '/api/v1/withdraws' //提币
+	withdraw: host + '/api/v1/withdraws', //提币
+	help: host + '/api/v1/news', //帮助中心列表
+	invite: host + '/api/v1/user/invite/email' //邀请邮件发送
 });
 
 /***/ }),
@@ -68628,6 +68707,10 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vuex
 		setUserState: function setUserState(state, data) {
 			state.commit('SET_USER_STATE', data);
 			__WEBPACK_IMPORTED_MODULE_0__helpers_jwt__["a" /* default */].setUserState(data);
+		},
+		clearState: function clearState(state) {
+			state.commit('CLEAR_USER_STATE');
+			__WEBPACK_IMPORTED_MODULE_0__helpers_jwt__["a" /* default */].removeToken();
 		}
 	}
 });

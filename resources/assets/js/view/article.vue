@@ -7,10 +7,9 @@
 			<span if="title">{{title}}</span>
 		</mhead>
 		
-		<div class="ctninner pl30 pr30">
-			<div class="article fs12">
-				文章测试
-			</div>
+		<div class="ctninner pl30 pr30" v-loading="!isloaded">
+			<div v-if="ctn" class="article fs12" v-html="ctn"></div>
+			<div v-else class="text-center mt40 color-gray">暂无该文章</div>
 		</div>
 	</div>
 </template>
@@ -25,13 +24,34 @@ export default{
 	},
 	data() {
       return {
-      	title:this.$route.query.title
+      	title:'',
+      	aid:'',
+      	ctn:'',
+      	isloaded:true
       }
     },
     methods: {
 		goback(){
 			this.$router.go(-1)
 		}
+    },
+    activated(){
+    	let vm = this;
+    	vm.title = vm.$route.query.title;
+    	vm.aid = vm.$route.query.aid;
+    	
+    	vm.isloaded = false;
+    	vm.$http.get(vm.commonApi.help + '/' + vm.aid).then(function(response){
+			let res = response.body;
+			vm.isloaded = true;
+			if(res.code == 200) {
+				vm.ctn = res.data.content
+			}else {
+				this.$alert(res.message, { confirmButtonText: '确定' });
+			}
+		}).catch(function(){
+			vm.isloaded = true;
+		})
     }
 }
 

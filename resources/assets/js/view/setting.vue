@@ -40,7 +40,9 @@
 				<i class="fa fa-angle-right fs14 pull-right"></i>
 			</div>
 		</div>
-		<el-button class="full submit" round type="tip" >退出登录</el-button>
+		<div class="submit-wrap">
+			<el-button @click="logout" class="full submit" round type="tip" >退出登录</el-button>
+		</div>
 	</div>
 </div>
 </template>
@@ -59,6 +61,10 @@ export default{
 		}
 	},
 	methods:{
+		logout(){
+			this.$store.dispatch('clearState');
+			this.$router.replace('/star');
+		},
 		goback(){
 			this.$router.go(-1)
 		}

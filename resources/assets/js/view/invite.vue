@@ -20,11 +20,11 @@
 				<label class="el-form-item__label">
 					<i class="fa fa-envelope-open-o"></i>
 				</label>
-				<el-input v-model="form.count" placeholder="请填写邮箱"></el-input>
+				<el-input v-model="form.mail" placeholder="请填写邮箱"></el-input>
 			</el-form-item>
 		</el-form>
 		
-		<div class="submit-wrap">
+		<div class="submit-wrap" v-loading="!isloaded">
 			<el-button @click="submit" class="full submit" round type="tip">确认</el-button>
 		</div>
 	</div>
@@ -40,15 +40,29 @@ export default{
 	data(){
 		return {
 			form: {
-				mail:'',
-				pwd: ''
-			}
+				mail:''
+			},
+			isloaded:true
 		}
 	},
 	methods:{
 		submit(){
 			var	vm = this;
-		
+			
+			if(vm.form.mail == ''){
+    			this.$alert('请填写邮箱', { confirmButtonText: '确定' });
+    			return;
+    		}
+			
+			vm.isloaded = false;
+			vm.$http.post(vm.commonApi.invite, {email: vm.form.mail}).then(response => {
+				let res = response.body;
+				vm.isloaded = true;
+				this.$alert(res.message, { confirmButtonText: '确定' });
+			}).catch(function(err){
+				console.log(err)
+				vm.isloaded = true;
+			})
 		},
 		goback(){
 			this.$router.go(-1)

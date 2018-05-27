@@ -33,6 +33,10 @@ export default {
 		setUserState(state, data) {
 			state.commit('SET_USER_STATE', data);
 			jwtToken.setUserState(data);
+		},
+		clearState(state) {
+			state.commit('CLEAR_USER_STATE');
+			jwtToken.removeToken();
 		}
 	}
 }
