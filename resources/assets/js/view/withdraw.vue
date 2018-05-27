@@ -1,6 +1,9 @@
 <template>
 <div class="container">
 	<mhead>
+		<div class="color-tip handler left">
+			<a @click="goback"><i class="fa fa-close fs18"></i></a>
+		</div>
 		 提币申请
 	</mhead>
 	<div class="ctninner">
@@ -27,14 +30,15 @@
 							<label class="el-form-item__label">
 								<i class="fa fa-circle"></i>
 							</label>
-							<el-input v-model="form.count" placeholder="请输入金额量"></el-input>
+							<el-input v-model="form.amount" placeholder="请输入金额量"></el-input>
 						</el-form-item>
 					</el-form>
 				</div>
 			</div>
 			
-			
-			<el-button @click="submit" class="full submit" round type="tip">确认</el-button>
+			<div class="submit-wrap" v-loading="!isloaded">
+				<el-button @click="submit" class="full submit" round type="tip">确认</el-button>
+			</div>
 		</div>
 	</div>
 	<mnav></mnav>
@@ -46,7 +50,7 @@ import mhead from '../components/head.vue'
 import mnav from '../components/unav.vue'
 export default{
 	mounted(){
-//		console.log(this.$store.state.count)
+		
 	},
 	components:{
 		mhead,
@@ -54,14 +58,55 @@ export default{
 	},
 	data(){
 		return {
+			code:'',
 			form:{
-				adrs:'',
-				count:''
-			}
+				adrs:null,
+				amount:null
+			},
+			isloaded:true
 		}
 	},
 	methods:{
-	
+		submit(){
+			let vm = this;
+			if(!vm.form.adrs) {
+				this.$alert('请填写提币地址', { confirmButtonText: '确定' });
+				return;
+			}
+			
+			if(!vm.form.amount) {
+				this.$alert('请输入金额量', { confirmButtonText: '确定' });
+				return;
+			}
+			
+			vm.isloaded = false;
+			vm.$http.post(vm.commonApi.withdraw ,{
+				code:vm.code,
+    			address:vm.form.adrs,
+    			amount:vm.form.amount
+    		}).then( response => {
+    			vm.isloaded = true;
+    			let res = response.body;
+    			if(res.code == 200) {
+    				this.$alert('体现成功', { confirmButtonText: '确定' });
+    			}else {
+    				this.$alert(res.message, { confirmButtonText: '确定' });
+    			}
+    		})
+			
+			
+		},
+		goback(){
+			this.$router.go(-1)
+		}
+	},
+	activated(){
+		let vm = this;
+		vm.code = vm.$route.query.code;
+		console.log(vm.code)
+		
+		
+		
 	}
 }
 </script>

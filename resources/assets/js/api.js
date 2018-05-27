@@ -8,7 +8,9 @@ export default {
 	submitOrder: host + '/api/order',
 	listProject: host + '/api/v1/guess',
 	listAttendance: host + '/api/v1/guess/attendance',
+	listFriends: host + '/api/v1/user/friends',
 	depositsAddress: host + '/api/v1/deposits/address',
 	depositsQrcode: host + '/api/v1/deposits/qrcode',
 	passwordReset: host + '/api/v1/password/reset',
+	withdraw: host + '/api/v1/withdraws'						//提币
 }
