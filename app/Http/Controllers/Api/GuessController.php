@@ -63,6 +63,13 @@ class GuessController extends Controller
             return $this->setStatusCode(404)->responseError('缺少ID');
         }
 
+        if($guessId == 'current') {
+            $guess = with(new Guess())->orderBy('id', 'DESC')->first();
+            if(isset($guess->id)) {
+                $guessId = $guess->id;
+            }
+        }
+
         $builders = with(new GuessOrders())->setHidden([])->newQuery();
 
         if($sinceId > 0) {
