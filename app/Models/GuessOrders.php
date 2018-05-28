@@ -50,6 +50,11 @@ class GuessOrders extends Model
         return $this->hasOne(CurrencyModel::class, 'id', 'currency');
     }
 
+    public function guess()
+    {
+        return $this->hasOne(Guess::class, 'id', 'guess_id');
+    }
+
     public function updateGuess($cond, $saveData)
     {
         if(empty($cond) || empty($saveData)) {

@@ -48,28 +48,26 @@ class UserController extends Controller
             $this->setStatusCode(404)->responseError('查无数据');
         }
 
-        $datas['list'] = $orders->map(function($order) {
-            return 222;
+        $lastId = 0;
+        $datas['list'] = $orders->map(function($order) use (&$lastId) {
+            $order->load('user');
+            $order->load('guess');
+            $order->load('currencyTo');
+
+            $lastId = $order->id;
+            return [
+                'id' => $order->id,
+                'item_title' => $order->guess->title,
+                'item_rdate' => (string) $order->created_at,
+                'item_amount' => $order->amount,
+                'item_price' => $order->expect_price,
+                'item_code' => $order->currencyTo->code,
+            ];
         });
         
-    	$data['list'] = [
-    		[
-    			'item_title' => '项目名',
-    			'item_rdate' => date('Y-m-d'),
-    			'item_price' => rand(1000, 9999),
-    			'item_amount' => rand(1, 100),
-    			'item_code' => 'eth',
-    		],
-    		[
-    			'item_title' => '项目名2',
-    			'item_rdate' => date('Y-m-d'),
-    			'item_price' => rand(1000, 9999),
-    			'item_amount' => rand(1, 100),
-    			'item_code' => 'eth',
-    		]
-    	];
-    	$data['lastId'] = 1;
-    	return $this->responseSuccess($data, '查询成功');
+        $datas['lastId'] = $lastId;
+    	
+    	return $this->responseSuccess($datas, '查询成功');
     }
 
     public function friends(Request $request)

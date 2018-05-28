@@ -29,7 +29,7 @@ Route::group([
 	function () {
 		Route::group(['prefix' => 'user'], function () {
 		    Route::get('/','Api\UserController@index');
-		    Route::get('/orders','Api\UserController@orders');
+		    Route::get('/items','Api\UserController@orders');
 		    Route::get('/friends','Api\UserController@friends');
 		    Route::post('/invite/email','Api\UserController@sendInviteEmail');
 		});
