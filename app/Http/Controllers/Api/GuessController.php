@@ -63,12 +63,32 @@ class GuessController extends Controller
             return $this->setStatusCode(404)->responseError('缺少ID');
         }
 
-        $data['list'] = array(
-            ['uid' => 1, 'name' => 'Jack', 'createdAt' => date('Y-m-d'), 'price' => rand(1000, 9999), 'amount' => rand(1, 100), 'avatar' => env('APP_URL') . "/avatars/avatar_".rand(1, 8).".png"],
-            ['uid' => 2, 'name' => 'Red', 'createdAt' => date('Y-m-d'), 'price' => rand(1000, 9999), 'amount' => rand(1, 100), 'avatar' => env('APP_URL') . ("/avatars/avatar_".rand(1, 8).".png")],
-            ['uid' => 3, 'name' => 'Ken', 'createdAt' => date('Y-m-d'), 'price' => rand(1000, 9999), 'amount' => rand(1, 100), 'avatar' => env('APP_URL') . ("/avatars/avatar_".rand(1, 8).".png")],
-            ['uid' => 4, 'name' => 'Make', 'createdAt' => date('Y-m-d'), 'price' => rand(1000, 9999), 'amount' => rand(1, 100), 'avatar' => env('APP_URL') . ("/avatars/avatar_".rand(1, 8).".png")],
-        );
+        $builders = with(new GuessOrders())->setHidden([])->newQuery();
+
+        if($sinceId > 0) {
+            $builders->where('id', '<', $sinceId);
+        }
+
+        $items = $builders->where('guess_id', $guessId)->orderBy('id', 'DRSC')->get();
+
+        if($items->isEmpty()) {
+            return $this->setStatusCode(403)->responseError('查无数据');
+        }
+        
+        $data['list'] = [];
+        foreach ($items as $key => $item) {
+            $data['list'][$key]['id'] = $item->id;
+            $data['list'][$key]['uid'] = $item->uid;
+            $data['list'][$key]['name'] = $item->user->name;
+            $data['list'][$key]['createdAt'] = (string) $item->created_at;
+            $data['list'][$key]['avatar'] = env('APP_URL') . "/avatars/avatar_".$item->user->avatar.".png";
+            $data['list'][$key]['price'] = my_number_format($item->expect_price, 4);
+            $data['list'][$key]['amount'] = my_number_format($item->amount, 4);
+        }
+        if(!empty($data['list'])) {
+            $last = end($data['list']);
+            $data['last'] = $last['id'];
+        }
         return $this->responseSuccess($data, 'success');
     }
 

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\ApiController as Controller;
 use App\Http\Resources\GuessResource;
 use App\Models\Guess;
+use App\Models\UserModel;
 use \Exception;
 use Mail;
 
@@ -48,16 +49,37 @@ class UserController extends Controller
 
     public function friends(Request $request)
     {
+        if(empty($this->uid)) {
+            return $this->setStatusCode(403)->responseError('请登录');
+        }
+
         $sinceId = $request->input('sinceId', 0);
         $limit = $request->input('limit', 20);
 
-        $data['list'] = array(
-            ['uid' => 1, 'name' => 'Jack', 'createdAt' => date('Y-m-d'),  'avatar' => env('APP_URL') . "/avatars/avatar_".rand(1, 8).".png"],
-            ['uid' => 2, 'name' => 'Red', 'createdAt' => date('Y-m-d'),  'avatar' => env('APP_URL') . ("/avatars/avatar_".rand(1, 8).".png")],
-            ['uid' => 3, 'name' => 'Ken', 'createdAt' => date('Y-m-d'),  'avatar' => env('APP_URL') . ("/avatars/avatar_".rand(1, 8).".png")],
-            ['uid' => 4, 'name' => 'Make', 'createdAt' => date('Y-m-d'),  'avatar' => env('APP_URL') . ("/avatars/avatar_".rand(1, 8).".png")],
-        );
-        $data['lastId'] = 4;
+        $builders = with(new UserModel())->setHidden([])->newQuery();
+
+        if($sinceId > 0) {
+            $builders->where('id', '<', $sinceId);
+        }
+
+        $users = $builders->where('invite_uid', $this->uid)->orderBy('id', 'DRSC')->get();
+
+        if($users->isEmpty()) {
+            return $this->setStatusCode(403)->responseError('查无数据');
+        }
+        
+        $data['list'] = [];
+        foreach ($users as $key => $user) {
+            $data['list'][$key]['uid'] = $user->id;
+            $data['list'][$key]['name'] = $user->name;
+            $data['list'][$key]['createdAt'] = (string) $user->created_at;
+            $data['list'][$key]['avatar'] = env('APP_URL') . "/avatars/avatar_".$user->avatar.".png";
+        }
+        if(!empty($data['list'])) {
+            $last = end($data['list']);
+            $data['last'] = $last['uid'];
+        }
+
         return $this->responseSuccess($data, 'success');
     }
 
