@@ -24,7 +24,7 @@ class GuessResource extends JsonResource
             $this->state = 'in_progress';
         }
         if(bccomp(strtotime($this->end_time), time()) <= 0 && bccomp(strtotime($this->open_time), time()) > 0) {
-            $this->state = 'in_wait';
+            $this->state = 'completed';
         }
         // 当前时间大约开奖时间结束
         if(bccomp(strtotime($this->open_time), time()) < 0) {
