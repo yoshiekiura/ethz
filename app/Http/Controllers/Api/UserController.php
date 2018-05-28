@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\ApiController as Controller;
 use App\Http\Resources\GuessResource;
 use App\Models\Guess;
+use App\Models\GuessOrders;
 use App\Models\UserModel;
 use \Exception;
 use Mail;
@@ -25,8 +26,32 @@ class UserController extends Controller
         return $this->responseSuccess($user, '查询成功');
     }
 
-    public function items(Request $request)
+    public function orders(Request $request)
     {
+        $user = $this->getUser();
+        if (empty($user->id)) {
+            return $this->setStatusCode(403)->responseError('请登录');
+        }
+
+        $sinceId = $request->input('sinceId', 0);
+        $limit = $request->input('limit', 20);
+
+        $builders = with(new GuessOrders())->setHidden([])->newQuery();
+
+        if($sinceId > 0) {
+            $builders->where('id', '<', $sinceId);
+        }
+
+        $orders = $builders->where('uid', $user->id)->orderBy('id', 'DRSC')->limit($limit)->get();
+
+        if($orders->isEmpty()) {
+            $this->setStatusCode(404)->responseError('查无数据');
+        }
+
+        $datas['list'] = $orders->map(function($order) {
+            return 222;
+        });
+        
     	$data['list'] = [
     		[
     			'item_title' => '项目名',
@@ -62,7 +87,7 @@ class UserController extends Controller
             $builders->where('id', '<', $sinceId);
         }
 
-        $users = $builders->where('invite_uid', $this->uid)->orderBy('id', 'DRSC')->get();
+        $users = $builders->where('invite_uid', $this->uid)->orderBy('id', 'DRSC')->limit($limit)->get();
 
         if($users->isEmpty()) {
             return $this->setStatusCode(403)->responseError('查无数据');
