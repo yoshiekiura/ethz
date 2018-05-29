@@ -20894,7 +20894,7 @@ var render = function() {
               ),
               _vm._v(" "),
               _c("div", { staticClass: "fs12 color-gray" }, [
-                _vm._v("下注数量 :")
+                _vm._v("交易密码 :")
               ]),
               _vm._v(" "),
               _c(
@@ -20902,7 +20902,11 @@ var render = function() {
                 [
                   _c("el-input", {
                     staticClass: "text-center",
-                    attrs: { pattern: "[0-9]*", "auto-complete": "off" },
+                    attrs: {
+                      type: "password",
+                      pattern: "[0-9]*",
+                      "auto-complete": "off"
+                    },
                     model: {
                       value: _vm.dailogForm.amount,
                       callback: function($$v) {
@@ -24486,7 +24490,9 @@ var render = function() {
                     "ul",
                     _vm._l(_vm.list.list, function(item) {
                       return _c("li", [
-                        _vm._m(0, true),
+                        _c("div", { staticClass: "avatar img-box" }, [
+                          _c("img", { attrs: { src: item.avatar } })
+                        ]),
                         _vm._v(" "),
                         _c("div", { staticClass: "info" }, [
                           _c("span", { staticClass: "fs12" }, [
@@ -24511,16 +24517,7 @@ var render = function() {
     1
   )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "avatar img-box" }, [
-      _c("img", { attrs: { src: "item.avatar" } })
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {

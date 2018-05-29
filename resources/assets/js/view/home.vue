@@ -78,10 +78,10 @@
 				<!--v-model="dialogPrice"-->
 				<el-input class="text-center" v-model="dailogForm.price" pattern="[0-9]*"  auto-complete="off"></el-input>
 			</el-form-item>
-			<div class="fs12 color-gray">下注数量 :</div>
+			<div class="fs12 color-gray">交易密码 :</div>
 			<el-form-item>
 				 <!--v-model="dialogAmount"-->
-				<el-input class="text-center" v-model="dailogForm.amount"  pattern="[0-9]*" auto-complete="off"></el-input>
+				<el-input class="text-center" v-model="dailogForm.amount" type="password" pattern="[0-9]*" auto-complete="off"></el-input>
 			</el-form-item>
 			<el-button class="full mt40" round @click.prevent = "dialogSubmit">确认下注</el-button>
 		</el-form>

@@ -120,6 +120,7 @@ class RegisterController extends  ApiController
             $token = $this->proxy->login($postData['email'], $postData['password']);
 
             $user = User::find($user->id);
+			$user->avatar = env('APP_URL') . "/avatars/avatar_".intval($user->avatar).".png";
             $user->token = $token->original['token'];
 
             return $this->responseSuccess($user, '注册成功');
