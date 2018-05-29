@@ -63,7 +63,7 @@
 			</div>
 		</div>
 		<div class="panel" v-if="user_state.wallet">
-			<router-link v-for="(item, index) in user_state.wallet" :key="index" :to="{ path: '/address', query:{code: index} }">
+			<router-link v-for="(item, index) in user_state.wallet" :key="index" :to="{ path: '/address', query:{code: item.code} }">
 				<div class="panel-bd color-tip">
 					<span>{{item.code}} 钱包</span>
 					<span class="pull-right">
