@@ -60,7 +60,7 @@ class LoginController extends Controller
             $user = json_decode((string)$response->getBody(), true);
             
             $user['data']['token'] = $token->original['token'];
-			$user['data']['avatar'] = env('APP_URL') . "/avatars/avatar_".intval($user['avatar']).".png";
+			$user['data']['avatar'] = env('APP_URL') . "/avatars/avatar_".intval($user['data']['avatar']).".png";
             return $this->responseSuccess($user['data'], '登录成功');
         } else {
             return $this->setStatusCode(404)->responseError($token->original['message']);
