@@ -65,6 +65,10 @@ Route::group(['prefix' => 'v1'], function () {
 	    Route::get('/qrcode','Api\DepositsController@qrcode');
 	});
 
+	Route::group(['prefix' => 'rewards'], function () {
+	    Route::get('/','Api\RewardsController@index');
+	});
+
 	Route::get('/contact','Api\ContactController@index');
 	Route::post('/feedback','Api\FeedbackController@index');
 });
