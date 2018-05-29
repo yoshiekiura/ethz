@@ -14,5 +14,5 @@ export default {
 	passwordReset: host + '/api/v1/password/reset',
 	withdraw: host + '/api/v1/withdraws',						//提币
 	help: host + '/api/v1/news',								//帮助中心列表
-	invite: host + '/api/v1/user/invite/email'					//邀请邮件发送
+	invite: host + '/api/v1/user/invite/email',					//邀请邮件发送
 }

@@ -25,7 +25,7 @@ export default {
 			vm.$store.dispatch('setUserState', local_state);
 		}
 		
-		console.log(local_state, vm.user_state)
+//		console.log(local_state, vm.user_state)
 		if(!vm.user_state.token){
 			if(enter_path !=  '/' || enter_path != '/list_project' || enter_path != '/star' || enter_path != '/login' || enter_path != '/regist' || enter_path != '/reback') {
 				vm.$router.replace('/star');

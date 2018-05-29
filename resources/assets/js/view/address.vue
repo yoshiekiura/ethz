@@ -8,7 +8,7 @@
 	</mhead>
 	<div class="ctninner">
 		<p class="text-center">{{address.address}}</p>
-		<div class="qrcode" v-loading = 'address.qrcodeUrl'>
+		<div class="qrcode" v-loading = '!address.qrcodeUrl'>
 			<img :src="address.qrcodeUrl">
 		</div>
 		

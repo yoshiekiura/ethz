@@ -45,6 +45,10 @@ Route::group([
 		Route::group(['prefix' => 'withdraws'], function () {
 		    Route::post('/','Api\WithdrawsController@store');
 		});
+		
+		Route::group(['prefix' => 'guess'], function () {
+		    Route::post('/{guess}','Api\GuessController@guess')->where(['guess' => '[0-9]+']);
+		});
 });
 
 Route::group(['prefix' => 'v1'], function () {
@@ -52,7 +56,6 @@ Route::group(['prefix' => 'v1'], function () {
 	    Route::get('/','Api\GuessController@index');
 	    Route::get('/attendance','Api\GuessController@attendance');
 	    Route::get('/{guess}','Api\GuessController@show')->where(['guess' => '[0-9]+']);
-	    Route::post('/{guess}','Api\GuessController@guess')->where(['guess' => '[0-9]+']);
 	    Route::get('/current','Api\GuessController@showNew');
 	});
 

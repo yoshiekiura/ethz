@@ -41,20 +41,17 @@
 			</div>
 		</div>
 	</div>
-	<mnav></mnav>
 </div>
 </template>
 
 <script>
 import mhead from '../components/head.vue'
-import mnav from '../components/unav.vue'
 export default{
 	mounted(){
 		
 	},
 	components:{
 		mhead,
-		mnav
 	},
 	data(){
 		return {
