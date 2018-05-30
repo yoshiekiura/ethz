@@ -1,6 +1,9 @@
 <template>
 <div class="container">
 	<mhead>
+		<div class="color-tip handler left">
+			<a @click="goback"><i class="fa fa-close fs18"></i></a>
+		</div>
 		项目列表
 	</mhead>
 	<div class="ctninner" v-loading="!isloaded">
@@ -9,35 +12,34 @@
 				<div class="project-list-item panel mb20">
 					<div class="panel-hd fs9">项目时间: {{item.startTime}} ~ {{item.endTime}}</div>
 					<div class="panel-bd">
-						<div class="fs16 mb10">
-							<span class="fs12">{{item.name}}</span>
+						<div class="fs14 mb10">
+							<span class="fs12 color-light">项目名:</span>
+							<span>{{item.name}}</span>
 						</div>
 						<div class="fs16 mb10">
-							<span class="fs12">以太总额:</span>
+							<span class="fs12 color-light">以太总额:</span>
 							<span class="color-tip">{{item.sumAmount}}</span>
 						</div>
-						<div class="fs12">
-							<span class="color-light">参与人数: {{item.number}}</span>
+						<div>
+							<span class="fs12 color-light">参与人数:</span>
+							<span class="fs14">{{item.number}}</span>
 						</div>
 					</div>
 				</div>
 			</router-link>
 		</div>
 	</div>
-	<mnav></mnav>
 </div>
 </template>
 
 <script>
 import mhead from '../components/head.vue'
-import mnav from '../components/unav.vue'
 export default{
 	mounted(){
 //		console.log(this.$store.state.count)
 	},
 	components:{
 		mhead,
-		mnav
 	},
 	data(){
 		return {
@@ -46,7 +48,7 @@ export default{
 	      }
 	},
     activated(){
-    	var vm = this
+    	let vm = this;
     	vm.getItemList()
     },
 	methods: {
@@ -59,7 +61,10 @@ export default{
 		 			vm.list = response.body.data.list
 		 		}
         	})
-    	}
+    	},
+		goback(){
+			this.$router.go(-1)
+		}
     }
 }
 </script>

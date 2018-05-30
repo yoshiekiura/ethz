@@ -9,7 +9,7 @@ h1,h2,h3,h4,h5{font-size:inherit;}
 body{background-color:#10253a; max-width:640px; margin-left:auto; margin-right:auto; overflow-x:hidden;}
 #app{position:absolute; top:0; left:0; right:0; bottom:0;}
 .container{width:100%; height:100%;}
-.ctninner {padding:0.4rem 0.2rem;}
+.ctninner {padding:0.4rem 0.2rem .8rem;}
 header{height:0.8rem; line-height:0.8rem; padding:0 0.25rem; font-size:0.3rem; text-align:center; 
 border-bottom:0 none; background:rgba(0,0,0,0.3); position: relative; top: 0; left: 0;}
 header .handler.left, header .handler.right {position: absolute; top: 50%; transform: translateY(-50%); -webkit-transform: translateY(-50%); display: block; line-height:100%;}

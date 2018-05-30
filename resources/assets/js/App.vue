@@ -13,12 +13,16 @@ import jwtToken from './helpers/jwt'
 import {mapGetters} from 'vuex'	
 export default {
 	 computed:{
-	 	...mapGetters(['user_state'])
+	 	...mapGetters(['user_state']),
+	 	token(){
+	 		let vm = this;
+	 		console.log(vm.user_state.token);
+	 		return vm.user_state.token
+	 	}
 	 },
 	created(){
 		let vm = this;
 		let enter_path = vm.$route.path;
-		
 //		jwtToken.removeToken();
 		let local_state = jwtToken.getUserState();
 		if(local_state) {

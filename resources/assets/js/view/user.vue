@@ -62,12 +62,24 @@
 				</div>
 			</div>
 		</div>
+		<div class="panel" >
+			<router-link :to="{ path: '/list_project' }">
+				<div class="panel-bd color-tip">
+					<span>历史下注</span>
+					<span class="pull-right">
+						<i class="fa fa-angle-right"></i>
+					</span>
+				</div>
+			</router-link>
+		</div>
 		<div class="panel" v-if="user_state.wallet">
 			<router-link v-for="(item, index) in user_state.wallet" :key="index" :to="{ path: '/address', query:{code: item.code} }">
 				<div class="panel-bd color-tip">
 					<span>{{item.code}} 钱包</span>
 					<span class="pull-right">
 						<font class="color-link mr10">{{item.amount}} {{item.code}}</font>
+						
+						<i class="fa fa-angle-right"></i>
 					</span>
 				</div>
 			</router-link>

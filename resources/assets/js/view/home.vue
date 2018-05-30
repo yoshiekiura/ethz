@@ -76,12 +76,12 @@
 			<div class="fs12 color-gray">eth价格 :</div>
 			<el-form-item>
 				<!--v-model="dialogPrice"-->
-				<el-input class="text-center" v-model="dailogForm.price" pattern="[0-9]*"  auto-complete="off"></el-input>
+				<el-input class="text-center" type="text" v-model="dailogForm.price" pattern="[0-9]*"  auto-complete="off"></el-input>
 			</el-form-item>
 			<div class="fs12 color-gray">交易密码 :</div>
 			<el-form-item>
 				 <!--v-model="dialogAmount"-->
-				<el-input class="text-center" v-model="dailogForm.amount" type="password" pattern="[0-9]*" auto-complete="off"></el-input>
+				<el-input class="text-center" v-model="dailogForm.amount" type="text" pattern="[0-9]*" auto-complete="off"></el-input>
 			</el-form-item>
 			<el-button class="full mt40" round @click.prevent = "dialogSubmit">确认下注</el-button>
 		</el-form>
@@ -207,7 +207,6 @@ export default{
        			vm.dailogload = true;
        			let res = new Object(response.body);
        			this.$alert(res.message, { confirmButtonText: '确定' });
-       			console.log(res)
        		}).catch(err => {
        			vm.dailogload = true;
        			console.log(err)
@@ -235,7 +234,7 @@ export default{
 		});
 		
 		vm.listload = false;
-		vm.$http.get(vm.commonApi.listAttendance, {params:{guess_id:'current'}}).then(response =>{
+		vm.$http.get(vm.commonApi.listAttendance, {params:{guess_id:'current',limit:5}}).then(response =>{
 			vm.listload = true;
 			let res = new Object(response.body);
 			if(res.code == 200) {
