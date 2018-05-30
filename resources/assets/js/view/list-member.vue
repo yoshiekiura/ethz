@@ -11,7 +11,7 @@
 		</div>
 		<div class="panel">
 			<div class="panel-bd">
-				<div class="memberList">
+				<div class="memberList" v-loading="!isloaded">
 					<ul  v-if="list.length > 0">
 						<li v-for="item in list">
 							<div class="avatar img-box"><img :src="item.avatar" /></div>
@@ -47,8 +47,9 @@ export default{
 	},
 	data(){
 		return {
-			id:'',
-	      	list:[]
+			pid:'',
+	      	list:[],
+	      	isloaded:true
 	      }
 	},
     activated(){
@@ -58,14 +59,17 @@ export default{
 	methods:{
 		getMemberList(){
     		var vm = this
-    		vm.id = vm.$route.query.id;
-    		vm.$http.get(
-    			vm.commonApi.listAttendance,
-    			{params:{guess_id:vm.id}}
+    		vm.id = vm.$route.query.pid;
+    		vm.isloaded = false;
+    		vm.$http.get( vm.commonApi.listAttendance, {params:{guess_id:vm.id}}
     			).then(function(response){
+    			vm.isloaded = true;
 		 		if(response.body.code == 200) {
 		 			vm.list = response.body.data.list
 		 		}
+        	}).catch(err => {
+        		vm.isloaded = true;
+        		console.log(err)
         	})
     	},
 		goback(){

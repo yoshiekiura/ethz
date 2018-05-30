@@ -15,7 +15,7 @@
 					<ul>
 						
 						<li v-for="item in list.list">
-							<div class="avatar img-box"><img src="item.avatar" /></div>
+							<div class="avatar img-box"><img :src="item.avatar" /></div>
 							<div class="info">
 								<span class="fs12">{{item.name}}</span>
 								<span class="fs9 pull-right color-light">{{item.createdAt}}</span>

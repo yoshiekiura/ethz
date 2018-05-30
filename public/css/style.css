@@ -128,15 +128,15 @@ header .handler.right {right: .25rem;}
 
 .bg-theme{background-color:#409eff !important; color:#FFF !important;}
 .bg-white{background:#ffffff;}
-.bg-dark{background-color:#333 !important; color:#FFF !important;}
-.bg-gray{background-color:#666 !important; color:#FFF !important;}
-.bg-light{background-color:#EEE !important;}
+.bg-dark{background-color:#0b1b28 !important; color:#FFF !important;}
+.bg-gray{background-color:#233e4a !important; color:#FFF !important;}
+.bg-light{background-color:#95a5b5 !important;}
 .bg-lighter{background-color:#F6F6F6 !important;}
 .color-theme{color:#409eff !important;}
 .color-w{color:#ffffff !important;}
-.color-dark{color:#333333 !important;}
-.color-gray{color:#666666 !important;}
-.color-light{color:#999999 !important;}
+.color-dark{color:#0b1b28 !important;}
+.color-gray{color:#233e4a !important;}
+.color-light{color:#95a5b5 !important;}
 .color-lighter{color:#ebeef5 !important;}
 .color-link{color:#7eb7ea !important;}
 .color-tip{color: #f3c44e !important;}
@@ -203,16 +203,27 @@ text-align:center; cursor:pointer; -moz-user-select:none; -webkit-user-select:no
 .el-select-dropdown__item{height:2.5em; line-height:2.5em; font-size:inherit;}
 .el-message-box{width:80%;}
 
+.el-dialog {width: 80%;} 
+.el-dialog__header {padding: .2rem .2rem .1rem;}
+.el-dialog__headerbtn {top: .2rem; right: .2rem;}
+.el-dialog__body {padding: .3rem .5rem .5rem;}
+.el-dialog .el-form-item {margin-bottom: .5rem; background: #FFFFFF; border-radius:0;}
+.el-dialog .el-form-item .el-form-item__content,
+.el-dialog .el-form-item .el-form-item__content .el-input__inner{height: .6rem; line-height: .6rem; font-size: .4rem; color: #666666; padding: 0 .05rem; text-align: inherit;}
+
 .el-button--default {background-color: #678096; border-color: #678096; color: #FFFFFF;}
 .el-button:focus, .el-button:hover {background: #59738a; border-color: #59738a; color: #FFFFFF;}
 .el-button.submit {font-size: .25rem; padding: .25rem; border-radius:.5rem; overflow: hidden;}
 .el-button.full {width: 100%;}
 .el-button--tip {background: #f3c44e; color: #0b1b28; border-color: #f3c44e;}
 .el-button--tip:focus, .el-button--tip:hover {background: #f8b708; border-color: #f8b708; color: #0b1b28;}
+.el-button--disable {background: #1d2f40; color: #4e6275; border-color: #1d2f40;}
+.el-button--disable:focus, .el-button--disable:hover {background: #1d2f40; color: #4e6275; border-color: #1d2f40;}
 /*home*/
 .timecount .tc {font-size: 0.8rem;}
 
 /*成员列表*/
+.memberList {min-height: 3rem;}
 .memberList li {padding: .15rem 0; border-bottom: 1px solid #142735;}
 .memberList li:last-child {border-bottom: 0 none;}
 .memberList li .avatar {float: left; width: .8rem; height: .8rem; border-radius: 5px; overflow: hidden;}

@@ -5,7 +5,7 @@
 	</mhead>
 	<div class="ctninner" v-loading="!isloaded">
 		<div class="project-list" v-if="list.length > 0">
-			<router-link :to="{ path: '/list_member', query:{id: item.id} }" v-for="item in list" :key="item.id">
+			<router-link :to="{ path: '/list_member', query:{pid: item.id} }" v-for="item in list" :key="item.id">
 				<div class="project-list-item panel mb20">
 					<div class="panel-hd fs9">项目时间: {{item.startTime}} ~ {{item.endTime}}</div>
 					<div class="panel-bd">

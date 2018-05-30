@@ -104,10 +104,10 @@ class GuessController extends Controller
     public function guess(Request $request, Guess $guess)
     {
         if(empty($this->uid)) {
-            $this->setStatusCode(404)->responseError('请先登录');
+            return $this->setStatusCode(404)->responseError('请先登录');
         }
 
-        $number = $request->input('number');
+        $number = $request->input('amount');
         $price = $request->input('price');
         $user = $this->getUser();
 
@@ -119,7 +119,7 @@ class GuessController extends Controller
             $this->setStatusCode(404)->responseError('请输入竞猜价格');
         }
 
-        $amount = bcmul($guess->expect_price, $number);
+        $amount = $guess->expect_price*$number;
         $order = json_encode(['price' => $price, 'amount' => $amount]);
         $order = json_decode($order);
 
@@ -128,7 +128,7 @@ class GuessController extends Controller
         if($orderId > 0) {
             return $this->responseSuccess(['id' => $orderId], 'success');
         } else {
-            $this->setStatusCode(404)->responseError('竞猜失败');
+            return $this->setStatusCode(404)->responseError('竞猜失败');
         }
     }
 }
