@@ -57,6 +57,9 @@ class RewardsController extends Controller
         $order->is_win = 1;
         $order->save();
 
+        $guess->is_reward = 1;
+        $guess->save();
+
         return $this->responseSuccess('更新成功');
     }
 }
