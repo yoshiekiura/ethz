@@ -53,8 +53,11 @@ class RewardsController extends Controller
         $last = current($wins);
 
         // 最终胜出者
+        $order = GuessOrders::find($last['id']);
+        $order->is_win = 1;
+        $order->save();
 
-        return $this->responseSuccess(['list' => $list], 'success');
+        return $this->responseSuccess('更新成功');
     }
 }
 
