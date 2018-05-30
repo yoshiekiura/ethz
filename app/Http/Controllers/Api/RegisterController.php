@@ -122,6 +122,7 @@ class RegisterController extends  ApiController
             $user = User::find($user->id);
 			$user->avatar = env('APP_URL') . "/avatars/avatar_".intval($user->avatar).".png";
             $user->token = $token->original['token'];
+            $user->avatar = env('APP_URL') . "/avatars/avatar_".intval($user->avatar).".png";
 
             return $this->responseSuccess($user, '注册成功');
         } else {

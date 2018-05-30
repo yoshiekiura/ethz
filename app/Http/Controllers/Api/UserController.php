@@ -62,6 +62,7 @@ class UserController extends Controller
                 'item_amount' => $order->amount,
                 'item_price' => $order->expect_price,
                 'item_code' => $order->currencyTo->code,
+                'is_win' => rand(0, 1)
             ];
         });
         
