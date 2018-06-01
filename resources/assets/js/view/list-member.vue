@@ -7,13 +7,25 @@
 		项目成员
 	</mhead>
 	<div class="ctninner">
-		<div class="rank">
+		<div class="medal-row">
+			<div v-if="winnerId">
+				<div class="oner">
+					<div class="img-box winner"><img :src="list[winnerId].avatar" /></div>
+					<em class="medal"></em>
+				</div>
+				<div class="info"  style="color: #d4be00;">
+					<div class="n blod"><span class="mr10">中奖者:</span><span>{{list[winnerId].name}}</span></div>
+					<div class="p blod"><span class="mr10">买入价:</span><span>{{list[winnerId].price}}</span></div>
+				</div>
+			</div>
+			
+			<div v-else class="nowon color-gray">遗憾 ! 这期没有中奖者  >_<... </div>
 		</div>
 		<div class="panel">
 			<div class="panel-bd">
 				<div class="memberList" v-loading="!isloaded">
 					<ul  v-if="list.length > 0">
-						<li v-for="item in list">
+						<li v-for="(item, index) in list" v-if="!(index == winnerId)">
 							<div class="avatar img-box"><img :src="item.avatar" /></div>
 							<div class="info">
 								<div class="r">
@@ -49,11 +61,13 @@ export default{
 		return {
 			pid:'',
 	      	list:[],
+	      	winnerId:null,
 	      	isloaded:true
 	      }
 	},
     activated(){
-    	var vm = this
+    	var vm = this;
+    	vm.winnerId = null;
     	vm.getMemberList()
     },
 	methods:{
@@ -63,10 +77,18 @@ export default{
     		vm.isloaded = false;
     		vm.$http.get( vm.commonApi.listAttendance, {params:{guess_id:vm.id}}
     			).then(function(response){
+    			let res = response.body;
     			vm.isloaded = true;
-		 		if(response.body.code == 200) {
-		 			vm.list = response.body.data.list
+		 		if(res.code == 200) {
+		 			vm.list = res.data.list
 		 		}
+		 		
+		 		for(let i = 0; i < res.data.list.length; i++) {
+		 			if(res.data.list[i].is_win == 1) {
+		 				vm.winnerId = i;
+		 			}
+		 		}
+		 		
         	}).catch(err => {
         		vm.isloaded = true;
         		console.log(err)

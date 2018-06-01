@@ -23868,7 +23868,7 @@ exports = module.exports = __webpack_require__(2)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -23883,6 +23883,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_head_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__components_head_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_unav_vue__ = __webpack_require__(17);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_unav_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__components_unav_vue__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -23935,11 +23947,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		return {
 			pid: '',
 			list: [],
+			winnerId: null,
 			isloaded: true
 		};
 	},
 	activated: function activated() {
 		var vm = this;
+		vm.winnerId = null;
 		vm.getMemberList();
 	},
 
@@ -23949,9 +23963,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			vm.id = vm.$route.query.pid;
 			vm.isloaded = false;
 			vm.$http.get(vm.commonApi.listAttendance, { params: { guess_id: vm.id } }).then(function (response) {
+				var res = response.body;
 				vm.isloaded = true;
-				if (response.body.code == 200) {
-					vm.list = response.body.data.list;
+				if (res.code == 200) {
+					vm.list = res.data.list;
+				}
+
+				for (var i = 0; i < res.data.list.length; i++) {
+					if (res.data.list[i].is_win == 1) {
+						vm.winnerId = i;
+					}
 				}
 			}).catch(function (err) {
 				vm.isloaded = true;
@@ -23986,7 +24007,37 @@ var render = function() {
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "ctninner" }, [
-        _c("div", { staticClass: "rank" }),
+        _c("div", { staticClass: "medal-row" }, [
+          _vm.winnerId
+            ? _c("div", [
+                _c("div", { staticClass: "oner" }, [
+                  _c("div", { staticClass: "img-box winner" }, [
+                    _c("img", { attrs: { src: _vm.list[_vm.winnerId].avatar } })
+                  ]),
+                  _vm._v(" "),
+                  _c("em", { staticClass: "medal" })
+                ]),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "info", staticStyle: { color: "#d4be00" } },
+                  [
+                    _c("div", { staticClass: "n blod" }, [
+                      _c("span", { staticClass: "mr10" }, [_vm._v("中奖者:")]),
+                      _c("span", [_vm._v(_vm._s(_vm.list[_vm.winnerId].name))])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "p blod" }, [
+                      _c("span", { staticClass: "mr10" }, [_vm._v("买入价:")]),
+                      _c("span", [_vm._v(_vm._s(_vm.list[_vm.winnerId].price))])
+                    ])
+                  ]
+                )
+              ])
+            : _c("div", { staticClass: "nowon color-gray" }, [
+                _vm._v("遗憾 ! 这期没有中奖者  >_<... ")
+              ])
+        ]),
         _vm._v(" "),
         _c("div", { staticClass: "panel" }, [
           _c("div", { staticClass: "panel-bd" }, [
@@ -24007,44 +24058,48 @@ var render = function() {
                 _vm.list.length > 0
                   ? _c(
                       "ul",
-                      _vm._l(_vm.list, function(item) {
-                        return _c("li", [
-                          _c("div", { staticClass: "avatar img-box" }, [
-                            _c("img", { attrs: { src: item.avatar } })
-                          ]),
-                          _vm._v(" "),
-                          _c("div", { staticClass: "info" }, [
-                            _c("div", { staticClass: "r" }, [
-                              _c("span", { staticClass: "fs14" }, [
-                                _vm._v(_vm._s(item.name))
+                      _vm._l(_vm.list, function(item, index) {
+                        return !(index == _vm.winnerId)
+                          ? _c("li", [
+                              _c("div", { staticClass: "avatar img-box" }, [
+                                _c("img", { attrs: { src: item.avatar } })
                               ]),
                               _vm._v(" "),
-                              _c(
-                                "span",
-                                { staticClass: "color-light fs9 pull-right" },
-                                [_vm._v("买入价格:" + _vm._s(item.price))]
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c("div", { staticClass: "r fs9" }, [
-                              _c("span", { staticClass: "color-light" }, [
-                                _vm._v(_vm._s(item.createdAt))
-                              ]),
-                              _vm._v(" "),
-                              _c(
-                                "span",
-                                { staticClass: "color-light pull-right" },
-                                [
-                                  _vm._v(
-                                    "买入数量:" +
-                                      _vm._s(item.amount) +
-                                      _vm._s(item.code)
+                              _c("div", { staticClass: "info" }, [
+                                _c("div", { staticClass: "r" }, [
+                                  _c("span", { staticClass: "fs14" }, [
+                                    _vm._v(_vm._s(item.name))
+                                  ]),
+                                  _vm._v(" "),
+                                  _c(
+                                    "span",
+                                    {
+                                      staticClass: "color-light fs9 pull-right"
+                                    },
+                                    [_vm._v("买入价格:" + _vm._s(item.price))]
                                   )
-                                ]
-                              )
+                                ]),
+                                _vm._v(" "),
+                                _c("div", { staticClass: "r fs9" }, [
+                                  _c("span", { staticClass: "color-light" }, [
+                                    _vm._v(_vm._s(item.createdAt))
+                                  ]),
+                                  _vm._v(" "),
+                                  _c(
+                                    "span",
+                                    { staticClass: "color-light pull-right" },
+                                    [
+                                      _vm._v(
+                                        "买入数量:" +
+                                          _vm._s(item.amount) +
+                                          _vm._s(item.code)
+                                      )
+                                    ]
+                                  )
+                                ])
+                              ])
                             ])
-                          ])
-                        ])
+                          : _vm._e()
                       })
                     )
                   : _vm._e()

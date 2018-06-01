@@ -122,6 +122,7 @@ header .handler.right {right: .25rem;}
 .w500 { width: 5rem; }
 .w600 { width: 6rem; }
 
+.blod {font-weight: 800;}
 
 .bl-t{border-top:1px solid #EBEEF5;}
 .bl-b{border-bottom:1px solid #EBEEF5;}
@@ -263,9 +264,17 @@ text-align: center; text-shadow: 0 .03rem #0a1622; color: #FFFFFF;}
 .invite-page  .tips {margin-top: -0.6rem; margin-bottom: .6rem;}
 
 
-
-
-
+.medal-row {padding: .2rem .2rem .2rem 2.5rem; height: 2.4rem; position: relative; border-radius: .1rem;
+ top: 0; left: 0; background: #0b1b28; margin-bottom: .2rem;}
+.medal-row .nowon {position: absolute; top: 50%; margin-top: -0.5em; left: 0; width: 100%; text-align: center;}
+.medal-row .n {font-size: .4rem; margin: .5rem 0 .3rem; }
+.medal-row .p {font-size: .3rem; }
+.medal-row .n , .medal-row .p { height: 1em; line-height: 1em; overflow: hidden; text-overflow: ellipsis; }
+.oner {position: absolute; top: .28rem; left: .4rem; width: 1.6rem; height: 1.6rem; margin: 0 auto .5rem;}
+.oner .winner {width: 100%; height: 100%; border-radius: 50%; background: #cbb800; overflow: hidden;
+ border:1px solid #889400; box-shadow: 0 0 0 .1rem #f7d00a;}
+.oner .medal {width: 2rem; height: .55rem; background: url('../img/medal.png') no-repeat center; 
+background-size: cover; position: absolute; bottom: -0.2rem; left: 50%; margin-left: -1rem;}
 
 
 
