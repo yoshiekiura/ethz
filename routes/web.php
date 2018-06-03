@@ -14,6 +14,10 @@
 Route::get('/', function () {
     return view('layouts.master');
 });
+Route::get('/{all}', function () {
+    return view('layouts.master');
+});
+
 
 Auth::routes();
 

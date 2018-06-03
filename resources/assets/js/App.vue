@@ -25,13 +25,17 @@ export default {
 		let enter_path = vm.$route.path;
 //		jwtToken.removeToken();
 		let local_state = jwtToken.getUserState();
+		
+		if(vm.$route.query&&vm.$route.query.invitor) {
+			vm.$store.dispatch('setInvitorState', vm.$route.query.invitor);
+		}
+		
 		if(local_state) {
 			vm.$store.dispatch('setUserState', local_state);
 		}
 		
-//		console.log(local_state, vm.user_state)
 		if(!vm.user_state.token){
-			if(enter_path !=  '/' || enter_path != '/list_project' || enter_path != '/star' || enter_path != '/login' || enter_path != '/regist' || enter_path != '/reback') {
+			if(enter_path !=  '/' && enter_path != '/list_project' && enter_path != '/star' && enter_path != '/login' && enter_path != '/regist' && enter_path != '/reback') {
 				vm.$router.replace('/star');
 			}
 		}else{
@@ -55,7 +59,7 @@ export default {
 					return next();
 				}
 			}
-		})
+		});
 	},
 	mounted(){		//替代ready方法
 		let vm = this

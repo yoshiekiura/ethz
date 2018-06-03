@@ -8,7 +8,7 @@
 			<div class="text-center">
 				<p class="fs9 clearfix pl20 pr20 mb20 text-left">
 					<span>本期开始时间: <font class="color-tip ml5">{{project.startTime}}</font></span>
-					<span class="pull-right">当前Eth价格:<font class="color-rise ml5">{{project.price}}¥</font></span>
+					<!--<span class="pull-right">:<font class="color-rise ml5"></font></span>-->
 				</p>
 				<div class="tc mb20">
 					<div class="num">
@@ -37,6 +37,20 @@
 							<div class="lab-item fs12 text-left p0">
 								<p class="color-link fs9">当前以太数</p>
 								<p class="fs18"><span class="color-tip mr5">{{project.sumAmount}}</span><span class="fs9">eth</span></p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="panel">
+			<div class="panel-bd clearfix text-center">
+				<div class="labtb">	
+					<div class="tr-item">
+						<div class="tb-item">
+							<div class="lab-item fs12 text-left p0">
+								<p class="color-link fs9">当前Eth价格</p>
+								<p class="fs18"><span class="fs9 mr10">¥</span><span class="color-rise mr5">{{project.price}}</span></p>
 							</div>
 						</div>
 					</div>

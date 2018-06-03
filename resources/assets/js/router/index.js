@@ -19,6 +19,7 @@ import listFriends from '../view/list-friends'
 import address from '../view/address'
 import withdraw from '../view/withdraw'
 import invite from '../view/invite'
+import connect from '../view/connect-us'
 Vue.use(Router)
 
 const routes = [
@@ -89,11 +90,16 @@ const routes = [
    	{
    		path: '/invite',
    		component: invite
+   	},
+   	{
+   		path: '/connect',
+   		component: connect
    	}
 ];
 
 const _router_ = new Router({
-  routes
+    mode: 'history',
+  	routes
 });
 
 

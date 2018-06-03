@@ -40,12 +40,18 @@
 
 <script>
 import mhead from '../components/head.vue'
+import {mapGetters} from 'vuex'
 export default{
-	mounted(){
-		
+	computed:{
+		...mapGetters(['invitor_state'])
 	},
 	components:{
 		mhead
+	},
+	activated(){
+		if(this.invitor_state.invitor){
+			this.form.invite = this.invitor_state.invitor;
+		}
 	},
 	data(){
 		return {

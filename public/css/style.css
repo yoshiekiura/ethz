@@ -1,5 +1,5 @@
 body,div,p,a,span,ul,li,dl,dt,dd,table,th,td,input,select,textarea,button,h1,h2,h3,h4,h5{padding:0; margin:0; border:0 none;}
-body, input, select, textarea{font-family:arial "microsoft yahei"; font-size:16px; color:#94b9d6; }
+body, input, select, textarea{font-family:arial "microsoft yahei"; font-size:16px; color:#94b9d6; letter-spacing: 2px; }
 ul,li,dl,dt,dd{list-style:none;}
 a, a:hover, a:focus, a:active{text-decoration:none; color:inherit;}
 a:hover, a:active{opacity:0.8;}
@@ -32,7 +32,9 @@ header .handler.right {right: .25rem;}
 .panel .labtb .tb-item:before, .panel .labtb .tb-item:after{content:''; display: block; background: #f7c746; position: absolute;}
 .panel .labtb .tb-item:before {height: 1px; width: 96%; bottom: 0; left: 2%;}
 .panel .labtb .tb-item:after {height: 80%; width: 1px; top: 10%; right: 0;}
-.panel .labtb .tr-item:last-child .tb-item:before, .panel .labtb .tb-item:nth-child(even):after{display: none;}
+.panel .labtb .tr-item:last-child .tb-item:before, 
+.panel .labtb .tr-item:last-child .tb-item:after,
+.panel .labtb .tb-item:nth-child(even):after{display: none;}
 .panel .tb-item .lab-item {min-width: 7em; display: inline-block; padding-left: .45rem; position: relative; top: 0; left: 0;}
 .lab-item .fa {position: absolute; top: 50%; left: 0; margin-top: -.5em; font-size: .3rem }
 .fs9{font-size:.18rem;}
@@ -199,8 +201,10 @@ text-align:center; cursor:pointer; -moz-user-select:none; -webkit-user-select:no
 .el-form-item.enctrl .el-form-item__content{padding-right: 6em; position: relative; top: 0; left: 0;}
 .el-form-item.enctrl .handler{position: absolute; top: 50%; margin-top: -0.5em; line-height:100%; right: .2rem;}
 .el-input__inner{border: 0 none; border-radius: 0; background: transparent; color: #94b9d6; height: 1.5em; line-height: 1.5em; font-size:inherit;}
-.el-input__inner::-webkit-input-placeholder{color: #94b9d6;} 
+.el-textarea__inner {border: 0 none; border-radius: 0; background: transparent; color: #94B9D6; height: 3rem; line-height: 175%; font-size: inherit; resize: none;}
+.el-input__inner::-webkit-input-placeholder, .el-textarea__inner::-webkit-input-placeholder{color: #94b9d6;} 
 .el-form-item__label, .el-form-item__content{ height: 1.5em; line-height: 1.5em; font-size:inherit; color: inherit;}
+.textarea .el-form-item__content {height: auto; line-height: 100%;}
 .el-select-dropdown__item{height:2.5em; line-height:2.5em; font-size:inherit;}
 .el-message-box{width:80%;}
 

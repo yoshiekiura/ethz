@@ -30,11 +30,6 @@
 				</router-link>
 			</div>
 			<div class="panel-bd">
-				<i class="fa fa-envelope-open mr20"></i>
-				意见反馈
-				<i class="fa fa-angle-right fs14 pull-right"></i>
-			</div>
-			<div class="panel-bd">
 				<i class="fa fa-exclamation-circle mr20"></i>
 				关于
 				<i class="fa fa-angle-right fs14 pull-right"></i>

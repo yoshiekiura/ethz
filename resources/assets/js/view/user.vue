@@ -119,16 +119,6 @@ export default{
 		}
 	},
 	methods:{
-//		userInfo(){
-//  		var vm = this;
-//  		vm.$http.get(vm.commonApi.user).then(function(response){
-//  			console.log(response.body)
-//		 		if(response.body.code == 200) {
-//		 			vm.user = response.body.data
-//		 			vm.wallet = vm.user.wallet
-//		 		}
-//      	})
-//  	},
 		goback(){
 			this.$router.go(-1)
 		}

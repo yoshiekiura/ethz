@@ -74,7 +74,7 @@ export default{
     		}).then(function(response){
     			var res = response.body;
     			vm.isloaded = true;
-    			
+    			console.log(res)
     			if(res.code == 200){
     				let resitem = res.data
 					vm.$store.dispatch('setUserState', {
@@ -84,7 +84,8 @@ export default{
 						avatar: resitem.avatar,
 						wallet: resitem.wallet,
 						friendsamount: resitem.invite_count,
-						wins: resitem.win_count
+						wins: resitem.win_count,
+						invitecode: resitem.invite_code
 			    	});
                     vm.$router.push('/user');
     			}else{

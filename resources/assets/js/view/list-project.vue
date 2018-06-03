@@ -13,33 +13,37 @@
 					<div class="panel-hd fs9">项目时间: {{item.startTime}} ~ {{item.endTime}}</div>
 					<div class="panel-bd">
 						<div class="fs14 mb10">
-							<span class="fs12 color-light">项目名:</span>
+							<span class="color-light">项目名:</span>
 							<span>{{item.name}}</span>
 						</div>
-						<div class="fs16 mb10">
-							<span class="fs12 color-light">以太总额:</span>
+						<div class="fs14 mb10">
+							<span class="color-light">以太总额:</span>
 							<span class="color-tip">{{item.sumAmount}}</span>
 						</div>
-						<div>
-							<span class="fs12 color-light">参与人数:</span>
-							<span class="fs14">{{item.number}}</span>
+						<div class="fs14">
+							<span class="color-light">参与人数:</span>
+							<span>{{item.number}}</span>
 						</div>
 					</div>
 				</div>
 			</router-link>
 		</div>
 	</div>
+	
+	<mnav></mnav>
 </div>
 </template>
 
 <script>
 import mhead from '../components/head.vue'
+import mnav from '../components/unav.vue'
 export default{
 	mounted(){
 //		console.log(this.$store.state.count)
 	},
 	components:{
 		mhead,
+		mnav
 	},
 	data(){
 		return {
