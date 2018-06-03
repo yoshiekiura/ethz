@@ -78,7 +78,7 @@ class GuessController extends Controller
             $builders->where('id', '<', $sinceId);
         }
 
-        $items = $builders->where('guess_id', $guessId)->orderBy('id', 'DRSC')->limit($limit)->get();
+        $items = $builders->where('guess_id', $guessId)->orderBy('is_win', 'DESC')->orderBy('id', 'DRSC')->limit($limit)->get();
 
         if($items->isEmpty()) {
             return $this->setStatusCode(403)->responseError('查无数据');
