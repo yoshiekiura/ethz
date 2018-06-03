@@ -8,7 +8,7 @@
 	</mhead>
 	<div class="ctninner">
 		<div class="medal-row">
-			<div v-if="winnerId">
+			<div v-if="winnerId != null">
 				<div class="oner">
 					<div class="img-box winner"><img :src="list[winnerId].avatar" /></div>
 					<em class="medal"></em>

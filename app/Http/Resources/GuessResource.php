@@ -38,12 +38,15 @@ class GuessResource extends JsonResource
             'minAmount' => (float) bcmul((string)$this->min_amount, '1', 4),
             'maxAmount' => (float) bcmul((string)$this->max_amount, '1', 4),
             'sumAmount' => (float) bcmul((string)$this->sum_amount, '1', 4),
+            'endPrice' => (float) bcmul((string)$this->price, '1', 4),
+            'code' => $this->currencyTo->code,
             'startTime' => $this->start_time,
             'endTime' => $this->end_time,
             'openTime' => $this->open_time,
             'period' => $this->period,
             'number' => $this->number,
             'state' => $this->state,
+            'isReward' => $this->is_reward,
             'createdAt' => (string) $this->created_at,
         ];
         // return parent::toArray($request);

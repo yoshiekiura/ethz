@@ -11,7 +11,10 @@
 					<!--<span class="pull-right">:<font class="color-rise ml5"></font></span>-->
 				</p>
 				<div class="tc mb20">
-					<div class="num">
+					<div class="num" v-if="project.isReward == 1">
+						{{project.endPrice}} {{project.code}}
+					</div>
+					<div class="num" v-else>
 						{{et.day}}<span class="fs9">天</span>
 						{{et.hour}}<span class="fs9">时</span>
 						{{et.min}}<span class="fs9">分</span>
