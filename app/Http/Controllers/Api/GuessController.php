@@ -91,9 +91,11 @@ class GuessController extends Controller
             $data['list'][$key]['name'] = $item->user->name;
             $data['list'][$key]['createdAt'] = (string) $item->created_at;
             $data['list'][$key]['avatar'] = env('APP_URL') . "/avatars/avatar_".$item->user->avatar.".png";
-            $data['list'][$key]['price'] = my_number_format($item->expect_price, 4);
+            $data['list'][$key]['price'] = (int) my_number_format($item->expect_price, 4);
             $data['list'][$key]['amount'] = my_number_format($item->amount, 4);
-            $data['list'][$key]['price'] = str_replace(substr($data['list'][$key]['price'],-2),"**",$data['list'][$key]['price']);
+            if($item->is_win == 0) {
+                $data['list'][$key]['price'] = substr_replace($data['list'][$key]['price'], "**", 3, 1);
+            }
             $data['list'][$key]['is_win'] = $item->is_win;
         }
         if(!empty($data['list'])) {

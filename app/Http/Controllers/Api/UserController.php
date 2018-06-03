@@ -45,7 +45,7 @@ class UserController extends Controller
         $orders = $builders->where('uid', $user->id)->orderBy('id', 'DRSC')->limit($limit)->get();
 
         if($orders->isEmpty()) {
-            $this->setStatusCode(404)->responseError('查无数据');
+            return $this->setStatusCode(404)->responseError('查无数据');
         }
 
         $lastId = 0;
@@ -53,8 +53,10 @@ class UserController extends Controller
             $order->load('user');
             $order->load('guess');
             $order->load('currencyTo');
-
             $lastId = $order->id;
+
+            $order->amount = (float) bcmul($order->amount, '1', 4);
+            $order->expect_price = (float) bcmul($order->expect_price, '1', 4);
             return [
                 'id' => $order->id,
                 'item_title' => $order->guess->title,

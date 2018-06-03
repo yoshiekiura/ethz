@@ -63,7 +63,7 @@
 			</div>
 		</div>
 		<div class="panel" >
-			<router-link :to="{ path: '/list_project' }">
+			<router-link :to="{ path: '/list_item' }">
 				<div class="panel-bd color-tip">
 					<span>历史下注</span>
 					<span class="pull-right">
