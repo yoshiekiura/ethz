@@ -12,7 +12,7 @@
 				</p>
 				<div class="tc mb20">
 					<div class="num" v-if="project.isReward == 1 && state == 'completed'">
-						{{project.endPrice}} {{project.code}}
+						￥{{project.endPrice}}
 					</div>
 					<div class="num" v-else>
 						{{et.day}}<span class="fs9">天</span>
