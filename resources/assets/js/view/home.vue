@@ -98,7 +98,8 @@
 			<div class="fs12 color-gray">登录密码 :</div>
 			<el-form-item>
 				 <!--v-model="dialogAmount"-->
-				<el-input class="text-center" v-model="dailogForm.amount" type="text" pattern="[0-9]*" auto-complete="off"></el-input>
+				<el-input class="text-center" v-model="dailogForm.password" type="password" auto-complete="off"></el-input>
+				<!-- <el-input class="text-center" v-model="dailogForm.amount" type="text" pattern="[0-9]*" auto-complete="off"></el-input> -->
 			</el-form-item>
 			<el-button class="full mt40" round @click.prevent = "dialogSubmit">确认下注</el-button>
 		</el-form>
@@ -137,7 +138,7 @@ export default{
 			},
 			dailogForm:{
 				price:'',
-				amount:'',
+				password:'',
 			},
 			dailogload:true,
 			dialogFormVisible:false
@@ -213,20 +214,22 @@ export default{
     			return;
     		}
        		
-      //  		if(vm.dailogForm.amount == ''){
-    		// 	this.$alert('请填写下注数量', { confirmButtonText: '确定' });
-    		// 	return;
-    		// }
+       		if(vm.dailogForm.password == ''){
+    			this.$alert('请填写登录密码', { confirmButtonText: '确定' });
+    			return;
+    		}
        		
        		vm.dailogload = false;
        		vm.$http.post(vm.commonApi.listProject + '/' + vm.project.id, {
        			guessid: vm.project.id,
        			price: vm.dailogForm.price,
-       			amount: vm.dailogForm.amount
+       			password: vm.dailogForm.password
        		}).then(response => {
        			vm.dailogload = true;
-       			vm.dialogFormVisible = false;
        			let res = new Object(response.body);
+       			if(res.code == 200) {
+       				vm.dialogFormVisible = false;
+       			}
        			this.$alert(res.message, { confirmButtonText: '确定' });
        		}).catch(err => {
        			vm.dailogload = true;

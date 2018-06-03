@@ -11,6 +11,7 @@ use App\Models\GuessOrders;
 use App\Models\UserModel;
 use App\Services\Guess as GuessSer;
 use App\Services\Rewards;
+use Hash;
 
 
 class GuessController extends Controller
@@ -114,6 +115,7 @@ class GuessController extends Controller
         $number = 1;
         // $number = $request->input('amount');
         $price = $request->input('price');
+        $password = $request->input('password');
         $user = $this->getUser();
 
         // if(empty($number)) {
@@ -124,9 +126,13 @@ class GuessController extends Controller
             return $this->setStatusCode(404)->responseError('请输入竞猜价格');
         }
 
-
         if(!preg_match('/^[0-9]+(.[0-9]{1,})?$/', $price)) {
             return $this->setStatusCode(404)->responseError('竞猜价格必须为数字');
+        }
+
+        $userInfo = UserModel::find($user->id);
+        if(!Hash::check($password, $userInfo->password)) {
+            return $this->setStatusCode(404)->responseError('登录密码错误');
         }
 
         $amount = $guess->expect_price*$number;
