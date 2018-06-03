@@ -109,16 +109,22 @@ class GuessController extends Controller
             return $this->setStatusCode(404)->responseError('请先登录');
         }
 
-        $number = $request->input('amount');
+        $number = 1;
+        // $number = $request->input('amount');
         $price = $request->input('price');
         $user = $this->getUser();
 
-        if(empty($number)) {
-            $this->setStatusCode(404)->responseError('请输入投注数');
-        }
+        // if(empty($number)) {
+        //     $this->setStatusCode(404)->responseError('请输入投注数');
+        // }
 
         if(empty($price)) {
-            $this->setStatusCode(404)->responseError('请输入竞猜价格');
+            return $this->setStatusCode(404)->responseError('请输入竞猜价格');
+        }
+
+
+        if(!preg_match('/^[0-9]+(.[0-9]{1,})?$/', $price)) {
+            return $this->setStatusCode(404)->responseError('竞猜价格必须为数字');
         }
 
         $amount = $guess->expect_price*$number;
