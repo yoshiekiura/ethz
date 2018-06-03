@@ -8,7 +8,9 @@ use App\Http\Controllers\ApiController as Controller;
 use App\Http\Resources\GuessResource;
 use App\Models\Guess;
 use App\Models\GuessOrders;
+use App\Models\UserModel;
 use App\Services\Guess as GuessSer;
+use App\Services\Rewards;
 
 
 class GuessController extends Controller
@@ -126,6 +128,15 @@ class GuessController extends Controller
         $orderId = with(new GuessSer())->order($user, $guess, $order);
 
         if($orderId > 0) {
+            // 一级邀请奖励
+            with(new Rewards())->doReward($amount, 1, $user, $guess);
+
+            // 二级奖励
+            if($user->invite_uid > 0) {
+                $inviteUser = UserModel::find($user->invite_uid);
+                with(new Rewards())->doReward($amount, 2, $inviteUser, $guess);
+            }
+
             return $this->responseSuccess(['id' => $orderId], 'success');
         } else {
             return $this->setStatusCode(404)->responseError('竞猜失败');
