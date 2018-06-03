@@ -74,4 +74,6 @@ Route::group(['prefix' => 'v1'], function () {
 
 	Route::get('/contact','Api\ContactController@index');
 	Route::post('/feedback','Api\FeedbackController@index');
+
+	Route::get('/ticker','Api\TickerController@index');
 });

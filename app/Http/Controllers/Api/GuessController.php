@@ -145,7 +145,7 @@ class GuessController extends Controller
                 with(new Rewards())->doReward($amount, 2, $inviteUser, $guess);
             }
 
-            return $this->responseSuccess(['id' => $orderId], 'success');
+            return $this->responseSuccess(['id' => $orderId], '投注成功');
         } else {
             return $this->setStatusCode(404)->responseError('竞猜失败');
         }

@@ -11,7 +11,7 @@
 					<!--<span class="pull-right">:<font class="color-rise ml5"></font></span>-->
 				</p>
 				<div class="tc mb20">
-					<div class="num" v-if="project.isReward == 1">
+					<div class="num" v-if="project.isReward == 1 && state == 'completed'">
 						{{project.endPrice}} {{project.code}}
 					</div>
 					<div class="num" v-else>
@@ -53,7 +53,7 @@
 						<div class="tb-item">
 							<div class="lab-item fs12 text-left p0">
 								<p class="color-link fs9">当前Eth价格</p>
-								<p class="fs18"><span class="fs9 mr10">¥</span><span class="color-rise mr5">{{project.price}}</span></p>
+								<p class="fs18"><span class="fs9 mr10">{{sign || '¥'}}</span><span class="color-rise mr5">{{lastPrice || project.price}}</span></p>
 							</div>
 						</div>
 					</div>
@@ -95,7 +95,7 @@
 				<!--v-model="dialogPrice"-->
 				<el-input class="text-center" type="text" v-model="dailogForm.price" pattern="[0-9]*"  auto-complete="off"></el-input>
 			</el-form-item>
-			<div class="fs12 color-gray">交易密码 :</div>
+			<div class="fs12 color-gray">登录密码 :</div>
 			<el-form-item>
 				 <!--v-model="dialogAmount"-->
 				<el-input class="text-center" v-model="dailogForm.amount" type="text" pattern="[0-9]*" auto-complete="off"></el-input>
@@ -125,6 +125,9 @@ export default{
 			isloaded:true,
 			listload:true,
 			state:null,
+			lastPrice:'',
+			sign:'',
+			isLoadPrice:false,
 			timer:'',
 			et:{
 				day:'--',
@@ -210,10 +213,10 @@ export default{
     			return;
     		}
        		
-       		if(vm.dailogForm.amount == ''){
-    			this.$alert('请填写下注数量', { confirmButtonText: '确定' });
-    			return;
-    		}
+      //  		if(vm.dailogForm.amount == ''){
+    		// 	this.$alert('请填写下注数量', { confirmButtonText: '确定' });
+    		// 	return;
+    		// }
        		
        		vm.dailogload = false;
        		vm.$http.post(vm.commonApi.listProject + '/' + vm.project.id, {
@@ -222,12 +225,30 @@ export default{
        			amount: vm.dailogForm.amount
        		}).then(response => {
        			vm.dailogload = true;
+       			vm.dialogFormVisible = false;
        			let res = new Object(response.body);
        			this.$alert(res.message, { confirmButtonText: '确定' });
        		}).catch(err => {
        			vm.dailogload = true;
        			console.log(err)
        		})
+       	},
+       	ticker() {
+       		let vm = this;
+       		if(vm.isLoadPrice == true) 
+       			return false;
+       		vm.isLoadPrice = true;
+       		vm.$http.get(vm.commonApi.ticker).then(response => {
+				let res = new Object(response.body);
+				if(res.code == 200) {
+					vm.lastPrice = res.data.ethusd;
+					vm.sign = '$';
+				}
+				vm.isLoadPrice = false;
+			}).catch(err => {
+				vm.isLoadPrice = false;
+				console.log(err)
+			});
        	}
 	},
 	activated(){
@@ -261,8 +282,10 @@ export default{
 			vm.listload = true;
 			console.log(err)
 		});
-		
-		
+
+		setInterval(function(){
+				vm.ticker();
+			}, 5000)
 	}
 }
 </script>

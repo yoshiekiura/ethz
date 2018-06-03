@@ -16,6 +16,7 @@ export default {
 	help: host + '/api/v1/news',								//帮助中心列表
 	invite: host + '/api/v1/user/invite/email',					//邀请邮件发送
 	connect: host + '/api/v1/contact',							//联系
-	feedback: host + '/api/v1/feedback',							//反馈
-	listOrders: host + '/api/v1/user/orders'							//反馈
+	feedback: host + '/api/v1/feedback',						//反馈
+	listOrders: host + '/api/v1/user/orders',					//订单
+	ticker: host + '/api/v1/ticker',							//价格
 }
