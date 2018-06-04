@@ -145,8 +145,8 @@ class GuessController extends Controller
 
             })->tab('竞猜设置', function (Form $form) {
 
-              $form->number('expect_price', '竞猜低价')->rules('required');
-              $form->number('charges', '运营费用')->rules('required');
+              // $form->number('expect_price', '竞猜低价')->rules('required');
+              $form->number('charges', '运营费用')->rules('required')->help('百分比，平台收益');
               // $form->number('max_amount', '最大投注数')->rules('required');
               // $form->number('min_amount', '最小投注数')->rules('required');
 
