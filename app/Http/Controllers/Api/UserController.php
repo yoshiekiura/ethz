@@ -10,6 +10,8 @@ use App\Http\Resources\GuessResource;
 use App\Models\Guess;
 use App\Models\GuessOrders;
 use App\Models\UserModel;
+use App\Models\AccountsModel;
+use App\Models\Rewards;
 use \Exception;
 use Mail;
 
@@ -20,9 +22,15 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
-        $user->earnings_count = 9998;
         $user->avatar = env('APP_URL') . "/avatars/avatar_".intval($user->avatar).".png";
-        $user->wallet = array(['code' => 'eth', 'amount' => 2000]);
+
+        $rewards = Rewards::where(['uid' => $user->id])->sum('amount');
+        $user->earnings_count = (float) bcmul($rewards, '1', 4);
+
+        $account = AccountsModel::where(['uid' => $user->id, 'currency' => 1])->first();
+        $amount = (float) bcmul($account->balance, '1', 4);
+        $user->wallet = array(['code' => 'eth', 'amount' => $amount]);
+
         return $this->responseSuccess($user, '查询成功');
     }
 

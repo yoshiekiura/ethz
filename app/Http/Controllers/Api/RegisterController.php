@@ -126,14 +126,12 @@ class RegisterController extends  ApiController
                 $inviteUser->increment('invite_count');
             }
 
-            $token = $this->proxy->login($postData['email'], $postData['password']);
-
-            $user = User::find($user->id);
-			$user->avatar = env('APP_URL') . "/avatars/avatar_".intval($user->avatar).".png";
-            $user->token = $token->original['token'];
-
             // 邀请地址生成
             $this->getDepositsAdress()->getUserAddress($user->id, 'ETH');
+
+            $token = $this->proxy->login($postData['email'], $postData['password']);
+            $user = $this->getUserByToken($token->original['token']);
+            $user->token = $token->original['token'];
 
             return $this->responseSuccess($user, '注册成功');
         } else {
@@ -142,7 +140,8 @@ class RegisterController extends  ApiController
     }
 
 
-    public function userInvite($uid,$inviteUid){
+    public function userInvite($uid,$inviteUid)
+    {
         $user = UserInvit::where('uid', '=', $inviteUid)->first();
         $addData['uid'] = $uid;
         $addData['first_uid'] = $inviteUid;
@@ -150,9 +149,23 @@ class RegisterController extends  ApiController
         return UserInvit::create($addData);
     }
 
-    public function isUser($email){
+    public function isUser($email)
+    {
         $user = User::where('email', '=', $email)->first();
         return empty($user) ? 0: 1;
+    }
+
+    public function getUserByToken($token)
+    {
+        $client = new \GuzzleHttp\Client(['verify' => false]);
+        $response = $client->request('GET', env('APP_URL').'/api/v1/user', [
+            'headers' => [
+                'Accept' => 'application/json',
+                'Authorization' => 'Bearer '.$token,
+            ],
+        ]);
+        $data = json_decode((string)$response->getBody());
+        return $data->data;
     }
 
     /**
