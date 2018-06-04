@@ -7,9 +7,7 @@
 		好友列表
 	</mhead>
 	<div class="ctninner">
-		<div class="rank">
-		</div>
-		<div class="panel">
+		<div class="panel" v-loading="!isloaded">
 			<div class="panel-bd">
 				<div class="memberList" v-if="list">
 					<ul>
@@ -23,6 +21,11 @@
 						</li>
 						
 					</ul>
+				</div>
+				<div class="text-center fs14" v-else>
+					<div class="pt40 pb40">
+						快去邀请好友吧!
+					</div>
 				</div>
 			</div>
 		</div>
@@ -51,17 +54,15 @@ export default{
 		}
 	},
 	activated(){
-		console.log(123);
 		let vm = this;
 		
 		vm.isloaded = false;
+		vm.list = '';
 		vm.$http.get(vm.commonApi.listFriends).then(function(response){
 			let res = response.body;
 			vm.isloaded = true;
 			if(res.code == 200) {
 				vm.list = res.data
-			}else {
-				this.$alert(res.message, { confirmButtonText: '确定' });
 			}
 		}).catch(function(){
 			vm.isloaded = true;

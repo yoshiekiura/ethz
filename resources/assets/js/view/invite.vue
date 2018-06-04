@@ -21,7 +21,7 @@
 		</el-form>
 		
 		<div class="submit-wrap" v-loading="!isloaded">
-			<el-button @click="submit" class="full submit" round >
+			<el-button @click="clip" class="full submit" round >
 				<i class="fa fa-link mr10 fs16" style="vertical-align: -2px;"></i>
 				复制链接
 			</el-button>
@@ -33,6 +33,7 @@
 <script>
 import mhead from '../components/head.vue'
 import {mapGetters} from 'vuex'
+import clipboard from 'clipboard-js'
 export default{
 	components:{
 		mhead
@@ -40,8 +41,7 @@ export default{
 	computed:{
 		...mapGetters(['user_state']),
 		inviteUrl(){
-			console.log(this.$route)
-			return window.location.host + '?invitor=' + this.user_state.invitecode;
+			return window.location.host + '/?invitor=' + this.user_state.invitecode;
 		}
 	},
 	data(){
@@ -54,13 +54,16 @@ export default{
 	},
 	mounted(){
 		var vm = this;
-		console.log(vm.user_state);
 	},
 	methods:{
-		submit(){
-			var	vm = this;
-			
-		},
+    	clip(){
+    		var vm = this;
+    		if(vm.inviteUrl){
+    			clipboard.copy(vm.inviteUrl).then(function(){
+    				vm.$alert('复制成功', { confirmButtonText: '确定' });
+    			})
+    		}
+    	},
 		goback(){
 			this.$router.go(-1)
 		}

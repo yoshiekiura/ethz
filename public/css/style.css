@@ -172,7 +172,7 @@ text-align:center; cursor:pointer; -moz-user-select:none; -webkit-user-select:no
 .row-radio .el-radio__inner{width:.3rem; height: .3rem; position:absolute; top:50%; right: .2rem; transform: translateY(-50%); -webkit-transform: translateY(-50%);}
 .row-radio .el-radio__inner:after{width:50%; height:50%;}
 .row-radio .el-radio__label{display:none;}
-.submit-wrap {margin-top: .7rem;}
+.submit-wrap {margin-top: .4rem;}
 .submit-wrap .button, .submit-wrap > a{margin-top: .4rem; display: block;}
 .submit-wrap .button:first-child, .submit-wrap a:first-child {margin-top: 0;}
 /*.nav-cell .fa {font-size: .24rem;}*/

@@ -6,7 +6,7 @@
 	<div class="ctninner">
 		<div class="timecount mb30">
 			<div class="text-center">
-				<p class="fs9 clearfix pl20 pr20 mb20 text-left">
+				<p class="fs9 clearfix pl20 pr20 mb20 text-center">
 					<span>本期开始时间: <font class="color-tip ml5">{{project.startTime}}</font></span>
 					<!--<span class="pull-right">:<font class="color-rise ml5"></font></span>-->
 				</p>
@@ -22,7 +22,7 @@
 					</div>
 				</div>
 				<el-button v-if="state == 'coming_soon'" round ><span>准备中...</span></el-button>
-				<el-button  v-if="state == 'in_progress'" @click="dialogFormVisible = true" type="tip" round>马上抢注</el-button>
+				<el-button  v-if="state == 'in_progress'" @click="pour" type="tip" round>马上抢注</el-button>
 				<el-button  v-if="state == 'completed' || !state " type="disable" round>已结束</el-button>
 			</div>
 		</div>
@@ -111,13 +111,14 @@
 <script>
 import mhead from '../components/head.vue'
 import mnav from '../components/unav.vue'
+import {mapGetters} from 'vuex'	
 export default{
-	mounted(){
-//		console.log(this.$store.state.count)
-	},
 	components:{
 		mhead,
 		mnav
+	},
+	computed:{
+		...mapGetters(['user_state']),
 	},
 	data(){
 		return {
@@ -128,8 +129,8 @@ export default{
 			state:null,
 			lastPrice:'',
 			sign:'',
-			isLoadPrice:false,
 			timer:'',
+			timerTicker:null,
 			et:{
 				day:'--',
 				hour:'--',
@@ -238,20 +239,27 @@ export default{
        	},
        	ticker() {
        		let vm = this;
-       		if(vm.isLoadPrice == true) 
-       			return false;
-       		vm.isLoadPrice = true;
        		vm.$http.get(vm.commonApi.ticker).then(response => {
 				let res = new Object(response.body);
 				if(res.code == 200) {
 					vm.lastPrice = res.data.ethusd;
 					vm.sign = '$';
 				}
-				vm.isLoadPrice = false;
 			}).catch(err => {
-				vm.isLoadPrice = false;
 				console.log(err)
 			});
+       	},
+       	cleanTimers(){
+       		var vm = this;
+       		clearInterval(vm.timerTicker)
+       	},
+       	pour(){
+       		var vm = this;
+       		if(!vm.user_state.token) {
+       			this.$alert('请先登录', { confirmButtonText: '确定' });
+       		}else {
+       			vm.dialogFormVisible = !vm.dialogFormVisible;
+       		}
        	}
 	},
 	activated(){
@@ -285,10 +293,14 @@ export default{
 			vm.listload = true;
 			console.log(err)
 		});
-
-		setInterval(function(){
-				vm.ticker();
-			}, 5000)
+		
+		vm.timerTicker = setInterval(function(){
+			vm.ticker();
+		}, 5000)
+	},
+	deactivated(){
+		var vm = this;
+		vm.cleanTimers();
 	}
 }
 </script>
