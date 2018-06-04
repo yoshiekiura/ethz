@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Auth\Events\Registered;
 use App\Http\Controllers\Controller;
 use App\Models\UserAuthorize;
+use App\Services\DepositsAddresses;
 
 
 class RegisterController extends  ApiController
@@ -131,6 +132,9 @@ class RegisterController extends  ApiController
 			$user->avatar = env('APP_URL') . "/avatars/avatar_".intval($user->avatar).".png";
             $user->token = $token->original['token'];
 
+            // 邀请地址生成
+            $this->getDepositsAdress()->getUserAddress($user->id, 'ETH');
+
             return $this->responseSuccess($user, '注册成功');
         } else {
             return $this->setStatusCode(403)->responseNotFound('注册失败');
@@ -173,5 +177,10 @@ class RegisterController extends  ApiController
     public function isUserByPhone($phone){
         $user = User::where('phone', '=', $phone)->first();
         return empty($user) ? 0: 1;
+    }
+
+    private function getDepositsAdress()
+    {
+        return new DepositsAddresses();
     }
 }

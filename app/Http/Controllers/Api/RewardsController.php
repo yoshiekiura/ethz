@@ -81,9 +81,11 @@ class RewardsController extends Controller
 
             $sumAmount = $guessOrdersBuilders->where('guess_id', $guess->id)->sum('amount');
 
-            $usrAmount = bcmul($sumAmount, '0.8', 18);
+            $siteAmount = bcmul($sumAmount, $guess->change, 18);
 
-            $siteAmount = bcsub($sumAmount, $usrAmount);
+            $usrAmount = bcsub($sumAmount, $siteAmount, 18);
+
+            // $siteAmount = bcsub($sumAmount, $usrAmount);
 
             $rewardAmount = $rewards->where('rewardable_id', $guess->id)->sum('amount');
 

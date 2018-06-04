@@ -75,8 +75,8 @@ class GuessController extends Controller
             $grid->title('名称');
             $grid->period('周期');
             $grid->currencyTo()->name('币种');
-            $grid->expect_price('中奖点数')->display(function($expect_price){
-                return my_number_format($expect_price, 4);
+            $grid->price('中奖点数')->display(function($price){
+                return my_number_format($price, 4);
             });
             $grid->charges('运营费用')->display(function($charges){
                 return my_number_format($charges, 4) . '%';
@@ -86,11 +86,11 @@ class GuessController extends Controller
                 $id = $this->id;
                 $profile['竞猜期数'] = $this->period;
 
-                $profile['竞猜价'] = my_number_format($this->expect_price);
+                // $profile['竞猜价'] = my_number_format($this->expect_price);
                 $profile['平台运营费'] = my_number_format($this->charges) . '%';
                 // $profile['最大投注'] = my_number_format($this->max_amount);
                 // $profile['最小投注'] = my_number_format($this->min_amount);
-                $profile['最低投注'] = my_number_format($this->price);
+                // $profile['最低投注'] = my_number_format($this->price);
 
                 $profile['开奖时间'] = $this->open_time;
                 $profile['开始时间'] = $this->start_time;
@@ -146,7 +146,7 @@ class GuessController extends Controller
             })->tab('竞猜设置', function (Form $form) {
 
               // $form->number('expect_price', '竞猜低价')->rules('required');
-              $form->number('charges', '运营费用')->rules('required')->help('百分比，平台收益');
+              $form->number('charges', '运营费用')->rules('required')->help('百分比，平台收益')->default('20');
               // $form->number('max_amount', '最大投注数')->rules('required');
               // $form->number('min_amount', '最小投注数')->rules('required');
 
