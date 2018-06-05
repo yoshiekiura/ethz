@@ -40,7 +40,6 @@ class GuessController extends Controller
         $data = $data->toArray($data->resource);
         $data['currency'] = 1;
         $data['last'] = rand(1000, 9999);
-        $data['unit'] = '0.01';
         return $this->responseSuccess($data, 'success');
     }
 
@@ -52,7 +51,6 @@ class GuessController extends Controller
         $data = $data->toArray($data->resource);
         $data['currency'] = 1;
         $data['last'] = rand(1000, 9999);
-        $data['unit'] = '0.01';
         return $this->responseSuccess($data, 'success');
     }
 
@@ -112,6 +110,10 @@ class GuessController extends Controller
             return $this->setStatusCode(404)->responseError('请先登录');
         }
 
+        if($guess->status == 0) {
+            return $this->setStatusCode(404)->responseError('项目暂未开放');
+        }
+
         $number = 1;
         // $number = $request->input('amount');
         $price = $request->input('price');
@@ -135,7 +137,7 @@ class GuessController extends Controller
             return $this->setStatusCode(404)->responseError('登录密码错误');
         }
 
-        $amount = $guess->expect_price*$number;
+        $amount = $guess->unit_price*$number;
         $order = json_encode(['price' => $price, 'amount' => $amount]);
         $order = json_decode($order);
 

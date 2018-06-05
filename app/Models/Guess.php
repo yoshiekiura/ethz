@@ -18,7 +18,7 @@ class Guess extends Model
      * @var array
      */
     protected $fillable = [
-        'currency', 'title', 'expect_price', 'max_amount', 'min_amount', 'charges', 'start_time', 'end_time', 'open_time', 'period', 'status',
+        'currency', 'title', 'unit_price', 'max_amount', 'min_amount', 'charges', 'start_time', 'end_time', 'open_time', 'period', 'status',
     ];
 
     /**

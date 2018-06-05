@@ -34,7 +34,7 @@ class GuessResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->title,
-            'price' => (float) bcmul((string)$this->expect_price, '1', 4),
+            'unit' => (float) bcmul((string)$this->unit_price, '1', 4),
             'minAmount' => (float) bcmul((string)$this->min_amount, '1', 4),
             'maxAmount' => (float) bcmul((string)$this->max_amount, '1', 4),
             'sumAmount' => (float) bcmul((string)$this->sum_amount, '1', 4),
