@@ -53,7 +53,7 @@
 						<div class="tb-item">
 							<div class="lab-item fs12 text-left p0">
 								<p class="color-link fs9">当前Eth价格</p>
-								<p class="fs18"><span class="fs9 mr10">{{sign || '¥'}}</span><span class="color-rise mr5">{{lastPrice || project.price}}</span></p>
+								<p class="fs18"><span class="fs9 mr10">{{sign || '¥'}}</span><span class="color-rise mr5">{{lastPrice || project.price || '--'}}</span></p>
 							</div>
 						</div>
 					</div>
@@ -227,10 +227,12 @@ export default{
        			password: vm.dailogForm.password
        		}).then(response => {
        			vm.dailogload = true;
+       			vm.dailogForm.password = '';
        			let res = new Object(response.body);
        			if(res.code == 200) {
        				vm.dialogFormVisible = false;
        			}
+       			vm.listAttendance();
        			this.$alert(res.message, { confirmButtonText: '确定' });
        		}).catch(err => {
        			vm.dailogload = true;
@@ -260,6 +262,20 @@ export default{
        		}else {
        			vm.dialogFormVisible = !vm.dialogFormVisible;
        		}
+       	},
+       	listAttendance(){
+       		let vm = this;
+       		vm.listload = false;
+			vm.$http.get(vm.commonApi.listAttendance, {params:{guess_id:'current',limit:5}}).then(response =>{
+				vm.listload = true;
+				let res = new Object(response.body);
+				if(res.code == 200) {
+					vm.members = res.data.list;
+				}
+			}).catch(err => {
+				vm.listload = true;
+				console.log(err)
+			});
        	}
 	},
 	activated(){
@@ -281,19 +297,9 @@ export default{
 			vm.isloaded = true;
 			console.log(err)
 		});
-		
-		vm.listload = false;
-		vm.$http.get(vm.commonApi.listAttendance, {params:{guess_id:'current',limit:5}}).then(response =>{
-			vm.listload = true;
-			let res = new Object(response.body);
-			if(res.code == 200) {
-				vm.members = res.data.list;
-			}
-		}).catch(err => {
-			vm.listload = true;
-			console.log(err)
-		});
-		
+
+		vm.listAttendance();
+
 		vm.timerTicker = setInterval(function(){
 			vm.ticker();
 		}, 5000)
