@@ -11,14 +11,20 @@ class TickerController extends Controller
     public function index(Request $request)
     {
         $client = new \GuzzleHttp\Client(['verify' => false]);
-        $response = $client->request('GET', 'https://api.etherscan.io/api', [
+        $response = $client->request('GET', 'https://api.binance.com/api/v1/ticker/24hr', [
             'query' => [
-                'module' => 'stats',
-                'action' => 'ethprice',
+                'symbol' => 'ETHUSDT',
             ],
         ]);
+
         $ticker = json_decode((string)$response->getBody());
-        return $this->responseSuccess($ticker->result);
+        return $this->responseSuccess([
+            'open' => $ticker->openPrice,
+            'last' => $ticker->lastPrice,
+            'high' => $ticker->highPrice,
+            'low' => $ticker->lowPrice,
+            'vol' => $ticker->volume,
+        ]);
     }
 }
 
