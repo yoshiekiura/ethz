@@ -158,5 +158,57 @@ class GuessController extends Controller
             return $this->setStatusCode(404)->responseError('竞猜失败');
         }
     }
+
+    public function betRose(Request $request, Guess $guess)
+    {
+        if(empty($this->uid)) {
+            return $this->setStatusCode(404)->responseError('请先登录');
+        }
+
+        if($guess->status == 0) {
+            return $this->setStatusCode(404)->responseError('项目暂未开放');
+        }
+
+        $betting = $request->input('betting');
+        $amount = $request->input('amount');
+        $password = $request->input('password');
+        $user = $this->getUser();
+
+        if(empty($amount)) {
+            $this->setStatusCode(404)->responseError('请输入投注数');
+        }
+
+        if(empty($betting)) {
+            return $this->setStatusCode(404)->responseError('请输选择你投注选项');
+        }
+
+        if(!in_array($betting, ['rise', 'flat', 'fall'])) {
+            return $this->setStatusCode(404)->responseError('投注类型不正确');
+        }
+
+        // $userInfo = UserModel::find($user->id);
+        // if(!Hash::check($password, $userInfo->password)) {
+        //     return $this->setStatusCode(404)->responseError('登录密码错误');
+        // }
+
+        if($betting == 'rise') {
+            $betting = 1;
+        } else if($betting == 'flat') {
+            $betting = 0;
+        } else if($betting == 'fall') {
+            $betting = -1;
+        }
+
+        $order = json_encode(['betting' => $betting, 'amount' => $amount]);
+        $order = json_decode($order);
+
+        $orderId = with(new GuessSer())->orderRose($user, $guess, $order);
+
+        if($orderId > 0) {
+            return $this->responseSuccess(['id' => $orderId], '投注成功');
+        } else {
+            return $this->setStatusCode(404)->responseError('竞猜失败');
+        }
+    }
 }
 

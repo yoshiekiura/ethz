@@ -48,6 +48,7 @@ Route::group([
 		
 		Route::group(['prefix' => 'guess'], function () {
 		    Route::post('/{guess}','Api\GuessController@guess')->where(['guess' => '[0-9]+']);
+		    Route::post('/betting/{guess}','Api\GuessController@betRose')->where(['guess' => '[0-9]+']);
 		});
 });
 
