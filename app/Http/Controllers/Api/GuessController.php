@@ -188,6 +188,10 @@ class GuessController extends Controller
             $this->setStatusCode(404)->responseError('请输入投注数');
         }
 
+        if(!preg_match('/^[0-9]+(.[0-9]{1,})?$/', $amount)) {
+            return $this->setStatusCode(404)->responseError('竞猜价格必须为数字');
+        }
+
         if(empty($betting)) {
             return $this->setStatusCode(404)->responseError('请输选择你投注选项');
         }
@@ -196,10 +200,10 @@ class GuessController extends Controller
             return $this->setStatusCode(404)->responseError('投注类型不正确');
         }
 
-        // $userInfo = UserModel::find($user->id);
-        // if(!Hash::check($password, $userInfo->password)) {
-        //     return $this->setStatusCode(404)->responseError('登录密码错误');
-        // }
+        $userInfo = UserModel::find($user->id);
+        if(!Hash::check($password, $userInfo->password)) {
+            return $this->setStatusCode(404)->responseError('登录密码错误');
+        }
 
         if($betting == 'rise') {
             $betting = 1;
