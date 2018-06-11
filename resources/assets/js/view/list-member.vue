@@ -7,7 +7,7 @@
 		项目成员
 	</mhead>
 	<div class="ctninner">
-		<div class="medal-row">
+		<!--<div class="medal-row">
 			<div v-if="winnerId != null">
 				<div class="oner">
 					<div class="img-box winner"><img :src="list[winnerId].avatar" /></div>
@@ -20,10 +20,10 @@
 			</div>
 			
 			<div v-else class="nowon color-gray">遗憾 ! 这期没有中奖者  >_<... </div>
-		</div>
+		</div>-->
 		<div class="panel">
 			<div class="panel-bd">
-				<div class="memberList" v-loading="!isloaded">
+				<div class="memberList" v-loading="!isloaded" v-pfresh>
 					<ul  v-if="list.length > 0">
 						<li v-for="(item, index) in list" v-if="!(index == winnerId)">
 							<div class="avatar img-box"><img :src="item.avatar" /></div>
@@ -39,6 +39,7 @@
 							</div>
 						</li>
 					</ul>
+					<div @click="getMemberList" class="handle text-center pt20 pb20" :class="last&&last!=1?'color-tip':'color-gray'" >{{handleStr}}</div>
 				</div>
 			</div>
 		</div>
@@ -62,37 +63,47 @@ export default{
 			pid:'',
 	      	list:[],
 	      	winnerId:null,
-	      	isloaded:true
+	      	isloaded:true,
+	      	last:null,
 	      }
+	},
+	computed:{
+		handleStr(){
+			return (this.last&&this.last!=1)?'加载更多':'没有更多数据了';
+		}
 	},
     activated(){
     	var vm = this;
     	vm.winnerId = null;
+    	vm.list = new Array();
+    	vm.last = null;
     	vm.getMemberList()
     },
 	methods:{
 		getMemberList(){
     		var vm = this
-    		vm.id = vm.$route.query.pid;
-    		vm.isloaded = false;
-    		vm.$http.get( vm.commonApi.listAttendance, {params:{guess_id:vm.id}}
-    			).then(function(response){
-    			let res = response.body;
-    			vm.isloaded = true;
-		 		if(res.code == 200) {
-		 			vm.list = res.data.list
-		 		}
-		 		
-		 		for(let i = 0; i < res.data.list.length; i++) {
-		 			if(res.data.list[i].is_win == 1) {
-		 				vm.winnerId = i;
-		 			}
-		 		}
-		 		
-        	}).catch(err => {
-        		vm.isloaded = true;
-        		console.log(err)
-        	})
+    		if(vm.last != 1) {
+    			vm.id = vm.$route.query.pid;
+    			vm.isloaded = false;
+	    		vm.$http.get( vm.commonApi.listAttendance, {params:{guess_id:vm.id, sinceId:vm.last}}
+	    			).then(function(response){
+	    			let res = response.body;
+	    			vm.isloaded = true;
+			 		if(res.code == 200) {
+			 			vm.list = vm.list.concat(res.data.list);
+			 			vm.last = res.data.last;
+			 		}
+			 		
+			 		for(let i = 0; i < res.data.list.length; i++) {
+			 			if(res.data.list[i].is_win == 1) {
+			 				vm.winnerId = i;
+			 			}
+			 		}
+	        	}).catch(err => {
+	        		vm.isloaded = true;
+	        		console.log(err)
+	        	});
+        	}
     	},
 		goback(){
 			this.$router.go(-1)

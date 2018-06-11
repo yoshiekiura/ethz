@@ -1,78 +1,111 @@
 <template>
-<div class="container home-page">
-	<mhead></mhead>
-	<div class="ctninner ">
-		<div class="logs">
-			<h2>有奖竞猜</h2>
-			<p>享受丰厚收益</p>
-		</div>
-		<div class="panel">
-			<div class="panel-bd color-tip">
-				<span>所选币种</span>
-				<span class="pull-right">
-					<font class="color-link mr10">Eth</font>
-					
-					<i class="fa fa-caret-left"></i>
-				</span>
+<div class="container">
+	<mhead>
+		{{project.name}}
+	</mhead>
+	<div class="ctninner">
+		<div class="timecount mb30">
+			<div class="text-center">
+				<p class="fs9 clearfix pl20 pr20 mb20 text-center">
+					<span>本期开始时间: <font class="color-tip ml5">{{project.startTime}}</font></span>
+					<!--<span class="pull-right">:<font class="color-rise ml5"></font></span>-->
+				</p>
+				<div class="tc mb20">
+					<div class="num" v-if="project.isReward == 1 && state == 'completed'">
+						￥{{project.endPrice}}
+					</div>
+					<div class="num" v-else>
+						{{et.day}}<span class="fs9">天</span>
+						{{et.hour}}<span class="fs9">时</span>
+						{{et.min}}<span class="fs9">分</span>
+						{{et.sec}}<span class="fs9">秒</span>
+					</div>
+				</div>
+				<el-button v-if="state == 'coming_soon'" round ><span>准备中...</span></el-button>
+				<el-button  v-if="state == 'in_progress'" @click="pour" type="tip" round>马上抢注</el-button>
+				<el-button  v-if="state == 'completed' || !state " type="disable" round>已结束</el-button>
 			</div>
 		</div>
-		
 		<div class="panel">
-			<div class="panel-hd">
-				<div class="clearfix mb10">
-					<span class="pull-left">总投注</span>
-					<span class="pull-right">期数</span>
+			<div class="panel-bd clearfix text-center">
+				<div class="labtb">	
+					<div class="tr-item">
+						<div class="tb-item">
+							<div class="lab-item fs12 text-left p0">
+								<p class="color-link fs9">当前人数</p>
+								<p class="fs18"><span class="color-tip mr5">{{project.number}}</span><span class="fs9">人</span></p>
+							</div>
+						</div>
+						<div class="tb-item">
+							<div class="lab-item fs12 text-left p0">
+								<p class="color-link fs9">当前以太数</p>
+								<p class="fs18"><span class="color-tip mr5">{{project.sumAmount}}</span><span class="fs9">eth</span></p>
+							</div>
+						</div>
+					</div>
 				</div>
-				<div class="clearfix mb10">
-					<span class="pull-left"><font class="fs16 color-tip">10.2</font><font>eth</font></span>
-					<span class="pull-right">1000期</span>
+			</div>
+		</div>
+		<div class="panel">
+			<div class="panel-bd clearfix text-center">
+				<div class="labtb">	
+					<div class="tr-item">
+						<div class="tb-item">
+							<div class="lab-item fs12 text-left p0">
+								<p class="color-link fs9">当前Eth价格</p>
+								<p class="fs18"><span class="fs9 mr10">{{sign || '¥'}}</span><span class="color-rise mr5">{{lastPrice || project.price}}</span></p>
+							</div>
+						</div>
+					</div>
 				</div>
+			</div>
+		</div>
+		<div class="panel">
+			<div class="panel-hd fs9">
+				<span >参与用户列表</span>
+				<router-link :to="{path:'/list_member', query:{pid:project.id}}" class="pull-right">更多<i class="fa fa-angle-right ml5"></i></router-link>
 			</div>
 			<div class="panel-bd">
-				<div class="mb20">
-					开盘价格：{{sign}}{{project.open || '--'}}
-				</div>
-				<div class="mb40">
-					当前价格：{{sign}}{{lastPrice.last || '--'}}
-				</div>
-				<div class="bg-gray p20 clearfix fs9 mb40">
-					<span class="pull-left">场次：{{project.expect || '--'}}</span>
-					<span class="pull-right">剩余时间：
-						<font class="color-tip">{{et.day}}天{{et.hour}}时{{et.min}}分{{et.sec}}秒</font>
-					</span>
-				</div>
-				<div class="clearfix bet-wrap text-center">
-					<div class="item pull-left raise">
-						<i class="fa fa-caret-up"></i>
-						涨 {{project.rise}}
-					</div>
-					<div class="item pull-left">
-						<i class="fa fa-minus"></i>
-						平{{project.flat}}
-					</div>
-					<div class="item pull-left fall">
-						<i class="fa fa-caret-down"></i>
-						跌{{project.fall}}
-					</div>
+				<div class="memberList" v-loading="!listload">
+					
+					<transition-group  tag="ul" name="mlist">
+						<li v-for="(item, index) in members" :key="index">
+							<div class="avatar img-box"><img :src="item.avatar" /></div>
+							<div class="info">
+								<div class="r">
+									<span class="fs14">{{item.name}}</span>
+									<span class="color-light fs9 pull-right">买入价格:{{item.price}}</span>
+								</div>
+								<div class="r fs9">
+									<span class="color-light">{{item.createdAt}}</span>
+									<span class="color-light pull-right">买入数量:{{item.amount}}</span>
+								</div>
+							</div>
+						</li>
+					</transition-group>
+					
 				</div>
 			</div>
 		</div>
 	</div>
 	<mnav></mnav>
 	
-	<!--<el-dialog :visible.sync="dialogFormVisible">
+	<el-dialog :visible.sync="dialogFormVisible">
 		<el-form v-loading="!dailogload">
 			<div class="fs12 color-gray">eth价格 :</div>
 			<el-form-item>
+				<!--v-model="dialogPrice"-->
 				<el-input class="text-center" type="text" v-model="dailogForm.price" pattern="[0-9]*"  auto-complete="off"></el-input>
 			</el-form-item>
 			<div class="fs12 color-gray">登录密码 :</div>
 			<el-form-item>
+				 <!--v-model="dialogAmount"-->
 				<el-input class="text-center" v-model="dailogForm.password" type="password" auto-complete="off"></el-input>
+				<!-- <el-input class="text-center" v-model="dailogForm.amount" type="text" pattern="[0-9]*" auto-complete="off"></el-input> -->
 			</el-form-item>
 			<el-button class="full mt40" round @click.prevent = "dialogSubmit">确认下注</el-button>
 		</el-form>
-	</el-dialog>-->
+	</el-dialog>
 	
 </div>
 </template>
@@ -196,12 +229,10 @@ export default{
        			password: vm.dailogForm.password
        		}).then(response => {
        			vm.dailogload = true;
-       			vm.dailogForm.password = '';
        			let res = new Object(response.body);
        			if(res.code == 200) {
        				vm.dialogFormVisible = false;
        			}
-       			vm.listAttendance();
        			this.$alert(res.message, { confirmButtonText: '确定' });
        		}).catch(err => {
        			vm.dailogload = true;
@@ -213,7 +244,7 @@ export default{
        		vm.$http.get(vm.commonApi.ticker).then(response => {
 				let res = new Object(response.body);
 				if(res.code == 200) {
-					vm.lastPrice = res.data;
+					vm.lastPrice = res.data.ethusd;
 					vm.sign = '$';
 				}
 			}).catch(err => {
@@ -231,20 +262,6 @@ export default{
        		}else {
        			vm.dialogFormVisible = !vm.dialogFormVisible;
        		}
-       	},
-       	listAttendance(){
-       		let vm = this;
-       		vm.listload = false;
-			vm.$http.get(vm.commonApi.listAttendance, {params:{guess_id:'current',limit:5}}).then(response =>{
-				vm.listload = true;
-				let res = new Object(response.body);
-				if(res.code == 200) {
-					vm.members = res.data.list;
-				}
-			}).catch(err => {
-				vm.listload = true;
-				console.log(err)
-			});
        	}
 	},
 	activated(){
@@ -266,12 +283,30 @@ export default{
 			vm.isloaded = true;
 			console.log(err)
 		});
-
-		vm.listAttendance();
-
+		
+		vm.listload = false;
+		vm.$http.get(vm.commonApi.listAttendance, {params:{guess_id:'current',limit:5}}).then(response =>{
+			vm.listload = true;
+			let res = new Object(response.body);
+			if(res.code == 200) {
+				vm.members = res.data.list;
+				console.log(vm.members)
+			}
+		}).catch(err => {
+			vm.listload = true;
+			console.log(err)
+		});
+		
 		vm.timerTicker = setInterval(function(){
 			vm.ticker();
 		}, 5000);
+		
+//		var testData = { amount:'1', avatar:'/avatars/avatar_4.png', createdAt:"2011-02-03-11:22:33", id:'3', is_win:'0', name:'saf', price:'234', uid:'12' }		
+//		setInterval(function(){
+//			vm.members.splice(0, 0, testData);
+//			vm.members.splice(vm.members.length - 1, 1)
+//		}, 5000)
+		
 	},
 	deactivated(){
 		var vm = this;
@@ -281,12 +316,15 @@ export default{
 </script>
 
 <style>
-/*.list-enter-active, .list-leave-active {
+.list-enter-active, .list-leave-active {
   transition: all 1s;
 }
 
 .list-enter, .list-leave-to {
   transform: translateY(-30px);
   opacity: 0;
-}	*/
+}	
+/*.mlist-move {
+	transition: transform 1s;
+}*/
 </style>
