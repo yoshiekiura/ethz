@@ -19,4 +19,5 @@ export default {
 	feedback: host + '/api/v1/feedback',						//反馈
 	listOrders: host + '/api/v1/user/orders',					//订单
 	ticker: host + '/api/v1/ticker',							//价格
+	betting: host + '/api/v1/guess/betting'						//买涨跌
 }

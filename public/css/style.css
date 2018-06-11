@@ -76,7 +76,7 @@ header .handler.right {right: .25rem;}
 .m20{margin: .2rem;}
 .ml20{margin-left:.2rem;}
 .mr20{margin-right:.2rem;}
-.mb20{margin-bottom:.2rem;}
+.mb20{margin-bottom:.2rem !important;}
 .mt20{margin-top:.2rem;}
 
 .m30{margin: .30rem;}
@@ -223,7 +223,7 @@ text-align:center; cursor:pointer; -moz-user-select:none; -webkit-user-select:no
 .el-dialog__body {padding: .3rem .5rem .5rem;}
 .el-dialog .el-form-item {margin-bottom: .5rem; background: #FFFFFF; border-radius:0;}
 .el-dialog .el-form-item .el-form-item__content,
-.el-dialog .el-form-item .el-form-item__content .el-input__inner{height: .6rem; line-height: .6rem; font-size: .4rem; color: #666666; padding: 0 .05rem; text-align: inherit;}
+.el-dialog .el-form-item .el-form-item__content .el-input__inner{height: .5rem; line-height: .5rem; font-size: 14px; color: #666666; padding: 0 .05rem; text-align: left;}
 
 .el-button--default {background-color: #678096; border-color: #678096; color: #FFFFFF;}
 .el-button:focus, .el-button:hover {background: #59738a; border-color: #59738a; color: #FFFFFF;}

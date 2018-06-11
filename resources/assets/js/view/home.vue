@@ -1,6 +1,6 @@
 <template>
 <div class="container home-page">
-	<mhead></mhead>
+	<mhead>有奖竞猜</mhead>
 	<div class="ctninner ">
 		<div class="logs">
 			<h2>有奖竞猜</h2>
@@ -10,7 +10,7 @@
 			<div class="panel-bd color-tip">
 				<span>所选币种</span>
 				<span class="pull-right">
-					<font class="color-link mr10">Eth</font>
+					<font class="color-link mr10">{{project.code}}</font>
 					
 					<i class="fa fa-caret-left"></i>
 				</span>
@@ -24,33 +24,37 @@
 					<span class="pull-right">期数</span>
 				</div>
 				<div class="clearfix mb10">
-					<span class="pull-left"><font class="fs16 color-tip">10.2</font><font>eth</font></span>
-					<span class="pull-right">1000期</span>
+					<span class="pull-left"><font class="fs16 color-tip">{{project.sumAmount}}</font><font>{{project.code}}</font></span>
+					<span class="pull-right">{{project.name}}</span>
 				</div>
 			</div>
 			<div class="panel-bd">
 				<div class="mb20">
-					开盘价格：{{sign}}{{project.open || '--'}}
+					开盘价格：${{project.open || '--'}}
 				</div>
 				<div class="mb40">
-					当前价格：{{sign}}{{lastPrice.last || '--'}}
+					当前价格：${{lastPrice.last || '--'}}
 				</div>
-				<div class="bg-gray p20 clearfix fs9 mb40">
-					<span class="pull-left">场次：{{project.expect || '--'}}</span>
-					<span class="pull-right">剩余时间：
-						<font class="color-tip">{{et.day}}天{{et.hour}}时{{et.min}}分{{et.sec}}秒</font>
+				<div class="bg-gray p20 clearfix fs9 mb40 text-center">
+					<!--<span class="pull-left">场次：{{project.expect || '--'}}</span>-->
+					<span v-if="state == 'coming_soon'" >
+						离开始时间还剩：<font class="color-tip">{{et.day}}天{{et.hour}}时{{et.min}}分{{et.sec}}秒</font>
 					</span>
+					<span v-else-if="state == 'in_progress'">
+						离开结束间还剩：<font class="color-tip">{{et.day}}天{{et.hour}}时{{et.min}}分{{et.sec}}秒</font>
+					</span>
+					<span v-else>在<font class="color-tip">{{project.openTime}}</font>开奖</span>
 				</div>
 				<div class="clearfix bet-wrap text-center">
-					<div class="item pull-left raise">
+					<div class="item pull-left raise" @click="pour('rise')">
 						<i class="fa fa-caret-up"></i>
 						涨 {{project.rise}}
 					</div>
-					<div class="item pull-left">
+					<div class="item pull-left" @click="pour('flat')">
 						<i class="fa fa-minus"></i>
 						平{{project.flat}}
 					</div>
-					<div class="item pull-left fall">
+					<div class="item pull-left fall" @click="pour('fall')">
 						<i class="fa fa-caret-down"></i>
 						跌{{project.fall}}
 					</div>
@@ -60,19 +64,22 @@
 	</div>
 	<mnav></mnav>
 	
-	<!--<el-dialog :visible.sync="dialogFormVisible">
+	<el-dialog :visible.sync="dialogFormVisible" title="输入下注金额"> 
+		<!--<div class="color-rise" v-if="bettingType == 'rise'">买涨</div>
+		<div  class="color-gray" v-if="bettingType == 'flat'">买平</div>
+		<div class="color-fall" v-if="bettingType == 'fall'">买跌</div>-->
 		<el-form v-loading="!dailogload">
-			<div class="fs12 color-gray">eth价格 :</div>
-			<el-form-item>
-				<el-input class="text-center" type="text" v-model="dailogForm.price" pattern="[0-9]*"  auto-complete="off"></el-input>
+			<div class="fs12 color-gray mb5">购买数量 :</div>
+			<el-form-item class="mb20">
+				<el-input class="text-center" type="text" v-model="dailogForm.amount" pattern="[0-9]*"  auto-complete="off"></el-input>
 			</el-form-item>
-			<div class="fs12 color-gray">登录密码 :</div>
-			<el-form-item>
+			<div class="fs12 color-gray mb5">登录密码 :</div>
+			<el-form-item class="mb20">
 				<el-input class="text-center" v-model="dailogForm.password" type="password" auto-complete="off"></el-input>
 			</el-form-item>
 			<el-button class="full mt40" round @click.prevent = "dialogSubmit">确认下注</el-button>
 		</el-form>
-	</el-dialog>-->
+	</el-dialog>
 	
 </div>
 </template>
@@ -97,9 +104,9 @@ export default{
 			listload:true,
 			state:null,
 			lastPrice:'',
-			sign:'',
 			timer:'',
 			timerTicker:null,
+			bettingType:'',
 			et:{
 				day:'--',
 				hour:'--',
@@ -107,7 +114,7 @@ export default{
 				sec:'--'
 			},
 			dailogForm:{
-				price:'',
+				amount:'',
 				password:'',
 			},
 			dailogload:true,
@@ -179,8 +186,8 @@ export default{
        	},
        	dialogSubmit(){
        		var vm = this;
-       		if(vm.dailogForm.price == ''){
-    			this.$alert('请填写下注金额', { confirmButtonText: '确定' });
+       		if(vm.dailogForm.amount == ''){
+    			this.$alert('请填写下注数量', { confirmButtonText: '确定' });
     			return;
     		}
        		
@@ -190,9 +197,10 @@ export default{
     		}
        		
        		vm.dailogload = false;
-       		vm.$http.post(vm.commonApi.listProject + '/' + vm.project.id, {
+       		vm.$http.post(vm.commonApi.betting + '/' + vm.project.id, {
        			guessid: vm.project.id,
-       			price: vm.dailogForm.price,
+       			amount: vm.dailogForm.amount,
+       			betting: vm.bettingType,
        			password: vm.dailogForm.password
        		}).then(response => {
        			vm.dailogload = true;
@@ -214,7 +222,6 @@ export default{
 				let res = new Object(response.body);
 				if(res.code == 200) {
 					vm.lastPrice = res.data;
-					vm.sign = '$';
 				}
 			}).catch(err => {
 				console.log(err)
@@ -224,11 +231,12 @@ export default{
        		var vm = this;
        		clearInterval(vm.timerTicker)
        	},
-       	pour(){
+       	pour(str){
        		var vm = this;
        		if(!vm.user_state.token) {
        			this.$alert('请先登录', { confirmButtonText: '确定' });
        		}else {
+       			vm.bettingType = str;
        			vm.dialogFormVisible = !vm.dialogFormVisible;
        		}
        	},

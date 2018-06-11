@@ -20558,7 +20558,7 @@ exports = module.exports = __webpack_require__(2)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\r\n/*.list-enter-active, .list-leave-active {\r\n  transition: all 1s;\r\n}\r\n\r\n.list-enter, .list-leave-to {\r\n  transform: translateY(-30px);\r\n  opacity: 0;\r\n}\t*/\r\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\r\n/*.list-enter-active, .list-leave-active {\r\n  transition: all 1s;\r\n}\r\n\r\n.list-enter, .list-leave-to {\r\n  transform: translateY(-30px);\r\n  opacity: 0;\r\n}\t*/\r\n", ""]);
 
 // exports
 
@@ -20576,6 +20576,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vuex__ = __webpack_require__(8);
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -20673,9 +20680,9 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 			listload: true,
 			state: null,
 			lastPrice: '',
-			sign: '',
 			timer: '',
 			timerTicker: null,
+			bettingType: '',
 			et: {
 				day: '--',
 				hour: '--',
@@ -20683,7 +20690,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 				sec: '--'
 			},
 			dailogForm: {
-				price: '',
+				amount: '',
 				password: ''
 			},
 			dailogload: true,
@@ -20758,8 +20765,8 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 			var _this = this;
 
 			var vm = this;
-			if (vm.dailogForm.price == '') {
-				this.$alert('请填写下注金额', { confirmButtonText: '确定' });
+			if (vm.dailogForm.amount == '') {
+				this.$alert('请填写下注数量', { confirmButtonText: '确定' });
 				return;
 			}
 
@@ -20769,9 +20776,10 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 			}
 
 			vm.dailogload = false;
-			vm.$http.post(vm.commonApi.listProject + '/' + vm.project.id, {
+			vm.$http.post(vm.commonApi.betting + '/' + vm.project.id, {
 				guessid: vm.project.id,
-				price: vm.dailogForm.price,
+				amount: vm.dailogForm.amount,
+				betting: vm.bettingType,
 				password: vm.dailogForm.password
 			}).then(function (response) {
 				vm.dailogload = true;
@@ -20793,7 +20801,6 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 				var res = new Object(response.body);
 				if (res.code == 200) {
 					vm.lastPrice = res.data;
-					vm.sign = '$';
 				}
 			}).catch(function (err) {
 				console.log(err);
@@ -20803,11 +20810,12 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 			var vm = this;
 			clearInterval(vm.timerTicker);
 		},
-		pour: function pour() {
+		pour: function pour(str) {
 			var vm = this;
 			if (!vm.user_state.token) {
 				this.$alert('请先登录', { confirmButtonText: '确定' });
 			} else {
+				vm.bettingType = str;
 				vm.dialogFormVisible = !vm.dialogFormVisible;
 			}
 		},
@@ -20870,7 +20878,7 @@ var render = function() {
     "div",
     { staticClass: "container home-page" },
     [
-      _c("mhead"),
+      _c("mhead", [_vm._v("有奖竞猜")]),
       _vm._v(" "),
       _c("div", { staticClass: "ctninner " }, [
         _vm._m(0),
@@ -20883,7 +20891,9 @@ var render = function() {
               "span",
               { staticClass: "pull-right" },
               [
-                _c("font", { staticClass: "color-link mr10" }, [_vm._v("Eth")]),
+                _c("font", { staticClass: "color-link mr10" }, [
+                  _vm._v(_vm._s(_vm.project.code))
+                ]),
                 _vm._v(" "),
                 _c("i", { staticClass: "fa fa-caret-left" })
               ],
@@ -20902,22 +20912,23 @@ var render = function() {
                 { staticClass: "pull-left" },
                 [
                   _c("font", { staticClass: "fs16 color-tip" }, [
-                    _vm._v("10.2")
+                    _vm._v(_vm._s(_vm.project.sumAmount))
                   ]),
-                  _c("font", [_vm._v("eth")])
+                  _c("font", [_vm._v(_vm._s(_vm.project.code))])
                 ],
                 1
               ),
               _vm._v(" "),
-              _c("span", { staticClass: "pull-right" }, [_vm._v("1000期")])
+              _c("span", { staticClass: "pull-right" }, [
+                _vm._v(_vm._s(_vm.project.name))
+              ])
             ])
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "panel-bd" }, [
             _c("div", { staticClass: "mb20" }, [
               _vm._v(
-                "\r\n\t\t\t\t\t开盘价格：" +
-                  _vm._s(_vm.sign) +
+                "\r\n\t\t\t\t\t开盘价格：$" +
                   _vm._s(_vm.project.open || "--") +
                   "\r\n\t\t\t\t"
               )
@@ -20925,73 +20936,231 @@ var render = function() {
             _vm._v(" "),
             _c("div", { staticClass: "mb40" }, [
               _vm._v(
-                "\r\n\t\t\t\t\t当前价格：" +
-                  _vm._s(_vm.sign) +
+                "\r\n\t\t\t\t\t当前价格：$" +
                   _vm._s(_vm.lastPrice.last || "--") +
                   "\r\n\t\t\t\t"
               )
             ]),
             _vm._v(" "),
-            _c("div", { staticClass: "bg-gray p20 clearfix fs9 mb40" }, [
-              _c("span", { staticClass: "pull-left" }, [
-                _vm._v("场次：" + _vm._s(_vm.project.expect || "--"))
-              ]),
-              _vm._v(" "),
-              _c(
-                "span",
-                { staticClass: "pull-right" },
-                [
-                  _vm._v("剩余时间：\r\n\t\t\t\t\t\t"),
-                  _c("font", { staticClass: "color-tip" }, [
-                    _vm._v(
-                      _vm._s(_vm.et.day) +
-                        "天" +
-                        _vm._s(_vm.et.hour) +
-                        "时" +
-                        _vm._s(_vm.et.min) +
-                        "分" +
-                        _vm._s(_vm.et.sec) +
-                        "秒"
+            _c(
+              "div",
+              { staticClass: "bg-gray p20 clearfix fs9 mb40 text-center" },
+              [
+                _vm.state == "coming_soon"
+                  ? _c(
+                      "span",
+                      [
+                        _vm._v("\r\n\t\t\t\t\t\t离开始时间还剩："),
+                        _c("font", { staticClass: "color-tip" }, [
+                          _vm._v(
+                            _vm._s(_vm.et.day) +
+                              "天" +
+                              _vm._s(_vm.et.hour) +
+                              "时" +
+                              _vm._s(_vm.et.min) +
+                              "分" +
+                              _vm._s(_vm.et.sec) +
+                              "秒"
+                          )
+                        ])
+                      ],
+                      1
                     )
-                  ])
-                ],
-                1
-              )
-            ]),
+                  : _vm.state == "in_progress"
+                    ? _c(
+                        "span",
+                        [
+                          _vm._v("\r\n\t\t\t\t\t\t离开结束间还剩："),
+                          _c("font", { staticClass: "color-tip" }, [
+                            _vm._v(
+                              _vm._s(_vm.et.day) +
+                                "天" +
+                                _vm._s(_vm.et.hour) +
+                                "时" +
+                                _vm._s(_vm.et.min) +
+                                "分" +
+                                _vm._s(_vm.et.sec) +
+                                "秒"
+                            )
+                          ])
+                        ],
+                        1
+                      )
+                    : _c(
+                        "span",
+                        [
+                          _vm._v("在"),
+                          _c("font", { staticClass: "color-tip" }, [
+                            _vm._v(_vm._s(_vm.project.openTime))
+                          ]),
+                          _vm._v("开奖")
+                        ],
+                        1
+                      )
+              ]
+            ),
             _vm._v(" "),
             _c("div", { staticClass: "clearfix bet-wrap text-center" }, [
-              _c("div", { staticClass: "item pull-left raise" }, [
-                _c("i", { staticClass: "fa fa-caret-up" }),
-                _vm._v(
-                  "\r\n\t\t\t\t\t\t涨 " +
-                    _vm._s(_vm.project.rise) +
-                    "\r\n\t\t\t\t\t"
-                )
-              ]),
+              _c(
+                "div",
+                {
+                  staticClass: "item pull-left raise",
+                  on: {
+                    click: function($event) {
+                      _vm.pour("rise")
+                    }
+                  }
+                },
+                [
+                  _c("i", { staticClass: "fa fa-caret-up" }),
+                  _vm._v(
+                    "\r\n\t\t\t\t\t\t涨 " +
+                      _vm._s(_vm.project.rise) +
+                      "\r\n\t\t\t\t\t"
+                  )
+                ]
+              ),
               _vm._v(" "),
-              _c("div", { staticClass: "item pull-left" }, [
-                _c("i", { staticClass: "fa fa-minus" }),
-                _vm._v(
-                  "\r\n\t\t\t\t\t\t平" +
-                    _vm._s(_vm.project.flat) +
-                    "\r\n\t\t\t\t\t"
-                )
-              ]),
+              _c(
+                "div",
+                {
+                  staticClass: "item pull-left",
+                  on: {
+                    click: function($event) {
+                      _vm.pour("flat")
+                    }
+                  }
+                },
+                [
+                  _c("i", { staticClass: "fa fa-minus" }),
+                  _vm._v(
+                    "\r\n\t\t\t\t\t\t平" +
+                      _vm._s(_vm.project.flat) +
+                      "\r\n\t\t\t\t\t"
+                  )
+                ]
+              ),
               _vm._v(" "),
-              _c("div", { staticClass: "item pull-left fall" }, [
-                _c("i", { staticClass: "fa fa-caret-down" }),
-                _vm._v(
-                  "\r\n\t\t\t\t\t\t跌" +
-                    _vm._s(_vm.project.fall) +
-                    "\r\n\t\t\t\t\t"
-                )
-              ])
+              _c(
+                "div",
+                {
+                  staticClass: "item pull-left fall",
+                  on: {
+                    click: function($event) {
+                      _vm.pour("fall")
+                    }
+                  }
+                },
+                [
+                  _c("i", { staticClass: "fa fa-caret-down" }),
+                  _vm._v(
+                    "\r\n\t\t\t\t\t\t跌" +
+                      _vm._s(_vm.project.fall) +
+                      "\r\n\t\t\t\t\t"
+                  )
+                ]
+              )
             ])
           ])
         ])
       ]),
       _vm._v(" "),
-      _c("mnav")
+      _c("mnav"),
+      _vm._v(" "),
+      _c(
+        "el-dialog",
+        {
+          attrs: { visible: _vm.dialogFormVisible, title: "输入下注金额" },
+          on: {
+            "update:visible": function($event) {
+              _vm.dialogFormVisible = $event
+            }
+          }
+        },
+        [
+          _c(
+            "el-form",
+            {
+              directives: [
+                {
+                  name: "loading",
+                  rawName: "v-loading",
+                  value: !_vm.dailogload,
+                  expression: "!dailogload"
+                }
+              ]
+            },
+            [
+              _c("div", { staticClass: "fs12 color-gray mb5" }, [
+                _vm._v("购买数量 :")
+              ]),
+              _vm._v(" "),
+              _c(
+                "el-form-item",
+                { staticClass: "mb20" },
+                [
+                  _c("el-input", {
+                    staticClass: "text-center",
+                    attrs: {
+                      type: "text",
+                      pattern: "[0-9]*",
+                      "auto-complete": "off"
+                    },
+                    model: {
+                      value: _vm.dailogForm.amount,
+                      callback: function($$v) {
+                        _vm.$set(_vm.dailogForm, "amount", $$v)
+                      },
+                      expression: "dailogForm.amount"
+                    }
+                  })
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c("div", { staticClass: "fs12 color-gray mb5" }, [
+                _vm._v("登录密码 :")
+              ]),
+              _vm._v(" "),
+              _c(
+                "el-form-item",
+                { staticClass: "mb20" },
+                [
+                  _c("el-input", {
+                    staticClass: "text-center",
+                    attrs: { type: "password", "auto-complete": "off" },
+                    model: {
+                      value: _vm.dailogForm.password,
+                      callback: function($$v) {
+                        _vm.$set(_vm.dailogForm, "password", $$v)
+                      },
+                      expression: "dailogForm.password"
+                    }
+                  })
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "el-button",
+                {
+                  staticClass: "full mt40",
+                  attrs: { round: "" },
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                      return _vm.dialogSubmit($event)
+                    }
+                  }
+                },
+                [_vm._v("确认下注")]
+              )
+            ],
+            1
+          )
+        ],
+        1
+      )
     ],
     1
   )
@@ -69374,7 +69543,8 @@ var host = hostUrl;
 	connect: host + '/api/v1/contact', //联系
 	feedback: host + '/api/v1/feedback', //反馈
 	listOrders: host + '/api/v1/user/orders', //订单
-	ticker: host + '/api/v1/ticker' //价格
+	ticker: host + '/api/v1/ticker', //价格
+	betting: host + '/api/v1/guess/betting' //买涨跌
 });
 
 /***/ }),
