@@ -1,0 +1,67 @@
+
+01
+//文档高度
+02
+function getDocumentTop() {
+03
+    var scrollTop = 0, bodyScrollTop = 0, documentScrollTop = 0;
+04
+    if (document.body) {
+05
+        bodyScrollTop = document.body.scrollTop;
+06
+    }
+07
+    if (document.documentElement) {
+08
+        documentScrollTop = document.documentElement.scrollTop;
+09
+    }
+10
+    scrollTop = (bodyScrollTop - documentScrollTop > 0) ? bodyScrollTop : documentScrollTop;    return scrollTop;
+11
+}
+12
+ 
+13
+//可视窗口高度
+14
+function getWindowHeight() {
+15
+    var windowHeight = 0;    if (document.compatMode == "CSS1Compat") {
+16
+        windowHeight = document.documentElement.clientHeight;
+17
+    } else {
+18
+        windowHeight = document.body.clientHeight;
+19
+    }
+20
+    return windowHeight;
+21
+}
+22
+ 
+23
+//滚动条滚动高度
+24
+function getScrollHeight() {
+25
+    var scrollHeight = 0, bodyScrollHeight = 0, documentScrollHeight = 0;
+26
+    if (document.body) {
+27
+        bodyScrollHeight = document.body.scrollHeight;
+28
+    }
+29
+    if (document.documentElement) {
+30
+        documentScrollHeight = document.documentElement.scrollHeight;
+31
+    }
+32
+    scrollHeight = (bodyScrollHeight - documentScrollHeight > 0) ? bodyScrollHeight : documentScrollHeight;    return scrollHeight;
+33
+}

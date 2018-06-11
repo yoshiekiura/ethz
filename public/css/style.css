@@ -9,7 +9,8 @@ h1,h2,h3,h4,h5{font-size:inherit;}
 body{background-color:#10253a; max-width:640px; margin-left:auto; margin-right:auto; overflow-x:hidden;}
 #app{position:absolute; top:0; left:0; right:0; bottom:0;}
 .container{width:100%; height:100%;}
-.ctninner {padding:0.4rem 0.2rem .8rem;}
+.ctninner {padding:0.4rem 0.2rem 0.2rem;}
+.ctninner.isNavbar {padding-bottom: 0.8rem}
 header{height:0.8rem; line-height:0.8rem; padding:0 0.25rem; font-size:0.3rem; text-align:center; 
 border-bottom:0 none; background:rgba(0,0,0,0.3); position: relative; top: 0; left: 0;}
 header .handler.left, header .handler.right {position: absolute; top: 50%; transform: translateY(-50%); -webkit-transform: translateY(-50%); display: block; line-height:100%;}
@@ -37,13 +38,20 @@ header .handler.right {right: .25rem;}
 .panel .labtb .tb-item:nth-child(even):after{display: none;}
 .panel .tb-item .lab-item {min-width: 7em; display: inline-block; padding-left: .45rem; position: relative; top: 0; left: 0;}
 .lab-item .fa {position: absolute; top: 50%; left: 0; margin-top: -.5em; font-size: .3rem }
-.fs9{font-size:.18rem;}
+/*.fs9{font-size:.18rem;}
 .fs12{font-size:.24rem;}
 .fs14{font-size:.28rem;}
 .fs16{font-size:.32rem;}
 .fs18{font-size:.36rem;}
 .fs20{font-size:.4rem;}
-.fs24{font-size:.48rem;}
+.fs24{font-size:.48rem;}*/
+.fs9{font-size:9px;}
+.fs12{font-size:12px;}
+.fs14{font-size:14px;}
+.fs16{font-size:16px;}
+.fs18{font-size:18px;}
+.fs20{font-size:20px;}
+.fs24{font-size:24px;}
 
 .m-auto {margin-left: auto !important; margin-right: auto !important;}
 
@@ -144,6 +152,7 @@ header .handler.right {right: .25rem;}
 .color-link{color:#7eb7ea !important;}
 .color-tip{color: #f3c44e !important;}
 .color-rise {color: #de415e !important;}
+.color-fall {color: #59eaae !important;}
 
 a.color-theme:hover{color:#F00;}
 
@@ -225,7 +234,7 @@ text-align:center; cursor:pointer; -moz-user-select:none; -webkit-user-select:no
 .el-button--disable {background: #1d2f40; color: #4e6275; border-color: #1d2f40;}
 .el-button--disable:focus, .el-button--disable:hover {background: #1d2f40; color: #4e6275; border-color: #1d2f40;}
 /*home*/
-.timecount .tc {font-size: 0.8rem;}
+/*.timecount .tc {font-size: 0.8rem;}*/
 
 /*成员列表*/
 .memberList {min-height: 3rem;}
@@ -256,6 +265,18 @@ margin-top: -0.2rem; background: #f3c44e; border-radius: .2rem; color: #333333; 
 /*充值*/
 .qrcode { background: #FFFFFF; padding: .2rem; margin: .2rem auto 0; width: 5rem; height: 5rem; max-width: 640px; border-radius: 10px;}
 .qrcode img {width: 100%; height: 100%; display: block;}
+
+/*首页*/
+.home-page {background: #0a1622;}
+.home-page .ctninner { padding: 2.5rem 0.4rem 0; background: url('../img/bg_invite.jpg') no-repeat top center ; background-size: 100% auto;}
+.home-page .logs {width: 100%; position: absolute; top: 1.25rem; left: 0; text-align: center; color: #FFFFFF;}
+.home-page .logs h2 {font-size: .8rem; font-weight: 300;}
+.home-page .logs p {font-size: .44rem;}
+.home-page .bet-wrap .item {height: .8rem; line-height: .8rem; width: 32%; margin-right: 2%; border: 1px solid #FFFFFF; color: #FFFFFF; text-overflow: ellipsis; overflow: hidden;
+border-radius: 5px; white-space: nowrap; padding: 0 0.1rem;}
+.home-page .bet-wrap .item:last-child {margin-right: 0;}
+.home-page .bet-wrap .item.raise {border-color: #de415e; color: #de415e; }
+.home-page .bet-wrap .item.fall {border-color: #59eaae; color: #59eaae;}
 
 
 /*邀请*/
