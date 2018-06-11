@@ -42,6 +42,9 @@ class GuessController extends Controller
         $data['last'] = rand(1000, 9999);
         $data['open'] = rand(1000, 9999);
         $data['expect'] = strtotime($guess->end_time) - strtotime($guess->start_time);
+        $data['rise'] = rand(1000, 9999);
+        $data['flat'] = rand(1000, 9999);
+        $data['fall'] = rand(1000, 9999);
         return $this->responseSuccess($data, 'success');
     }
 
@@ -55,6 +58,9 @@ class GuessController extends Controller
         $data['last'] = rand(1000, 9999);
         $data['open'] = rand(1000, 9999);
         $data['expect'] = strtotime($guess->end_time) - strtotime($guess->start_time);
+        $data['rise'] = rand(1000, 9999);
+        $data['flat'] = rand(1000, 9999);
+        $data['fall'] = rand(1000, 9999);
         return $this->responseSuccess($data, 'success');
     }
 
