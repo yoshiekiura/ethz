@@ -45,7 +45,7 @@ class GuessController extends Controller
         $data['rise'] = rand(1000, 9999);
         $data['flat'] = rand(1000, 9999);
         $data['fall'] = rand(1000, 9999);
-        $data['user']['balance'] = 100;
+        $data['user']['ETH'] = 100;
         return $this->responseSuccess($data, 'success');
     }
 
@@ -62,7 +62,7 @@ class GuessController extends Controller
         $data['rise'] = rand(1000, 9999);
         $data['flat'] = rand(1000, 9999);
         $data['fall'] = rand(1000, 9999);
-        $data['user']['balance'] = 100;
+        $data['user']['ETH'] = 100;
         return $this->responseSuccess($data, 'success');
     }
 
