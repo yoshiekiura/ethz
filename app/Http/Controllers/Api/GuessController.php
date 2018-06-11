@@ -40,6 +40,8 @@ class GuessController extends Controller
         $data = $data->toArray($data->resource);
         $data['currency'] = 1;
         $data['last'] = rand(1000, 9999);
+        $data['open'] = rand(1000, 9999);
+        $data['expect'] = strtotime($guess->end_time) - strtotime($guess->start_time);
         return $this->responseSuccess($data, 'success');
     }
 
@@ -51,6 +53,8 @@ class GuessController extends Controller
         $data = $data->toArray($data->resource);
         $data['currency'] = 1;
         $data['last'] = rand(1000, 9999);
+        $data['open'] = rand(1000, 9999);
+        $data['expect'] = strtotime($guess->end_time) - strtotime($guess->start_time);
         return $this->responseSuccess($data, 'success');
     }
 
