@@ -39,7 +39,7 @@
 							</div>
 						</li>
 					</ul>
-					<div @click="getMemberList" class="handle text-center pt20 pb20" :class="last&&last!=1?'color-tip':'color-gray'" >{{handleStr}}</div>
+					<div @click="getMemberList" class="handle text-center pt20 pb20" :class="handleStr=='加载更多'?'color-tip':'color-gray'" >{{handleStr}}</div>
 				</div>
 			</div>
 		</div>
@@ -65,12 +65,8 @@ export default{
 	      	winnerId:null,
 	      	isloaded:true,
 	      	last:null,
+	      	handleStr:'加载更多'
 	      }
-	},
-	computed:{
-		handleStr(){
-			return (this.last&&this.last!=1)?'加载更多':'没有更多数据了';
-		}
 	},
     activated(){
     	var vm = this;
@@ -82,7 +78,7 @@ export default{
 	methods:{
 		getMemberList(){
     		var vm = this
-    		if(vm.last != 1) {
+    		if(vm.handleStr != '没有更多数据了') {
     			vm.id = vm.$route.query.pid;
     			vm.isloaded = false;
 	    		vm.$http.get( vm.commonApi.listAttendance, {params:{guess_id:vm.id, sinceId:vm.last}}
@@ -92,6 +88,9 @@ export default{
 			 		if(res.code == 200) {
 			 			vm.list = vm.list.concat(res.data.list);
 			 			vm.last = res.data.last;
+			 			vm.handleStr = '加载更多';
+			 		}else if(res.code == 403){
+			 			vm.handleStr = '没有更多数据了';
 			 		}
 			 		
 			 		for(let i = 0; i < res.data.list.length; i++) {

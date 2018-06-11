@@ -77,6 +77,7 @@
 			<el-form-item class="mb20">
 				<el-input class="text-center" v-model="dailogForm.password" type="password" auto-complete="off"></el-input>
 			</el-form-item>
+			<div v-if="project.user" class="text-right">账号余额:<span class="color-rise">{{project.user.ETH}}</span>{{project.code}}</div>
 			<el-button class="full mt40" round @click.prevent = "dialogSubmit">确认下注</el-button>
 		</el-form>
 	</el-dialog>
@@ -134,6 +135,26 @@ export default{
 		}
 	},
 	methods:{
+		init(){
+			var vm = this;
+			vm.isloaded = false;
+			vm.$http.get(vm.commonApi.listProject + '/current').then(response => {
+				vm.isloaded = true;
+				let res = new Object(response.body);
+				if(res.code == 200) {
+					vm.state = res.data.state;
+					if(new Date() < vm.strTimeTrans(res.data.startTime)) {
+						vm.countTime(res.data.startTime)
+					}else if(new Date() < vm.strTimeTrans(res.data.endTime)){
+						vm.countTime(res.data.endTime)
+					}
+					vm.project = res.data;
+				}
+			}).catch(err => {
+				vm.isloaded = true;
+				console.log(err)
+			});
+		},
 		countTime(end){
 			let vm = this;
 			vm.timer = setInterval(function(){
@@ -207,9 +228,10 @@ export default{
        			vm.dailogForm.password = '';
        			let res = new Object(response.body);
        			if(res.code == 200) {
+       				vm.init();
        				vm.dialogFormVisible = false;
        			}
-       			vm.listAttendance();
+//     			vm.listAttendance();
        			this.$alert(res.message, { confirmButtonText: '确定' });
        		}).catch(err => {
        			vm.dailogload = true;
@@ -257,25 +279,10 @@ export default{
 	},
 	activated(){
 		let vm = this;
-		vm.isloaded = false;
-		vm.$http.get(vm.commonApi.listProject + '/current').then(response => {
-			vm.isloaded = true;
-			let res = new Object(response.body);
-			if(res.code == 200) {
-				vm.state = res.data.state;
-				if(new Date() < vm.strTimeTrans(res.data.startTime)) {
-					vm.countTime(res.data.startTime)
-				}else if(new Date() < vm.strTimeTrans(res.data.endTime)){
-					vm.countTime(res.data.endTime)
-				}
-				vm.project = res.data;
-			}
-		}).catch(err => {
-			vm.isloaded = true;
-			console.log(err)
-		});
+		
+		vm.init();
 
-		vm.listAttendance();
+//		vm.listAttendance();
 
 		vm.timerTicker = setInterval(function(){
 			vm.ticker();

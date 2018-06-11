@@ -234,6 +234,7 @@ text-align:center; cursor:pointer; -moz-user-select:none; -webkit-user-select:no
 .el-button--disable {background: #1d2f40; color: #4e6275; border-color: #1d2f40;}
 .el-button--disable:focus, .el-button--disable:hover {background: #1d2f40; color: #4e6275; border-color: #1d2f40;}
 /*home*/
+.el-loading-mask {background: transparent;}
 /*.timecount .tc {font-size: 0.8rem;}*/
 
 /*成员列表*/
