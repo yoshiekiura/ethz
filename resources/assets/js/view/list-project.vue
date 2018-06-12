@@ -9,23 +9,6 @@
 	<div class="ctninner isNavbar" v-loading="!isloaded">
 		<div class="project-list" v-if="list.length > 0">
 			<router-link :to="{ path: '/list_member', query:{pid: item.id} }" v-for="(item, index) in list" :key="index">
-				<!--<div class="project-list-item panel mb20">
-					<div class="panel-hd fs9">项目时间: {{item.startTime}} ~ {{item.endTime}}</div>
-					<div class="panel-bd">
-						<div class="fs14 mb10">
-							<span class="color-light">项目名:</span>
-							<span>{{item.name}}</span>
-						</div>
-						<div class="fs14 mb10">
-							<span class="color-light">以太总额:</span>
-							<span class="color-tip">{{item.sumAmount}}</span>
-						</div>
-						<div class="fs14">
-							<span class="color-light">参与人数:</span>
-							<span>{{item.number}}</span>
-						</div>
-					</div>
-				</div>-->
 				<div class="panel fs12">
 					<div class="panel-hd text-center">{{item.title}}</div>
 					<div class="panel-hd clearfix ">
@@ -102,6 +85,7 @@ export default{
 	},
     activated(){
     	let vm = this;
+    	vm.list = new Array();
     	vm.last = null;
     	vm.getItemList()
     },
