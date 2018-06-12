@@ -329,9 +329,9 @@ class AccountsModel extends Model
      *
      * @return BelongsTo
      */
-    public function currency() : BelongsTo
+    public function currencyTo()
     {
-        return $this->belongsTo(CurrencyModel::class, 'currency');
+        return $this->hasOne(CurrencyModel::class, 'id', 'currency');
     }
 
     public function getOrCreate($uid,$currency)

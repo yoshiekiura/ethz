@@ -55,7 +55,7 @@ Route::group([
 Route::group(['prefix' => 'v1'], function () {
     Route::group(['prefix' => 'guess'], function () {
 	    Route::get('/','Api\GuessController@index');
-	    Route::get('/attendance','Api\GuessController@attendance');
+	    Route::get('/attendance','Api\GuessController@attendanceRose');
 	    Route::get('/{guess}','Api\GuessController@show')->where(['guess' => '[0-9]+']);
 	    Route::get('/current','Api\GuessController@showNew');
 	});

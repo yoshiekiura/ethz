@@ -21,11 +21,11 @@ class TickerController extends Controller
         $ticker = json_decode('{"openPrice":"567.00000000","lastPrice":"522.00000000","highPrice":"568.45000000","lowPrice":"501.13000000","volume":"210881.66080000"}
 ');
         return $this->responseSuccess([
-            'open' => $ticker->openPrice,
-            'last' => $ticker->lastPrice,
-            'high' => $ticker->highPrice,
-            'low' => $ticker->lowPrice,
-            'vol' => $ticker->volume,
+            'open' => (float) $ticker->openPrice,
+            'last' => (float) $ticker->lastPrice,
+            'high' => (float) $ticker->highPrice,
+            'low' => (float) $ticker->lowPrice,
+            'vol' => (float) $ticker->volume,
         ]);
     }
 }

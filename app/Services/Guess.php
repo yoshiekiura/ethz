@@ -77,6 +77,11 @@ class Guess extends BaseService
 
         $account = $accountModel->setCurrency($guess->currency)->getAccountLock($user->id);
 
+        if($account->balance < $amount) {
+            DB::rollback();
+            return ['error'=>'账户余额不足'];
+        }
+
         $incrRes = $accountModel->where([
                     'uid' => $user->id ?? 0,
                     'currency' => $guess->currency,
@@ -108,7 +113,7 @@ class Guess extends BaseService
             return $orderId;
         } else {
             DB::rollback();
-            return null;
+            return ['error'=>'投注失败'];
         }
 
     }

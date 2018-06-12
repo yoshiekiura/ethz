@@ -30,11 +30,19 @@
 							<div class="info">
 								<div class="r">
 									<span class="fs14">{{item.name}}</span>
-									<span class="color-light fs9 pull-right">买入价格:{{item.price}}</span>
+									<span class="color-light fs9 pull-right" v-if="item.betting == 'rise'">
+										<i class="fa fa-caret-up"></i> 涨
+									</span>
+									<span class="color-light fs9 pull-right" v-else-if="item.betting == 'flat'">
+										<i class="fa fa-minus"></i> 平
+									</span>
+									<span class="color-light fs9 pull-right" v-else-if="item.betting == 'fall'">
+										<i class="fa fa-caret-down"></i> 跌
+									</span>
 								</div>
 								<div class="r fs9">
 									<span class="color-light">{{item.createdAt}}</span>
-									<span class="color-light pull-right">买入数量:{{item.amount}}{{item.code}}</span>
+									<span class="color-light pull-right">投注:{{item.amount}}{{item.code}}</span>
 								</div>
 							</div>
 						</li>

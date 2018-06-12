@@ -8,7 +8,9 @@ use App\Http\Controllers\ApiController as Controller;
 use App\Http\Resources\GuessResource;
 use App\Models\Guess;
 use App\Models\GuessOrders;
+use App\Models\GuessOrdersRose;
 use App\Models\UserModel;
+use App\Models\AccountsModel;
 use App\Services\Guess as GuessSer;
 use App\Services\Rewards;
 use Hash;
@@ -36,16 +38,35 @@ class GuessController extends Controller
 
     public function show(Request $request, Guess $guess)
     {
+        $user = $request->user('api');
         $data = new GuessResource($guess);
         $data = $data->toArray($data->resource);
         $data['currency'] = 1;
         $data['last'] = rand(1000, 9999);
         $data['open'] = rand(1000, 9999);
         $data['expect'] = strtotime($guess->end_time) - strtotime($guess->start_time);
-        $data['rise'] = rand(1000, 9999);
-        $data['flat'] = rand(1000, 9999);
-        $data['fall'] = rand(1000, 9999);
-        $data['user']['ETH'] = 100;
+
+        if(isset($guess->id)) {
+            $info = with(new GuessOrdersRose())->getOrderGroup($guess->id);
+            $data['rise'] = $info['rise'];
+            $data['flat'] = $info['flat'];
+            $data['fall'] = $info['fall'];
+        } else {
+            $data['rise'] = $data['flat'] = $data['fall'] = 0;
+        }
+
+        $user = $request->user('api');
+        $data['user'][$data['code']] = 0;
+        if(isset($user->id)) {
+            $accounts = with(new AccountsModel())->getListByUid($user->id);
+            if(!empty($accounts)) {
+                foreach ($accounts as $account) {
+                    $data['user'][$account->currencyTo->code] = (float) $account->balance;
+                }
+            }
+
+        }
+
         return $this->responseSuccess($data, 'success');
     }
 
@@ -59,10 +80,28 @@ class GuessController extends Controller
         $data['last'] = rand(1000, 9999);
         $data['open'] = rand(1000, 9999);
         $data['expect'] = strtotime($guess->end_time) - strtotime($guess->start_time);
-        $data['rise'] = rand(1000, 9999);
-        $data['flat'] = rand(1000, 9999);
-        $data['fall'] = rand(1000, 9999);
-        $data['user']['ETH'] = 100;
+
+        if(isset($guess->id)) {
+            $info = with(new GuessOrdersRose())->getOrderGroup($guess->id);
+            $data['rise'] = $info['rise'];
+            $data['flat'] = $info['flat'];
+            $data['fall'] = $info['fall'];
+        } else {
+            $data['rise'] = $data['flat'] = $data['fall'] = 0;
+        }
+
+        $user = $request->user('api');
+        $data['user'][$data['code']] = 0;
+        if(isset($user->id)) {
+            $accounts = with(new AccountsModel())->getListByUid($user->id);
+            if(!empty($accounts)) {
+                foreach ($accounts as $account) {
+                    $data['user'][$account->currencyTo->code] = (float) $account->balance;
+                }
+            }
+
+        }
+
         return $this->responseSuccess($data, 'success');
     }
 
@@ -94,7 +133,7 @@ class GuessController extends Controller
         if($items->isEmpty()) {
             return $this->setStatusCode(403)->responseError('查无数据');
         }
-        
+
         $data['list'] = [];
         foreach ($items as $key => $item) {
             $data['list'][$key]['id'] = $item->id;
@@ -181,6 +220,11 @@ class GuessController extends Controller
             return $this->setStatusCode(404)->responseError('项目暂未开放');
         }
 
+        $end_time = strtotime($guess->end_time);
+        if($end_time <= time()) {
+            return $this->setStatusCode(404)->responseError('项目已结束');
+        }
+
         $betting = $request->input('betting');
         $amount = $request->input('amount');
         $password = $request->input('password');
@@ -218,13 +262,60 @@ class GuessController extends Controller
         $order = json_encode(['betting' => $betting, 'amount' => $amount]);
         $order = json_decode($order);
 
-        $orderId = with(new GuessSer())->orderRose($user, $guess, $order);
+        $result = with(new GuessSer())->orderRose($user, $guess, $order);
 
-        if($orderId > 0) {
-            return $this->responseSuccess(['id' => $orderId], '投注成功');
+        if(!isset($result['error'])) {
+            return $this->responseSuccess(['id' => $result], '投注成功');
         } else {
-            return $this->setStatusCode(404)->responseError('竞猜失败');
+            return $this->setStatusCode(404)->responseError($result['error']);
         }
+    }
+
+    public function attendanceRose(Request $request)
+    {
+        $guessId = $request->input('guess_id');
+        $sinceId = $request->input('sinceId', 0);
+        $limit = $request->input('limit', 20);
+
+        if(empty($guessId)) {
+            return $this->setStatusCode(404)->responseError('缺少ID');
+        }
+
+        if($guessId == 'current') {
+            $guess = with(new Guess())->orderBy('id', 'DESC')->first();
+            if(isset($guess->id)) {
+                $guessId = $guess->id;
+            }
+        }
+
+        $builders = with(new GuessOrdersRose())->setHidden([])->newQuery();
+
+        if($sinceId > 0) {
+            $builders->where('id', '<', $sinceId);
+        }
+
+        $items = $builders->where('guess_id', $guessId)->orderBy('is_win', 'DESC')->orderBy('id', 'DRSC')->limit($limit)->get();
+
+        if($items->isEmpty()) {
+            return $this->setStatusCode(403)->responseError('查无数据');
+        }
+
+        $data['list'] = [];
+        foreach ($items as $key => $item) {
+            $data['list'][$key]['id'] = $item->id;
+            $data['list'][$key]['uid'] = $item->uid;
+            $data['list'][$key]['name'] = $item->user->name;
+            $data['list'][$key]['createdAt'] = (string) $item->created_at;
+            $data['list'][$key]['avatar'] = env('APP_URL') . "/avatars/avatar_".$item->user->avatar.".png";
+            $data['list'][$key]['betting'] = $item->betting == '0' ? 'flat' : ($item->betting == '1' ? 'rise' : 'fall');
+            $data['list'][$key]['amount'] = my_number_format($item->amount, 4);
+            $data['list'][$key]['is_win'] = $item->is_win;
+        }
+        if(!empty($data['list'])) {
+            $last = end($data['list']);
+            $data['last'] = $last['id'];
+        }
+        return $this->responseSuccess($data, 'success');
     }
 }
 
