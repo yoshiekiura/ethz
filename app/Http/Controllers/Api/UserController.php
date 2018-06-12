@@ -67,7 +67,7 @@ class UserController extends Controller
             $order->expect_price = (float) bcmul($order->expect_price, '1', 4);
             return [
                 'id' => $order->id,
-                'item_title' => $order->guess->title,
+                'item_title' => $order->guess->title??'',
                 'item_rdate' => (string) $order->created_at,
                 'item_amount' => $order->amount,
                 'item_price' => $order->expect_price,

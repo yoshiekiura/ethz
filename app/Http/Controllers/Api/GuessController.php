@@ -62,6 +62,8 @@ class GuessController extends Controller
             $info['sum_amount'] = rand(1000, 9999);
             $rose = ['rise', 'flat', 'fall'];
             $info['betting_win'] = $rose[rand(0, 2)];
+            $state = ['coming_soon', 'in_progress', 'completed', 'completed'];
+            $info['state'] = $state[rand(0, 3)];
             $last = $i;
             $list[] = $info;
         }
