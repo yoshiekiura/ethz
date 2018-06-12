@@ -234,7 +234,7 @@ text-align:center; cursor:pointer; -moz-user-select:none; -webkit-user-select:no
 .el-button--disable {background: #1d2f40; color: #4e6275; border-color: #1d2f40;}
 .el-button--disable:focus, .el-button--disable:hover {background: #1d2f40; color: #4e6275; border-color: #1d2f40;}
 /*home*/
-.el-loading-mask {background: transparent;}
+.el-loading-mask {background: #10253a; opacity: 0.5;}
 /*.timecount .tc {font-size: 0.8rem;}*/
 
 /*成员列表*/
@@ -273,7 +273,7 @@ margin-top: -0.2rem; background: #f3c44e; border-radius: .2rem; color: #333333; 
 .home-page .logs {width: 100%; position: absolute; top: 1.25rem; left: 0; text-align: center; color: #FFFFFF;}
 .home-page .logs h2 {font-size: .8rem; font-weight: 300;}
 .home-page .logs p {font-size: .44rem;}
-.home-page .bet-wrap .item {height: .8rem; line-height: .8rem; width: 32%; margin-right: 2%; border: 1px solid #FFFFFF; color: #FFFFFF; text-overflow: ellipsis; overflow: hidden;
+.home-page .bet-wrap .item {height: .8rem; line-height: .8rem; width: 32%; margin-right: 2%; border: 1px solid #95a5b5; color: #95a5b5; text-overflow: ellipsis; overflow: hidden;
 border-radius: 5px; white-space: nowrap; padding: 0 0.1rem;}
 .home-page .bet-wrap .item:last-child {margin-right: 0;}
 .home-page .bet-wrap .item.raise {border-color: #de415e; color: #de415e; }
@@ -303,8 +303,8 @@ text-align: center; text-shadow: 0 .03rem #0a1622; color: #FFFFFF;}
 background-size: cover; position: absolute; bottom: -0.2rem; left: 50%; margin-left: -1rem;}
 
 
-
-
+.clum3 {width: 32%; margin-right: 2%; float: left;}
+.clum3:last-child {margin-right: 0;}
 
 
 

@@ -1,7 +1,10 @@
 <template>
 <div class="container">
 	<mhead>
-		参与项目
+		<div class="color-tip handler left">
+			<a @click="goback"><i class="fa fa-close fs18"></i></a>
+		</div>
+		历史下注
 	</mhead>
 	<div class="ctninner" v-loading="!isloaded">
 		<div class="project-list" v-if="list.length > 0">
@@ -28,20 +31,17 @@
 			
 		</div>
 	</div>
-	<mnav></mnav>
 </div>
 </template>
 
 <script>
 import mhead from '../components/head.vue'
-import mnav from '../components/unav.vue'
 export default{
 	mounted(){
 		// console.log(this.$store.state.count)
 	},
 	components:{
-		mhead,
-		mnav
+		mhead
 	},
 	data(){
 		return {

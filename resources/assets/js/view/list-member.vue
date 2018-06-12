@@ -25,19 +25,19 @@
 			<div class="panel-bd">
 				<div class="memberList" v-loading="!isloaded" v-pfresh>
 					<ul  v-if="list.length > 0">
-						<li v-for="(item, index) in list" v-if="!(index == winnerId)">
+						<li v-for="(item, index) in list">
 							<div class="avatar img-box"><img :src="item.avatar" /></div>
 							<div class="info">
 								<div class="r">
 									<span class="fs14">{{item.name}}</span>
 									<span class="color-light fs9 pull-right" v-if="item.betting == 'rise'">
-										<i class="fa fa-caret-up"></i> 涨
+										买入： <font class="color-rise"><i class="fa fa-caret-up"></i> 涨</font>
 									</span>
 									<span class="color-light fs9 pull-right" v-else-if="item.betting == 'flat'">
-										<i class="fa fa-minus"></i> 平
+										买入：<font><i class="fa fa-minus"></i> 平</font>
 									</span>
 									<span class="color-light fs9 pull-right" v-else-if="item.betting == 'fall'">
-										<i class="fa fa-caret-down"></i> 跌
+										买入： <font class="color-fall"><i class="fa fa-caret-down"></i> 跌</font>
 									</span>
 								</div>
 								<div class="r fs9">
@@ -70,7 +70,7 @@ export default{
 		return {
 			pid:'',
 	      	list:[],
-	      	winnerId:null,
+//	      	winnerId:null,
 	      	isloaded:true,
 	      	last:null,
 	      	handleStr:'加载更多'
@@ -78,18 +78,19 @@ export default{
 	},
     activated(){
     	var vm = this;
-    	vm.winnerId = null;
-    	vm.list = new Array();
-    	vm.last = null;
-    	vm.getMemberList()
+    	console.log(vm.pid);
+    	if(vm.pid != vm.$route.query.pid){
+    		vm.dataClear();
+    		vm.getMemberList();
+    	}
     },
 	methods:{
 		getMemberList(){
     		var vm = this
     		if(vm.handleStr != '没有更多数据了') {
-    			vm.id = vm.$route.query.pid;
+    			vm.pid = vm.$route.query.pid;
     			vm.isloaded = false;
-	    		vm.$http.get( vm.commonApi.listAttendance, {params:{guess_id:vm.id, sinceId:vm.last}}
+	    		vm.$http.get( vm.commonApi.listAttendance, {params:{guess_id:vm.pid, sinceId:vm.last}}
 	    			).then(function(response){
 	    			let res = response.body;
 	    			vm.isloaded = true;
@@ -101,16 +102,22 @@ export default{
 			 			vm.handleStr = '没有更多数据了';
 			 		}
 			 		
-			 		for(let i = 0; i < res.data.list.length; i++) {
-			 			if(res.data.list[i].is_win == 1) {
-			 				vm.winnerId = i;
-			 			}
-			 		}
+//			 		for(let i = 0; i < res.data.list.length; i++) {
+//			 			if(res.data.list[i].is_win == 1) {
+//			 				vm.winnerId = i;
+//			 			}
+//			 		}
 	        	}).catch(err => {
 	        		vm.isloaded = true;
 	        		console.log(err)
 	        	});
         	}
+    	},
+    	dataClear(){
+    		var vm = this;
+	    	vm.list = new Array();
+	    	vm.last = null;
+	    	vm.handleStr = '加载更多';
     	},
 		goback(){
 			this.$router.go(-1)

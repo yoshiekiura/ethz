@@ -9,6 +9,7 @@ export default {
 	listProject: host + '/api/v1/guess',
 	listAttendance: host + '/api/v1/guess/attendance',
 	listFriends: host + '/api/v1/user/friends',
+	listHistory: host + '/api/v1/guess/histories',
 	depositsAddress: host + '/api/v1/deposits/address',
 	depositsQrcode: host + '/api/v1/deposits/qrcode',
 	passwordReset: host + '/api/v1/password/reset',
