@@ -36,6 +36,43 @@ class GuessController extends Controller
         return $this->responseSuccess(['list' => $list], 'success');
     }
 
+
+    public function histories(Request $request)
+    {
+
+        $limit = $request->input('limit', '20');
+        $since = $request->input('since', '100');
+        $since -= 1;
+        $show = abs($since - $limit);
+        $list = [];
+        $last = 0;
+        for ($i=$since; $i > $show; $i--) { 
+            $info['id'] = $i;
+            $info['title'] = 'ETH 有奖竞猜 第2018060101期 场次：10分钟';
+            $info['open_time'] = date('Y-m-d H:i:s');
+            $info['win_total'] = 22;
+            $info['user']['rise'] = rand(10, 99);
+            $info['user']['flat'] = rand(10, 99);
+            $info['user']['fall'] = rand(10, 99);
+            $info['betting']['rise'] = rand(1000, 9999);
+            $info['betting']['flat'] = rand(1000, 9999);
+            $info['betting']['fall'] = rand(1000, 9999);
+            $info['open_price'] = rand(1000, 9999);
+            $info['last_price'] = rand(1000, 9999);
+            $info['sum_amount'] = rand(1000, 9999);
+            $rose = ['rise', 'flat', 'fall'];
+            $info['betting_win'] = $rose[rand(0, 2)];
+            $last = $i;
+            $list[] = $info;
+        }
+        $datas['code'] = 'ETH';
+        $datas['lastId'] = $last;
+        $datas['list'] = $list;
+
+
+        return $this->responseSuccess($datas, 'success');
+    }
+
     public function show(Request $request, Guess $guess)
     {
         $user = $request->user('api');
