@@ -6,7 +6,7 @@ use Illuminate\Http\Response;
 use App\Http\Controllers\ApiController as Controller;
 use App\Services\Withdraws;
 use App\Models\WithdrawsOrdersModel;
-use function App\Lib\my_number_format;
+// use function App\Lib\my_number_format;
 
 class WithdrawsController extends Controller
 {
@@ -57,6 +57,58 @@ class WithdrawsController extends Controller
         }
 
         return $this->setStatusCode(400)->responseError('操作失败');
+    }
+
+    public function list(Request $request)
+    {
+        $limit = $request->input('limit', '10');
+        $sinceId = $request->input('sinceId');
+
+        if(is_numeric($sinceId) && $sinceId == 0) {
+            $this->setStatusCode(404)->responseError('查无数据');
+        }
+
+        $user = $this->getUser();
+
+        $builders = with(new WithdrawsOrdersModel())->setHidden([])->newQuery();
+
+        if($sinceId > 0) {
+            $builders->where('id', '<', $sinceId);
+        }
+
+        $orders = $builders->where('uid', $user->id)->orderBy('id', 'DESC')->limit($limit)->get();
+
+        if($orders->isEmpty()) {
+            return $this->setStatusCode(403)->responseError('查无数据');
+        }
+
+        $lastId = 0;
+        $datas['list'] = $orders->map(function ($order) use (&$lastId) {
+            $order->load('currencyTo');
+            $order->code = $order->currencyTo->code;
+            $order->amount = my_number_format($order->amount, 4);
+            $order->sum_amount = my_number_format($order->sum_amount, 4);
+            unset($order->currencyTo);
+            $lastId = $order->id;
+            return $order;
+        });
+        $datas['lastId'] = $lastId;
+
+        return $this->responseSuccess($datas, 'success');
+    }
+
+    public function show(Request $request, WithdrawsOrdersModel $order)
+    {
+        return $order->getConnection()->transaction(function () use ($order){
+            $order->amount = (float) $order->amount;
+            $order->tx_url = 'https://etherscan.io/tx/' . $order->txid;
+            $order->address_url = 'https://etherscan.io/address/' . $order->address;
+            $order->amount = (string) my_number_format($order->amount, 4);
+            $order->sum_amount = (string) my_number_format($order->sum_amount, 4);
+            $order->fee = (string) my_number_format($order->fee, 4);
+
+            return $this->responseSuccess($order, 'success');
+        });
     }
 
     private function getWithdraws()

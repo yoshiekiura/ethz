@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Services\DepositsAddresses;
+use App\Models\DepositsOrdersModel as DepositsOrders;
 use App\Http\Controllers\ApiController as Controller;
 use QrCode;
 
@@ -39,6 +40,53 @@ class DepositsController extends Controller
         if(!empty($text)) {
             return QrCode::format('png')->size(500)->generate($text);
         }
+    }
+
+    public function list(Request $request)
+    {
+        $limit = $request->input('limit', '10');
+        $sinceId = $request->input('sinceId');
+
+        if(is_numeric($sinceId) && $sinceId == 0) {
+            $this->setStatusCode(404)->responseError('查无数据');
+        }
+
+        $user = $this->getUser();
+
+        $builders = with(new DepositsOrders())->setHidden([])->newQuery();
+
+        if($sinceId > 0) {
+            $builders->where('id', '<', $sinceId);
+        }
+
+        $orders = $builders->where('uid', $user->id)->orderBy('id', 'DESC')->limit($limit)->get();
+
+        if($orders->isEmpty()) {
+            return $this->setStatusCode(403)->responseError('查无数据');
+        }
+
+        $lastId = 0;
+        $datas['list'] = $orders->map(function ($order) use (&$lastId) {
+            $order->load('currencyTo');
+            $order->code = $order->currencyTo->code;
+            unset($order->currencyTo);
+            $lastId = $order->id;
+            return $order;
+        });
+        $datas['lastId'] = $lastId;
+
+        return $this->responseSuccess($datas, 'success');
+    }
+
+    public function show(Request $request, DepositsOrders $order)
+    {
+        return $order->getConnection()->transaction(function () use ($order){
+            $order->amount = (float) $order->amount;
+            $order->tx_url = 'https://etherscan.io/tx/' . $order->txid;
+            $order->address_url = 'https://etherscan.io/address/' . $order->address;
+
+            return $this->responseSuccess($order, 'success');
+        });
     }
 
     private function getDepositsAdress()

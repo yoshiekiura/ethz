@@ -40,10 +40,14 @@ Route::group([
 
 		Route::group(['prefix' => 'deposits'], function () {
 		    Route::get('/address','Api\DepositsController@address');
+		    Route::get('/list','Api\DepositsController@list');
+		    Route::get('/{order}','Api\DepositsController@show')->where(['order' => '[0-9]+']);
 		});
 
 		Route::group(['prefix' => 'withdraws'], function () {
 		    Route::post('/','Api\WithdrawsController@store');
+		    Route::get('/list','Api\WithdrawsController@list');
+		    Route::get('/{order}','Api\WithdrawsController@show')->where(['order' => '[0-9]+']);
 		});
 		
 		Route::group(['prefix' => 'guess'], function () {
