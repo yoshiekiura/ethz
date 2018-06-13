@@ -78,7 +78,6 @@ export default{
 	},
     activated(){
     	var vm = this;
-    	console.log(vm.pid);
     	if(vm.pid != vm.$route.query.pid){
     		vm.dataClear();
     		vm.getMemberList();
