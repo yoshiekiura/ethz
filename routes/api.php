@@ -59,6 +59,7 @@ Route::group(['prefix' => 'v1'], function () {
 	    Route::get('/attendance','Api\GuessController@attendanceRose');
 	    Route::get('/{guess}','Api\GuessController@show')->where(['guess' => '[0-9]+']);
 	    Route::get('/current','Api\GuessController@showNew');
+	    Route::post('/items','Api\ItemsController@index');
 	});
 
 	Route::group(['prefix' => 'news'], function () {
@@ -72,6 +73,7 @@ Route::group(['prefix' => 'v1'], function () {
 
 	Route::group(['prefix' => 'rewards'], function () {
 	    Route::get('/','Api\RewardsController@index');
+	    Route::get('/rose','Api\RewardsController@rose');
 	});
 
 	Route::get('/contact','Api\ContactController@index');

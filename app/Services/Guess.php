@@ -63,11 +63,14 @@ class Guess extends BaseService
 
     }
 
-    public function orderRose($user, $guess, $order)
+    public function orderRose($user, $items, $order)
     {
         $detailsModel = $this->getAccountsDetails();
         $guessOrders = $this->getGuessOrders();
         $accountModel = $this->getAccounts();
+
+        $items->load('guess');
+        $guess = $items->guess;
         $accountModel->setCurrency($guess->currency)->getAccountLock($user->id);
 
         $amount = $order->amount;
@@ -90,6 +93,7 @@ class Guess extends BaseService
         $orderId = $guessOrders->createOrder([
             'uid' => $user->id ?? 0,
             'guess_id' => $guess->id,
+            'item_id' => $items->id,
             'currency' => $guess->currency,
             'betting' => $betting,
             'amount' => $amount,
@@ -105,8 +109,8 @@ class Guess extends BaseService
             'remark' => "竞猜：{$amount} {$guess->currencyTo->code}"
         ]);
 
-        $incrNumber = $guess->increment('number', 1);
-        $incrSum = $guess->increment('sum_amount', $amount);
+        $incrNumber = $items->increment('number', 1);
+        $incrSum = $items->increment('sum_amount', $amount);
 
         if($incrRes && $orderId && $detailId && $incrNumber && $incrSum) {
             DB::commit();

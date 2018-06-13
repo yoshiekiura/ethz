@@ -13,6 +13,7 @@ use App\Models\UserModel;
 use App\Models\AccountsModel;
 use App\Services\Guess as GuessSer;
 use App\Services\Rewards;
+use App\Models\GuessItems;
 use Hash;
 
 
@@ -40,37 +41,78 @@ class GuessController extends Controller
     public function histories(Request $request)
     {
 
-        $limit = $request->input('limit', '20');
-        $since = $request->input('since', '100');
-        $since -= 1;
-        $show = abs($since - $limit);
-        $list = [];
-        $last = 0;
-        for ($i=$since; $i > $show; $i--) { 
-            $info['id'] = $i;
-            $info['title'] = 'ETH 有奖竞猜 第2018060101期 场次：10分钟';
-            $info['open_time'] = date('Y-m-d H:i:s');
-            $info['win_total'] = 22;
-            $info['user']['rise'] = rand(10, 99);
-            $info['user']['flat'] = rand(10, 99);
-            $info['user']['fall'] = rand(10, 99);
-            $info['betting']['rise'] = rand(1000, 9999);
-            $info['betting']['flat'] = rand(1000, 9999);
-            $info['betting']['fall'] = rand(1000, 9999);
-            $info['open_price'] = rand(1000, 9999);
-            $info['last_price'] = rand(1000, 9999);
-            $info['sum_amount'] = rand(1000, 9999);
-            $rose = ['rise', 'flat', 'fall'];
-            $info['betting_win'] = $rose[rand(0, 2)];
-            $state = ['coming_soon', 'in_progress', 'completed', 'completed'];
-            $info['state'] = $state[rand(0, 3)];
-            $last = $i;
-            $list[] = $info;
-        }
-        $datas['code'] = 'ETH';
-        $datas['lastId'] = $last;
-        $datas['list'] = $list;
+        $limit = $request->input('limit', '10');
+        $sinceId = $request->input('sinceId');
 
+        if(is_numeric($sinceId) && $sinceId == 0) {
+            $this->setStatusCode(404)->responseError('查无数据');
+        }
+
+        $ctime = time();
+        $ordersRoseNode = new GuessOrdersRose();
+        $guessItems = with(new GuessItems())->setHidden([])->newQuery();
+
+        $cond[] = ['end_time', '<', time()];
+        if(!empty($sinceId)) {
+            $cond[] = ['id', '<', $sinceId];
+        }
+        $items = $guessItems->where($cond)->orderBy('id', 'desc')->limit($limit)->get();
+
+        $lastId = 0;
+        $datas['list'] = $items->map(function ($item) use ($ordersRoseNode, $ctime, &$lastId){
+            $item->load('guess');
+            $item->title = $item->guess->title . " 第 {$item->id} 期 场次：{$item->guess->interval} 分钟";
+
+            $item->open_price = my_number_format($item->open_price, 4);
+            $item->last_price = my_number_format($item->last_price, 4);
+            $item->sum_amount = my_number_format($item->sum_amount, 4);
+            $itemBetting = $item->betting;
+
+            $users['rise'] = $ordersRoseNode->where(['guess_id' => $item->guess_id,'betting' => 1])->count();
+            $users['flat'] = $ordersRoseNode->where(['guess_id' => $item->guess_id,'betting' => 0])->count();
+            $users['fall'] = $ordersRoseNode->where(['guess_id' => $item->guess_id,'betting' => -1])->count();
+            $item->user = $users;
+
+            $betting['rise'] = $ordersRoseNode->where(['guess_id' => $item->guess_id,'betting' => 1])->sum('amount');
+            $betting['rise'] = my_number_format($betting['rise'], 4);
+            $betting['flat'] = $ordersRoseNode->where(['guess_id' => $item->guess_id,'betting' => 0])->sum('amount');
+            $betting['flat'] = my_number_format($betting['flat'], 4);
+            $betting['fall'] = $ordersRoseNode->where(['guess_id' => $item->guess_id,'betting' => -1])->sum('amount');
+            $betting['fall'] = my_number_format($betting['fall'], 4);
+            $item->betting = $betting;
+
+            $item->betting_win = '';
+            if($itemBetting == 1) {
+                $item->betting_win = 'rise';
+            } else if ($itemBetting == 0) {
+                $item->betting_win = 'flat';
+            } else if ($itemBetting == -1) {
+                $item->betting_win = 'fall';
+            }
+
+            if($item->start_time > $ctime) {
+                $item->state = 'coming_soon';
+            } else if ($item->start_time < $ctime && $ctime < $item->end_time) {
+                $item->state = 'in_progress';
+            } else {
+                $item->state = 'completed';
+            }
+
+            if ($item->betting_win == 'rise') {
+                $item->win_total = $item->user['rise'];
+            } else if ($item->betting_win == 'flat') {
+                $item->win_total = $item->user['flat'];
+            } else if ($item->betting_win == 'fall') {
+                $item->win_total = $item->user['fall'];
+            }
+            $item->open_time = date('Y-m-d H:i:s', $item->end_time);
+
+            $lastId = $item->id;
+            unset($item->created_at, $item->updated_at, $item->guess);
+            return $item;
+        });
+        $datas['code'] = 'ETH';
+        $datas['lastId'] = $lastId;
 
         return $this->responseSuccess($datas, 'success');
     }
@@ -111,37 +153,62 @@ class GuessController extends Controller
 
     public function showNew(Request $request)
     {
-        $model = new Guess();
-        $guess = $model->orderBy('id', 'DESC')->first();
-        $data = new GuessResource($guess);
-        $data = $data->toArray($data->resource);
-        $data['currency'] = 1;
-        $data['last'] = rand(1000, 9999);
-        $data['open'] = rand(1000, 9999);
-        $data['expect'] = strtotime($guess->end_time) - strtotime($guess->start_time);
-
-        if(isset($guess->id)) {
-            $info = with(new GuessOrdersRose())->getOrderGroup($guess->id);
-            $data['rise'] = $info['rise'];
-            $data['flat'] = $info['flat'];
-            $data['fall'] = $info['fall'];
-        } else {
-            $data['rise'] = $data['flat'] = $data['fall'] = 0;
-        }
-
+        $this->getNewGuess();
+        $ctime = time();
         $user = $request->user('api');
-        $data['user'][$data['code']] = 0;
-        if(isset($user->id)) {
-            $accounts = with(new AccountsModel())->getListByUid($user->id);
-            if(!empty($accounts)) {
-                foreach ($accounts as $account) {
-                    $data['user'][$account->currencyTo->code] = (float) $account->balance;
+        $orderRose = with(new GuessOrdersRose());
+        $accountsNode = with(new AccountsModel());
+        $model = new GuessItems();
+        $items = $model->where('status', '=', 1)->orderBy('id', 'DESC')->first();
+
+        return $model->getConnection()->transaction(function () use ( $items, $user, $orderRose, $accountsNode, $ctime ) {
+            $items->load('guess');
+            $data['id'] = $items->id;
+            $data['name'] = $items->id . ' 期';
+            $data['period'] = $items->id;
+            $data['number'] = $items->guess->number;
+            $data['currency'] = $items->guess->currency;
+            $data['sumAmount'] = my_number_format($items->guess->sum_amount,2);
+            $data['last'] = my_number_format($items->last_price, 2);
+            $data['open'] = my_number_format($items->open_price, 2);
+            $data['openTime'] = date('Y-m-d H:i:s', $items->end_time);
+            $data['startTime'] = date('Y-m-d H:i:s', $items->start_time);
+            $data['endTime'] = date('Y-m-d H:i:s', $items->end_time);
+
+            if(isset($items->guess->id)) {
+                $data['expect'] = $items->guess->interval;
+                $info = $orderRose->getOrderGroup($items->id);
+                $data['rise'] = $info['rise'];
+                $data['flat'] = $info['flat'];
+                $data['fall'] = $info['fall'];
+                $data['code'] = $items->guess->currencyTo->code;
+                $data['user'][$items->guess->currencyTo->code] = 0;
+            } else {
+                $data['expect'] = 0;
+                $data['rise'] = $data['flat'] = $data['fall'] = 0;
+                $data['code'] = '';
+                $data['user'] = [];
+            }
+
+            if($items->start_time > $ctime) {
+                $data['state'] = 'coming_soon';
+            } else if ($items->start_time < $ctime && $ctime < $items->end_time) {
+                $data['state'] = 'in_progress';
+            } else {
+                $data['state'] = 'completed';
+            }
+
+            if(isset($user->id)) {
+                $accounts = $accountsNode->getListByUid($user->id);
+                if(!empty($accounts)) {
+                    foreach ($accounts as $account) {
+                        $data['user'][$account->currencyTo->code] = (float) $account->balance;
+                    }
                 }
             }
 
-        }
-
-        return $this->responseSuccess($data, 'success');
+            return $this->responseSuccess($data, 'success');
+        });
     }
 
     public function attendance(Request $request)
@@ -249,19 +316,22 @@ class GuessController extends Controller
         }
     }
 
-    public function betRose(Request $request, Guess $guess)
+    public function betRose(Request $request, GuessItems $guess)
     {
         if(empty($this->uid)) {
             return $this->setStatusCode(404)->responseError('请先登录');
         }
 
         if($guess->status == 0) {
-            return $this->setStatusCode(404)->responseError('项目暂未开放');
+            return $this->setStatusCode(404)->responseError('暂未开放');
         }
 
-        $end_time = strtotime($guess->end_time);
-        if($end_time <= time()) {
-            return $this->setStatusCode(404)->responseError('项目已结束');
+        if($guess->end_time <= time()) {
+            return $this->setStatusCode(404)->responseError('已结束');
+        }
+
+        if($guess->start_time > time()) {
+            return $this->setStatusCode(404)->responseError('未开始');
         }
 
         $betting = $request->input('betting');
@@ -333,7 +403,7 @@ class GuessController extends Controller
             $builders->where('id', '<', $sinceId);
         }
 
-        $items = $builders->where('guess_id', $guessId)->orderBy('is_win', 'DESC')->orderBy('id', 'DRSC')->limit($limit)->get();
+        $items = $builders->where('item_id', $guessId)->orderBy('is_win', 'DESC')->orderBy('id', 'DRSC')->limit($limit)->get();
 
         if($items->isEmpty()) {
             return $this->setStatusCode(403)->responseError('查无数据');
@@ -355,6 +425,14 @@ class GuessController extends Controller
             $data['last'] = $last['id'];
         }
         return $this->responseSuccess($data, 'success');
+    }
+
+    public function getNewGuess()
+    {
+        $client = new \GuzzleHttp\Client(['verify' => false]);
+        $response = $client->request('POST', env('APP_URL') . '/api/v1/guess/items');
+        $guess = json_decode((string)$response->getBody());
+        return $guess;
     }
 }
 

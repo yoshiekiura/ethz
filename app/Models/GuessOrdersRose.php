@@ -90,14 +90,14 @@ class GuessOrdersRose extends Model
         $this->updateGuess(['id' => $id], $attributes);
     }
 
-    public function getOrderGroup($guess_id)
+    public function getOrderGroup($item_id)
     {
-        if(empty($guess_id)) {
+        if(empty($item_id)) {
             return null;
         }
-        $riseTotal = $this->where(['guess_id' => $guess_id, 'betting' => '1'])->sum('amount');
-        $flatTotal = $this->where(['guess_id' => $guess_id, 'betting' => '0'])->sum('amount');
-        $fallTotal = $this->where(['guess_id' => $guess_id, 'betting' => '-1'])->sum('amount');
+        $riseTotal = $this->where(['item_id' => $item_id, 'betting' => '1'])->sum('amount');
+        $flatTotal = $this->where(['item_id' => $item_id, 'betting' => '0'])->sum('amount');
+        $fallTotal = $this->where(['item_id' => $item_id, 'betting' => '-1'])->sum('amount');
 
         return [
             'rise' => (float) $riseTotal,

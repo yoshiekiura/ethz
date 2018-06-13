@@ -4,7 +4,7 @@
 		<div class="color-tip handler left">
 			<a @click="goback"><i class="fa fa-close fs18"></i></a>
 		</div>
-		项目列表
+		往期竞猜
 	</mhead>
 	<div class="ctninner isNavbar" v-loading="!isloaded">
 		<div class="project-list" v-if="list.length > 0">

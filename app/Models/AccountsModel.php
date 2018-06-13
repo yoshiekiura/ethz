@@ -108,12 +108,13 @@ class AccountsModel extends Model
      */
     public function createAccount($data) 
     {
-    	return $this->insertGetId([
+    	$this->insertGetId([
             'uid'      => (int) $data['uid'], 
             'currency' => (int) $data['currency'], 
             'balance'  => (float) $data['balance'], 
             'locked'   => (float) $data['locked'], 
         ]);
+        return $data['uid'];
     }
 
     /**

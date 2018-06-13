@@ -21,7 +21,7 @@
 			<div class="panel-hd">
 				<div class="clearfix mb10">
 					<span class="pull-left">总投注</span>
-					<span class="pull-right">期数</span>
+					<span class="pull-right">期数 {{project.name}}</span>
 				</div>
 				<div class="clearfix mb10">
 					<span class="pull-left"><font class="fs16 color-tip">{{project.sumAmount}}</font><font>{{project.code}}</font></span>

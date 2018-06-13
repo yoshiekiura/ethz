@@ -73,31 +73,31 @@ class GuessController extends Controller
             $grid->id('ID')->sortable();
 
             $grid->title('名称');
-            $grid->period('周期');
-            $grid->currencyTo()->name('币种');
-            $grid->price('中奖点数')->display(function($price){
+            // $grid->period('周期');
+            $grid->currencyTo()->name('竞猜币种');
+            $grid->interval('场次')->display(function($price){
                 return my_number_format($price, 4);
             });
             $grid->charges('运营费用')->display(function($charges){
                 return my_number_format($charges, 4) . '%';
             });
             $grid->open_time('开奖时间');
-            $grid->column('竞猜信息')->expand(function (){
-                $id = $this->id;
-                $profile['竞猜期数'] = $this->period;
+            // $grid->column('竞猜信息')->expand(function (){
+            //     $id = $this->id;
+            //     $profile['竞猜期数'] = $this->period;
 
-                $profile['竞猜底价'] = my_number_format($this->unit_price);
-                $profile['平台运营费'] = my_number_format($this->charges) . '%';
-                // $profile['最大投注'] = my_number_format($this->max_amount);
-                // $profile['最小投注'] = my_number_format($this->min_amount);
-                // $profile['最低投注'] = my_number_format($this->price);
+            //     $profile['竞猜底价'] = my_number_format($this->unit_price);
+            //     $profile['平台运营费'] = my_number_format($this->charges) . '%';
+            //     // $profile['最大投注'] = my_number_format($this->max_amount);
+            //     // $profile['最小投注'] = my_number_format($this->min_amount);
+            //     // $profile['最低投注'] = my_number_format($this->price);
 
-                $profile['开奖时间'] = $this->open_time;
-                $profile['开始时间'] = $this->start_time;
-                $profile['结束时间'] = $this->end_time;
+            //     $profile['开奖时间'] = $this->open_time;
+            //     $profile['开始时间'] = $this->start_time;
+            //     $profile['结束时间'] = $this->end_time;
 
-                return new Table([], $profile);
-            }, '展开');
+            //     return new Table([], $profile);
+            // }, '展开');
             $grid->created_at('创建时间');
 
             // $states = [
@@ -132,9 +132,10 @@ class GuessController extends Controller
 
                 // 基本资料
                 $form->display('id', 'ID');
-                $form->select('currency', '充值货币')->options(CurrencyModel::where(['status' => 1, 'is_virtual' => 1])->get()->pluck('name', 'id'))->rules('required');
+                $form->select('currency', '竞猜货币')->options(CurrencyModel::where(['status' => 1, 'is_virtual' => 1])->get()->pluck('name', 'id'))->rules('required');
                 $form->text('title', '竞猜标题')->rules('required');
-                $form->text('period', '竞猜期数')->rules('required');
+                $form->number('interval', '场次')->rules('required')->help('每场开奖间隔，以“分”为单位');
+                $form->number('charges', '运营费用')->rules('required')->help('百分比，平台收益')->default('20');
                 $form->switch('status', '是否启用')->states([
                     'on'  => ['value' => 1, 'text' => '是', 'color' => 'success'],
                     'off' => ['value' => 0, 'text' => '否', 'color' => 'danger'],
@@ -143,37 +144,38 @@ class GuessController extends Controller
                 $form->display('created_at', '创建时间');
                 $form->display('updated_at', '更新时间');
 
-            })->tab('竞猜设置', function (Form $form) {
-
-              $form->number('unit_price', '竞猜底价')->rules('required');
-              $form->number('charges', '运营费用')->rules('required')->help('百分比，平台收益')->default('20');
-              // $form->number('max_amount', '最大投注数')->rules('required');
-              // $form->number('min_amount', '最小投注数')->rules('required');
-
-              $form->datetime('open_time', '开奖时间')->rules('required');
-              $form->datetime('start_time', '开始时间')->rules('required');
-              $form->datetime('end_time', '结束时间')->rules('required');
-
             });
+            // ->tab('竞猜设置', function (Form $form) {
+
+            //   $form->number('unit_price', '竞猜底价')->rules('required');
+            //   $form->number('charges', '运营费用')->rules('required')->help('百分比，平台收益')->default('20');
+            //   // $form->number('max_amount', '最大投注数')->rules('required');
+            //   // $form->number('min_amount', '最小投注数')->rules('required');
+
+            //   $form->datetime('open_time', '开奖时间')->rules('required');
+            //   $form->datetime('start_time', '开始时间')->rules('required');
+            //   $form->datetime('end_time', '结束时间')->rules('required');
+
+            // });
 
             $form->saving(function (Form $form) {
-                $open_time = $form->open_time ? strtotime($form->open_time) : 0;
-                $start_time = $form->start_time ? strtotime($form->start_time) : 0;
-                $end_time = $form->end_time ? strtotime($form->end_time) : 0;
-                if($start_time > $end_time) {
-                    $error = new MessageBag([
-                        'message' => '开始时间必须小于结束时间',
-                    ]);
+                // $open_time = $form->open_time ? strtotime($form->open_time) : 0;
+                // $start_time = $form->start_time ? strtotime($form->start_time) : 0;
+                // $end_time = $form->end_time ? strtotime($form->end_time) : 0;
+                // if($start_time > $end_time) {
+                //     $error = new MessageBag([
+                //         'message' => '开始时间必须小于结束时间',
+                //     ]);
 
-                    return back()->with(compact('error'));
-                }
-                if($start_time >= $open_time || $end_time >= $open_time) {
-                    $error = new MessageBag([
-                        'message' => '开奖时间必须大于开始时间与结束时间',
-                    ]);
+                //     return back()->with(compact('error'));
+                // }
+                // if($start_time >= $open_time || $end_time >= $open_time) {
+                //     $error = new MessageBag([
+                //         'message' => '开奖时间必须大于开始时间与结束时间',
+                //     ]);
 
-                    return back()->with(compact('error'));
-                }
+                //     return back()->with(compact('error'));
+                // }
                 $form->status = $form->status == 'on' ? 1 : 0;
             });
         });
